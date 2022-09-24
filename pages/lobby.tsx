@@ -5,7 +5,16 @@ import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
   return (
-    <h1>Hello World</h1>
+    <main>
+        <h1>Lobby</h1>
+        <ul>
+            <li>Player 1</li>
+            <li>Player 2</li>
+            <li>Player 3</li>
+            <li>etc</li>
+        </ul>
+    </main>
+    
   )
 }
 
