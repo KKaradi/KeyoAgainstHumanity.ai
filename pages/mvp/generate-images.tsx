@@ -4,15 +4,23 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
+
+
+  
   return (
     <main>
-        <h1>Guess The Prompt</h1>
+        <h1>Image Generation Page</h1>
         <h4>Image Goes Here</h4>
-        <textarea>Input Prompt</textarea>
+        <textarea>Input prompt</textarea>
         <div>
-            <button>submit</button>
+            <button>Generate Image</button>
+        </div>
+        <div>
+            <button>Reroll</button>
+            <button>Finalize</button>
         </div>
     </main>
+    
   )
 }
 
