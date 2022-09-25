@@ -5,7 +5,12 @@ import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
   return (
-    <h1>Hello World</h1>
+    <main>
+        <h1>Create New Room</h1>
+        <h3>Room Code: x-x-x-x-x-x</h3>
+        <button>Create</button>
+    </main>
+    
   )
 }
 
