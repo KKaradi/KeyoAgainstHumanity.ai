@@ -7,7 +7,7 @@ const Home: NextPage = () => {
   return (
     <main>
         <h1>Image Generation Page</h1>
-        <h4>Generation Goes Here</h4>
+        <h4>Image Goes Here</h4>
         <textarea>Input prompt</textarea>
         <div>
             <button>Generate Image</button>

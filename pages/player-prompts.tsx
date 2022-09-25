@@ -6,17 +6,13 @@ import styles from '../styles/Home.module.css'
 const Home: NextPage = () => {
   return (
     <main>
-        <h1>Keyo Against Humanity</h1>
-        <textarea>Username</textarea>
+        <h1>Guess The Prompt</h1>
+        <h4>Image Goes Here</h4>
+        <textarea>Input Prompt</textarea>
         <div>
-            <button>Create Room</button>
-            <button>Join Room</button>
-        </div>
-        <div>
-            <button>Rules</button>
+            <button>submit</button>
         </div>
     </main>
-    
   )
 }
 
