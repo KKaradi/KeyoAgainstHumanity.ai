@@ -4,14 +4,15 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
-
-
-  
   return (
     <main>
         <h1>Image Generation Page</h1>
-        <h4>Image Goes Here</h4>
-        <textarea>Input prompt</textarea>
+        <div>
+          <img src = "favicon.ico"></img>
+        </div>
+        <div>
+          <textarea>Input prompt</textarea>
+        </div>
         <div>
             <button>Generate Image</button>
         </div>
@@ -20,7 +21,6 @@ const Home: NextPage = () => {
             <button>Finalize</button>
         </div>
     </main>
-    
   )
 }
 

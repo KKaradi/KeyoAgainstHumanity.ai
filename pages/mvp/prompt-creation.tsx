@@ -10,8 +10,10 @@ const Home: NextPage = () => {
   return (
     <main>
         <h1>Guess The Prompt</h1>
-        <h4>Image Goes Here</h4>
-        <textarea>Input Prompt</textarea>
+        <img src = "favicon.ico"></img>
+        <div>
+          <textarea>Input Prompt</textarea>
+        </div>
         <div>
             <button>submit</button>
         </div>
