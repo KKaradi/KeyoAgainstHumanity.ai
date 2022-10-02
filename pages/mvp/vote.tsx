@@ -16,7 +16,7 @@ const Vote: NextPage = () => {
     roomID
   }
 
-  const img = "/pretty-picture"
+  const img = "/pretty-picture.jpg"
 
   //firebase returns to user 
   const playerCaptions = [
@@ -29,8 +29,8 @@ const Vote: NextPage = () => {
     return (
       playerCaptions.map(
         ({caption, author}) => (
-          <div>
-            <button key = {author} onClick={() => onButtonClick(author)}>{caption}</button>
+          <div key = {author}>
+            <button onClick={() => onButtonClick(author)}>{caption}</button>
           </div>
         )
       )
@@ -62,7 +62,9 @@ const Vote: NextPage = () => {
         <Image src = {img} width = {100} height = {100} alt = "Pretty Picture"/>
         <div>
           { displayCaptions() }
-          {/* <button onClick={() => navToResults()}>{ props.caption }</button> */}
+        </div>
+        <div>
+          <button onClick={() => navToResults()}>Results</button>
         </div>
     </main>
     

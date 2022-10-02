@@ -7,8 +7,8 @@ import Router from 'next/router'
 import { useRouter } from 'next/router'
 
 const users = ["John", "Tom", "Rob"];
-const listUsers = users.map((user) =>
-  <li>{user}</li>
+const listUsers = users.map((user, index) =>
+  <li key = {index}>{user}</li>
 );
 
 const Lobby: NextPage = () => {

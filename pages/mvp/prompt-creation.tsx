@@ -8,7 +8,7 @@ import {SetStateAction, useState} from 'react';
 
 const PromptCreation: NextPage = () => {
 
-  const img = "/public/pretty-picture"
+  const img = "/pretty-picture.jpg"
 
   const router = useRouter()
   const {

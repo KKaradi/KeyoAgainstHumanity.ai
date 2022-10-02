@@ -46,7 +46,7 @@ const Results: NextPage = () => {
     roomID
   }
 
-  const img = "/pretty-picture"
+  const img = "/pretty-picture.jpg"
 
   return (
     <main>
