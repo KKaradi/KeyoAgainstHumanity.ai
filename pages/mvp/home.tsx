@@ -4,16 +4,26 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import {Routes, Route, useNavigate} from 'react-router-dom';
 import Router from 'next/router';
+import { SetStateAction, useState } from 'react';
 
 const Home: NextPage = () => {
 
-  const generateRoomInFirebase = ()=>{
+  const roomID = 5555;
 
-  }
+  const [userName, setMessage] = useState('');
+        
+  const handleChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+    setMessage(event.target.value);
+    console.log('value is:', event.target.value)
+  };   
 
   function navToLobby() {
     Router.push({
-      pathname: '/mvp/lobby'
+      pathname: '/mvp/lobby',
+      query: {
+        userName,
+        roomID
+      }
     })
   }
 
@@ -21,8 +31,15 @@ const Home: NextPage = () => {
     <main>
         <h1>Keyo Against Humanity</h1>
         <div>
-          <textarea>Username</textarea>
+          <input
+          type="text"
+          id="message"
+          name="message"
+          onChange={handleChange}
+          value={userName}
+          />
         </div>
+        <div>{userName}</div>
         <div>
           <textarea>Room Code</textarea>
         </div>
