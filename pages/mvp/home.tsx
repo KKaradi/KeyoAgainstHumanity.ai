@@ -8,20 +8,20 @@ import { SetStateAction, useState } from 'react';
 
 const Home: NextPage = () => {
 
-  // const roomID = 5555;
+  function createRoom() {
+    console.log("null")
+  }
 
-  const [userName, setMessage1] = useState('');
+  const [userName, setUserName] = useState('');
         
-  const handleChange1 = (event: { target: { value: SetStateAction<string>; }; }) => {
-    setMessage1(event.target.value);
-    console.log('value is:', event.target.value)
+  const inputUserName = (event: { target: { value: SetStateAction<string>; }; }) => {
+    setUserName(event.target.value);
   }; 
   
-  const [roomID, setMessage2] = useState('');
+  const [roomID, setRoomID] = useState('');
         
-  const handleChange2 = (event: { target: { value: SetStateAction<string>; }; }) => {
-    setMessage2(event.target.value);
-    console.log('value is:', event.target.value)
+  const inputRoomID = (event: { target: { value: SetStateAction<string>; }; }) => {
+    setRoomID(event.target.value);
   };
 
   function navToLobby() {
@@ -43,7 +43,7 @@ const Home: NextPage = () => {
           type="text"
           id="message"
           name="message"
-          onChange={handleChange1}
+          onChange={inputUserName}
           value={userName}
           />
         </div>
@@ -53,12 +53,15 @@ const Home: NextPage = () => {
           type="text"
           id="message"
           name="message"
-          onChange={handleChange2}
+          onChange={inputRoomID}
           value={roomID}
           />
         </div>
         <div>
-            <button onClick={() => navToLobby()}>Join Room</button>
+          <button onClick = {()=> createRoom()}>Create Room</button>
+        </div>
+        <div>
+          <button onClick={() => navToLobby()}>Join Room</button>
         </div>
     </main>
     
