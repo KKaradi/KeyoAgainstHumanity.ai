@@ -41,10 +41,10 @@ const Home: NextPage = () => {
   return (
     <main>
         <h1>Lobby</h1>
-        <h2>Your Room</h2>
+        <h3>Room { roomID }</h3>
         <ul>
           { listUsers }
-          <li>{userName}</li>
+          <li>{ userName }</li>
         </ul>
         <button onClick={() => navToGenerate()}>Start Game!</button>
         <button onClick={() => navToHome()}>Home</button>

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import Router from 'next/router';
+import { useRouter } from 'next/router'
 
 const playerVotes = [
   {player: "John", votes: 2}, 
@@ -36,12 +37,27 @@ const Home: NextPage = () => {
     })
   }
 
+  const router = useRouter()
+  const {
+    query: {userName, roomID, imgURL, caption}
+  } = router
+  const props = {
+    imgURL,
+    userName,
+    roomID,
+    caption
+  }
+
   return (
     <main>
         <h1>Game Over</h1>
-        <h3>Image Goes Here</h3>
+        <h3>Appler: {props.userName}</h3>
+        <div>
+          {/* <img src = {props.imgURL}></img> */}
+        </div>
         <h3>Results:</h3>
         <ol>{displayVotes()}</ol>
+        <h3>Winning Caption: { props.caption }</h3>
         <button onClick={() => navToLobby()}>New Game</button>
         <div>
             <button onClick={() => navToHome()}>End Session</button>
