@@ -24,7 +24,9 @@ const Home: NextPage = () => {
           <textarea>Username</textarea>
         </div>
         <div>
-            <button>Create Room</button>
+          <textarea>Room Code</textarea>
+        </div>
+        <div>
             <button onClick={() => navToLobby()}>Join Room</button>
         </div>
     </main>

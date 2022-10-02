@@ -41,7 +41,7 @@ const Home: NextPage = () => {
         <h1>Game Over</h1>
         <h3>Image Goes Here</h3>
         <h3>Results:</h3>
-        <ol>{displayVotes(playerVotes)}</ol>
+        <ol>{displayVotes()}</ol>
         <button onClick={() => navToLobby()}>New Game</button>
         <div>
             <button onClick={() => navToHome()}>End Session</button>
