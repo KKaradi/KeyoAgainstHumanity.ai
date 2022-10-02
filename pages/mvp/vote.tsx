@@ -7,24 +7,6 @@ import { useRouter } from 'next/router'
 
 const Vote: NextPage = () => {
 
-  const img = "/pretty-picture"
-
-  const playerCaptions = [
-    {caption: "Purple monkey holding balloon", player: "Kai"}, 
-    {caption: "Banana riding a unicycle", player: "Zander"}, 
-    {caption: "Glue stick with eyes", player: "Emma"}
-  ]
-
-  function displayCaptions() {
-    return (
-      playerCaptions.map(
-        ({caption, player}) => (
-          <div><button key = {player} onClick={() => navToResults()}>{caption}</button></div>
-        )
-      )
-    )
-  }
-
   const router = useRouter()
   const {
     query: {userName, roomID}
@@ -32,6 +14,35 @@ const Vote: NextPage = () => {
   const props = {
     userName,
     roomID
+  }
+
+  const img = "/pretty-picture"
+
+  //firebase returns to user 
+  const playerCaptions = [
+    {caption: "Purple monkey holding balloon", author: "Kai"}, 
+    {caption: "Banana riding a unicycle", author: "Zander"}, 
+    {caption: "Glue stick with eyes", author: "Emma"}
+  ]
+
+  function displayCaptions() {
+    return (
+      playerCaptions.map(
+        ({caption, author}) => (
+          <div>
+            <button key = {author} onClick={() => onButtonClick(author)}>{caption}</button>
+          </div>
+        )
+      )
+    )
+  }
+
+  function onButtonClick(personVotedFor: string) {
+    //supply user (playing) and who they voted for
+    //user: props.userName
+    console.log(props.userName);
+    console.log(personVotedFor)
+
   }
 
   function navToResults() {

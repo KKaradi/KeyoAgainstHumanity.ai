@@ -11,7 +11,7 @@ const listUsers = users.map((user) =>
   <li>{user}</li>
 );
 
-const Home: NextPage = () => {
+const Lobby: NextPage = () => {
   
   const router = useRouter()
   const {
@@ -53,4 +53,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default Lobby

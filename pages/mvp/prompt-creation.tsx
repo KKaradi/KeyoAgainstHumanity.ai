@@ -38,7 +38,7 @@ const PromptCreation: NextPage = () => {
     <main>
         <h1>Caption the image</h1>
         <div>
-          <Image src = {img} width = {100} height = {100}/>
+          <Image src = {img} width = {100} height = {100} alt = "Pretty Picture"/>
         </div>
         <div>
           <input

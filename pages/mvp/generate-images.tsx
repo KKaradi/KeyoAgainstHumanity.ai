@@ -17,7 +17,7 @@ const GenerateImages: NextPage = () => {
     roomID
   }
 
-  let img = '/public/pretty-picture.jpg'
+  let img = '/public/pretty-picture'
 
   function navToPromptCreate() {
     Router.push({
