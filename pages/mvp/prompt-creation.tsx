@@ -6,14 +6,15 @@ import Router from 'next/router'
 import { useRouter } from 'next/router'
 import {SetStateAction, useState} from 'react';
 
-const Home: NextPage = () => {
+const PromptCreation: NextPage = () => {
+
+  const img = "/public/pretty-picture"
 
   const router = useRouter()
   const {
-    query: {userName, roomID, imgURL}
+    query: {userName, roomID}
   } = router
   const props = {
-    imgURL,
     userName,
     roomID
   }
@@ -22,30 +23,29 @@ const Home: NextPage = () => {
     Router.push({
       pathname: '/mvp/vote',
       query: {
-        userName, roomID, imgURL, caption
+        userName, roomID
       }
     })
   }
 
-  const [caption, setMessage] = useState('');
+  const [caption, setCaption] = useState('');
         
-  const handleChange = (event: { target: { value: SetStateAction<string>; }; }) => {
-    setMessage(event.target.value);
-    console.log('value is:', event.target.value)
+  const inputCaption = (event: { target: { value: SetStateAction<string>; }; }) => {
+    setCaption(event.target.value);
   };
 
   return (
     <main>
-        <h1>Guess The Prompt</h1>
+        <h1>Caption the image</h1>
         <div>
-          {/* <img src = {imgURL}></img> */}
+          <Image src = {img} width = {100} height = {100}/>
         </div>
         <div>
           <input
           type="text"
           id="message"
           name="message"
-          onChange={handleChange}
+          onChange={inputCaption}
           value={caption}
           />
         </div>
@@ -56,4 +56,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default PromptCreation

@@ -6,24 +6,24 @@ import * as ReactDOM from "react-dom";
 import Router from 'next/router';
 import { useRouter } from 'next/router'
 
-const playerVotes = [
-  {player: "John", votes: 2}, 
-  {player: "Tom", votes: 1}, 
-  {player: "Rob", votes: 0},
-  {player: "Randy", votes: 0}
-];
+const Results: NextPage = () => {
 
-function displayVotes() {
-  return (
-    playerVotes.map(
-      ({ player, votes }) => (
-        <li>{player} got {votes} votes.</li>
+  const playerVotes = [
+    {player: "John", votes: 2, id: 1}, 
+    {player: "Tom", votes: 1, id: 2}, 
+    {player: "Rob", votes: 0, id: 3},
+    {player: "Randy", votes: 0, id: 4}
+  ];
+  
+  function displayVotes() {
+    return (
+      playerVotes.map(
+        ({ player, votes, id }) => (
+          <li key = {id}>{player} got {votes} votes.</li>
+        )
       )
     )
-  );
-}
-
-const Home: NextPage = () => {
+  }
 
   function navToHome() {
     Router.push({
@@ -39,25 +39,25 @@ const Home: NextPage = () => {
 
   const router = useRouter()
   const {
-    query: {userName, roomID, imgURL, caption}
+    query: {userName, roomID}
   } = router
   const props = {
-    imgURL,
     userName,
-    roomID,
-    caption
+    roomID
   }
+
+  const img = "/pretty-picture"
 
   return (
     <main>
         <h1>Game Over</h1>
         <h3>Appler: {props.userName}</h3>
         <div>
-          {/* <img src = {props.imgURL}></img> */}
+          <Image src = {img} width = {100} height = {100} alt = "Pretty Picture"></Image>
         </div>
         <h3>Results:</h3>
         <ol>{displayVotes()}</ol>
-        <h3>Winning Caption: { props.caption }</h3>
+        {/* <h3>Winning Caption: { props.caption }</h3> */}
         <button onClick={() => navToLobby()}>New Game</button>
         <div>
             <button onClick={() => navToHome()}>End Session</button>
@@ -67,4 +67,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default Results

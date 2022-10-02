@@ -6,7 +6,7 @@ import Router from 'next/router'
 import { useRouter } from 'next/router'
 import { SetStateAction, useState } from 'react';
 
-const Home: NextPage = () => {
+const GenerateImages: NextPage = () => {
 
   const router = useRouter()
   const {
@@ -17,25 +17,35 @@ const Home: NextPage = () => {
     roomID
   }
 
-  let imgURL = "favicon.ico"
+  let img = '/public/pretty-picture.jpg'
 
   function navToPromptCreate() {
     Router.push({
       pathname: '/mvp/prompt-creation',
       query: {
-        imgURL,
         userName,
         roomID
       }
     })
   }
 
-  const [prompt, setMessage] = useState('');
+  const [prompt, setPrompt] = useState('');
         
-  const handleChange = (event: { target: { value: SetStateAction<string>; }; }) => {
-    setMessage(event.target.value);
-    console.log('value is:', event.target.value)
+  const inputPrompt = (event: { target: { value: SetStateAction<string>; }; }) => {
+    setPrompt(event.target.value);
   }; 
+
+  const generateImage = () => {
+    console.log("generate image");
+  };
+
+  const reroll = () => {
+    console.log("reroll");
+  };
+
+  const finalize = () => {
+    console.log("finalize");
+  };
 
   return (
     <main>
@@ -43,7 +53,7 @@ const Home: NextPage = () => {
         <h3>Room { props.roomID }</h3>
         <h4>Appler: { props.userName }</h4>
         <div>
-          <img src = {imgURL}></img>
+          <Image src = {img} width = {100} height = {100} alt = "Pretty Picture"></Image>
         </div>
         <div>
           <p>Input prompt</p>
@@ -51,12 +61,16 @@ const Home: NextPage = () => {
           type="text"
           id="message"
           name="message"
-          onChange={handleChange}
+          onChange={inputPrompt}
           value={prompt}
           />
         </div>
         <div>
-            <button>Generate Image</button>
+            <button onClick={() => generateImage()}>Generate Image</button>
+        </div>
+        <div>
+          <button onClick={() => reroll()}>Reroll</button>
+          <button onClick={() => finalize()}>Finalize</button>
         </div>
         <div>
             <button onClick={() => navToPromptCreate()}>Submit</button>
@@ -65,4 +79,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default GenerateImages

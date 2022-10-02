@@ -5,32 +5,41 @@ import styles from '../styles/Home.module.css'
 import Router from 'next/router'
 import { useRouter } from 'next/router'
 
-const playerPrompts = ["Purple monkey holding balloon", "Banana riding a unicycle", "Glue stick with eyes"]
-const displayPrompts = playerPrompts.map(
-    (prompt) => <div><button>{prompt}</button></div>
-)
+const Vote: NextPage = () => {
 
-const Home: NextPage = () => {
+  const img = "/pretty-picture"
+
+  const playerCaptions = [
+    {caption: "Purple monkey holding balloon", player: "Kai"}, 
+    {caption: "Banana riding a unicycle", player: "Zander"}, 
+    {caption: "Glue stick with eyes", player: "Emma"}
+  ]
+
+  function displayCaptions() {
+    return (
+      playerCaptions.map(
+        ({caption, player}) => (
+          <div><button key = {player} onClick={() => navToResults()}>{caption}</button></div>
+        )
+      )
+    )
+  }
 
   const router = useRouter()
   const {
-    query: {userName, roomID, imgURL, caption}
+    query: {userName, roomID}
   } = router
   const props = {
-    imgURL,
     userName,
-    roomID,
-    caption
+    roomID
   }
 
   function navToResults() {
     Router.push({
       pathname: '/mvp/results',
       query: {
-        imgURL,
         userName,
-        roomID,
-        caption
+        roomID
       }
     })
   }
@@ -39,15 +48,14 @@ const Home: NextPage = () => {
     <main>
         <h1>Vote for the best prompt</h1>
         <h3>Appler: {props.userName}</h3>
-        <img src = 'favicon.ico'/>
+        <Image src = {img} width = {100} height = {100} alt = "Pretty Picture"/>
         <div>
-          { displayPrompts }
-          <button>{ props.caption }</button>
+          { displayCaptions() }
+          {/* <button onClick={() => navToResults()}>{ props.caption }</button> */}
         </div>
-        <button onClick={() => navToResults()}>Submit</button>
     </main>
     
   )
 }
 
-export default Home
+export default Vote
