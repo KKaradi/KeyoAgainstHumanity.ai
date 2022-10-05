@@ -5,7 +5,7 @@ import styles from "../styles/Home.module.css";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { SetStateAction, useState } from "react";
-import { generateImages } from "../../utils/image-utils/image-util";
+import { generateImage } from "../../utils/image-utils/image-util";
 
 const GenerateImages: NextPage = () => {
   const router = useRouter();
@@ -37,8 +37,9 @@ const GenerateImages: NextPage = () => {
     setPrompt(event.target.value);
   };
 
-  const generateImage = async(prompt:string) => {
-    console.log(await generateImages(prompt))
+  const gen = async(prompt:string) => {
+    const imgGen = await generateImage(prompt)
+    console.log(imgGen)
   };
 
   const reroll = () => {
@@ -68,7 +69,7 @@ const GenerateImages: NextPage = () => {
         />
       </div>
       <div>
-        <button onClick={() => generateImage("Monkey")}>Generate Image</button>
+        <button onClick={() => gen("monkey")}>Generate Image</button>
       </div>
       <div>
         <button onClick={() => reroll()}>Reroll</button>

@@ -5,7 +5,7 @@ import Image from 'next/image'
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-export async function generateImages(prompt: string): Promise<string> {
+export async function generateImage(prompt: string): Promise<string> {
   const response = await fetch('/api/predictions', {
     method: "POST",
     headers: {

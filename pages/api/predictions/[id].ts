@@ -5,7 +5,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     "https://api.replicate.com/v1/predictions/" + req.query.id,
     {
       headers: {
-        Authorization: 'Token bad178965e0428a14bf3f6755dfe2002050e6305',
+        Authorization: 'Token <PutInToken>',
         "Content-Type": "application/json",
       },
     }
