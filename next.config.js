@@ -4,4 +4,10 @@ const nextConfig = {
   swcMinify: true,
 }
 
+module.exports = {
+  images: {
+    domains: ['https://upload.wikimedia.org'],
+  },
+}
+
 module.exports = nextConfig
