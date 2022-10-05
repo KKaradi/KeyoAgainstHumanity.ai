@@ -8,7 +8,7 @@ export default async function handler(
     "https://api.replicate.com/v1/predictions/" + req.query.id,
     {
       headers: {
-        Authorization: "Token <PUT IN API TOKEN>",
+        Authorization: "Token <Put in api token>",
         "Content-Type": "application/json",
       },
     }

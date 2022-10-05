@@ -8,7 +8,7 @@ export default async function handler(
   const response = await fetch("https://api.replicate.com/v1/predictions", {
     method: "POST",
     headers: {
-      Authorization: "Token <PUT IN API TOKEN>",
+      Authorization: "Token <Put in api token>",
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
