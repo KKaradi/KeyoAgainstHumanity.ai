@@ -7,20 +7,13 @@ import Router from "next/router";
 import { useRouter } from "next/router";
 
 const Results: NextPage = () => {
-  const playerVotes = [
-    { player: "John", votes: 2, id: 1 },
-    { player: "Tom", votes: 1, id: 2 },
-    { player: "Rob", votes: 0, id: 3 },
-    { player: "Randy", votes: 0, id: 4 },
-  ];
-
-  function displayVotes() {
-    return playerVotes.map(({ player, votes, id }) => (
-      <li key={id}>
-        {player} got {votes} votes.
-      </li>
-    ));
-  }
+  // function displayVotes() {
+  //   return playerVotes.map(({ player, votes, id }) => (
+  //     <li key={id}>
+  //       {player} got {votes} votes.
+  //     </li>
+  //   ));
+  // }
 
   function navToHome() {
     Router.push({
@@ -36,24 +29,39 @@ const Results: NextPage = () => {
 
   const router = useRouter();
   const {
-    query: { userName, roomID },
+    query: { userName, roomID, caption, imgURL, roomCode, votes },
   } = router;
   const props = {
     userName,
     roomID,
+    caption,
+    imgURL,
+    roomCode,
+    votes
   };
+
+  const displayVotes = () => {
+    if (votes === "1") {
+      return (<li>{userName} wrote "{caption}"! It got 1 vote</li>)
+    } else {
+      return (<li>{userName} wrote "{caption}"! It got {votes} votes</li>)
+    }
+  }
 
   const img = "/pretty-picture.jpg";
 
   return (
     <main>
       <h1>Game Over</h1>
+      <h3>Room {roomCode} {roomID}</h3>
       <h3>Appler: {props.userName}</h3>
       <div>
         <Image src={img} width={100} height={100} alt="Pretty Picture"></Image>
       </div>
-      <h3>Results:</h3>
-      <ol>{displayVotes()}</ol>
+      <h3>Leaderboard:</h3>
+      <ol>
+        {displayVotes()}
+      </ol>
       {/* <h3>Winning Caption: { props.caption }</h3> */}
       <button onClick={() => navToLobby()}>New Game</button>
       <div>

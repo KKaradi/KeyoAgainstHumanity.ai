@@ -2,14 +2,11 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import { Routes, Route, useNavigate } from "react-router-dom";
+// import { Routes, Route, useNavigate } from "react-router-dom";
 import Router from "next/router";
 import { SetStateAction, useState } from "react";
 
 const Home: NextPage = () => {
-  function createRoom() {
-    console.log("null");
-  }
 
   const [userName, setUserName] = useState("");
 
@@ -19,13 +16,25 @@ const Home: NextPage = () => {
     setUserName(event.target.value);
   };
 
-  const [roomID, setRoomID] = useState("");
+  let [roomID, setRoomID] = useState("");
 
   const inputRoomID = (event: {
     target: { value: SetStateAction<string> };
   }) => {
     setRoomID(event.target.value);
   };
+
+  function createRoom() {
+    //make this random
+    let roomCode = 6720
+    Router.push({
+      pathname: "/mvp/lobby",
+      query: {
+        userName,
+        roomCode,
+      },
+    });
+  }
 
   function navToLobby() {
     Router.push({
@@ -61,10 +70,10 @@ const Home: NextPage = () => {
         />
       </div>
       <div>
-        <button onClick={() => createRoom()}>Create Room</button>
+        <button onClick={() => navToLobby()}>Join Room</button>
       </div>
       <div>
-        <button onClick={() => navToLobby()}>Join Room</button>
+        <button onClick={() => createRoom()}>Create Room</button>
       </div>
     </main>
   );
