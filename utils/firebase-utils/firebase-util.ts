@@ -49,6 +49,7 @@ export async function fetchImageURL(
 //I do past this remove at commit
 
 export async function uploadCaption(
+  applerUserName: string,
   caption: string,
   yourUserName: string,
   roomCode: number
@@ -58,7 +59,8 @@ export async function uploadCaption(
       database,
       "Rooms/" +
         roomCode +
-        //some type of applerUserName/Round indicater? 
+        "/" +
+        applerUserName + 
         "/Userlist/" +
         yourUserName +
         "/" +
@@ -100,7 +102,7 @@ export async function vote(
         roomCode +
         "/" +
         applerUserName +
-        "/" +
+        "/Userlist/" +
         captionAuthor
     ),
   );
