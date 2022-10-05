@@ -7,7 +7,7 @@ import { getDatabase, onValue, ref, set, get, child} from "firebase/database"
 const firebaseConfig = {
 // ...
 // The value of `databaseURL` depends on the location of the database
-databaseURL: "https://keyo-against-humanity-d9a9d-default-rtdb.firebaseio.com/",
+databaseURL: "YourFirebaseAPI",
 };
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -85,7 +85,7 @@ export async function fetchListOfCaptions(
         "/Userlist"
       ) 
     ); 
-      return [snapshot.val()];
+      return [snapshot.val().key];
 }
 
 export async function vote(
@@ -110,7 +110,7 @@ export async function fetchVoteList(
   roomCode: number,
   applerUserName: string
 ): Promise<
-  { playeryourUserName: string; caption: string; numVotes: number }[]
+  { playerUserName: string; caption: string; numVotes: number }[]
 > { 
   const snapshot = await get(
     child(
