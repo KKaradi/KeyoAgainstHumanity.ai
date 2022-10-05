@@ -58,7 +58,8 @@ export async function uploadCaption(
       database,
       "Rooms/" +
         roomCode +
-        "/" +
+        //some type of applerUserName/Round indicater? 
+        "/Userlist/" +
         yourUserName +
         "/" +
         caption
@@ -78,19 +79,13 @@ export async function fetchListOfCaptions(
     child(
       ref(database), 
       "Rooms/" + 
-        roomCode + 
-        "/Userlist/") ); 
-      return [snapshot.val()];
-  /*get( 
-    ref(
-      database,
-      "Rooms/" +
-      roomCode +
+        roomCode +
         "/" +
-        applerUserName
-    )
-  ) 
-  //This is the general idea, cannot get it working yet. Maybe remove return/list statments? -Z */
+        applerUserName + 
+        "/Userlist"
+      ) 
+    ); 
+      return [snapshot.val()];
 }
 
 export async function vote(
@@ -113,11 +108,19 @@ export async function vote(
 
 export async function fetchVoteList(
   roomCode: number,
-  appleryourUserName: string
+  applerUserName: string
 ): Promise<
   { playeryourUserName: string; caption: string; numVotes: number }[]
-> {
-  return [
-    //get fetchListofCaptions working, this should fall right into place. -Z
-  ];
+> { 
+  const snapshot = await get(
+    child(
+      ref(database), 
+      "Rooms/" + 
+        roomCode +
+        "/" +
+        applerUserName + 
+        "/Userlist"
+      ) 
+    ); 
+      return [snapshot.val()];
 }
