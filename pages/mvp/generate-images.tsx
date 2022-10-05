@@ -44,6 +44,8 @@ const GenerateImages: NextPage = () => {
     setPrompt(event.target.value);
   };
 
+  const [URL, setURL] = useState("https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921");
+
   // const reroll = () => {
   //   console.log("reroll");
   // };
@@ -52,6 +54,11 @@ const GenerateImages: NextPage = () => {
   //   console.log("finalize");
   // };
 
+  const generateImageWrapper = async(prompt: string) => {
+    const newURL = await generateImage(prompt);
+    setURL(newURL)
+  }
+
   return (
     <main>
       <h1>Generate Image</h1>
@@ -59,7 +66,7 @@ const GenerateImages: NextPage = () => {
       <h3>Appler: {userName}</h3>
       <h4>Generate your image</h4>
       <div>
-        <Image src={imgURL} width={100} height={100} alt="Pretty Picture"></Image>
+        <Image src={URL} width={100} height={100} alt="Pretty Picture"></Image>
       </div>
       <div>
         <p>Input prompt</p>
@@ -72,7 +79,7 @@ const GenerateImages: NextPage = () => {
         />
       </div>
       <div>
-        <button onClick={() => generateImage(prompt)}>Generate</button>
+        <button onClick={() => generateImageWrapper(prompt)}>Generate</button>
       </div>
       {/* <div>
         <button onClick={() => reroll()}>Reroll</button>
