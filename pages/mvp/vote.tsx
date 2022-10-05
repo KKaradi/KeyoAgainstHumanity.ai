@@ -8,17 +8,15 @@ import { useRouter } from "next/router";
 const Vote: NextPage = () => {
   const router = useRouter();
   const {
-    query: { userName, roomID, roomCode, caption, imgURL },
+    query: { userName, roomID, roomCode, caption, URL },
   } = router;
   const props = {
     userName,
     roomID,
     roomCode,
     caption,
-    imgURL
+    URL
   };
-
-  const img = "/pretty-picture.jpg";
 
   // function displayCaptions() {
   //   return playerCaptions.map(({ caption, author }) => (
@@ -45,7 +43,7 @@ const Vote: NextPage = () => {
         userName,
         roomID,
         roomCode,
-        imgURL,
+        URL,
         caption,
         votes
       },
@@ -58,7 +56,7 @@ const Vote: NextPage = () => {
       <h3>Room {roomID} {roomCode}</h3>
       <h3>Appler: {props.userName}</h3>
       <h4>This is the picture {userName} generated</h4>
-      <Image src={img} width={100} height={100} alt="Pretty Picture" />
+      <Image src={URL as string} width={100} height={100} alt="Pretty Picture" />
       <h4>These are the captions the players came up with</h4>
       <h4>Vote for your favorite caption!</h4>
       <div>

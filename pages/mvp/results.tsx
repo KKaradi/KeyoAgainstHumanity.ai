@@ -29,13 +29,13 @@ const Results: NextPage = () => {
 
   const router = useRouter();
   const {
-    query: { userName, roomID, caption, imgURL, roomCode, votes },
+    query: { userName, roomID, caption, URL, roomCode, votes },
   } = router;
   const props = {
     userName,
     roomID,
     caption,
-    imgURL,
+    URL,
     roomCode,
     votes
   };
@@ -48,15 +48,13 @@ const Results: NextPage = () => {
     }
   }
 
-  const img = "/pretty-picture.jpg";
-
   return (
     <main>
       <h1>Game Over</h1>
       <h3>Room {roomCode} {roomID}</h3>
       <h3>Appler: {props.userName}</h3>
       <div>
-        <Image src={img} width={100} height={100} alt="Pretty Picture"></Image>
+        <Image src={URL as string} width={100} height={100} alt="Pretty Picture"></Image>
       </div>
       <h3>Leaderboard:</h3>
       <ol>

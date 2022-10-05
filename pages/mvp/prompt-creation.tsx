@@ -7,17 +7,15 @@ import { useRouter } from "next/router";
 import { SetStateAction, useState } from "react";
 
 const PromptCreation: NextPage = () => {
-  const img = "/pretty-picture.jpg";
-
   const router = useRouter();
   const {
-    query: { userName, roomID, roomCode, imgURL },
+    query: { userName, roomID, roomCode, URL },
   } = router;
   const props = {
     userName,
     roomID,
     roomCode,
-    imgURL
+    URL
   };
 
   function navToVote() {
@@ -28,7 +26,7 @@ const PromptCreation: NextPage = () => {
         roomID,
         roomCode,
         caption,
-        imgURL
+        URL
       },
     });
   }
@@ -43,7 +41,7 @@ const PromptCreation: NextPage = () => {
 
   const displayPicture = () => {
     return (
-      <Image src={img} width={100} height={100} alt="Pretty Picture" />
+      <Image src={URL as string} width={100} height={100} alt="Pretty Picture" />
     )
   }
 

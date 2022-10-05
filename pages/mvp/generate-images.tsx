@@ -31,7 +31,7 @@ const GenerateImages: NextPage = () => {
         userName,
         roomID,
         roomCode,
-        imgURL
+        URL
       },
     });
   }

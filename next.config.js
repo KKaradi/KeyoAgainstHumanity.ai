@@ -7,14 +7,4 @@ const nextConfig = {
   },
 };
 
-<<<<<<< HEAD
-module.exports = {
-  images: {
-    domains: ['https://upload.wikimedia.org'],
-  },
-}
-
-module.exports = nextConfig
-=======
 module.exports = nextConfig;
->>>>>>> f1000a289e63e4559d9f94fab7e7d472adb9c9d1
