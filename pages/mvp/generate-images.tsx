@@ -5,7 +5,7 @@ import styles from "../styles/Home.module.css";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { SetStateAction, useState } from "react";
-import { generateImages } from "../../utils/image-utils/image-util";
+import { generateImage } from "../../utils/image-utils/image-util";
 
 const GenerateImages: NextPage = () => {
   const router = useRouter();
@@ -72,7 +72,7 @@ const GenerateImages: NextPage = () => {
         />
       </div>
       <div>
-        <button onClick={() => generateImages(prompt)}>Generate</button>
+        <button onClick={() => generateImage(prompt)}>Generate</button>
       </div>
       {/* <div>
         <button onClick={() => reroll()}>Reroll</button>
