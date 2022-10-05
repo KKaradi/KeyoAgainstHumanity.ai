@@ -1,25 +1,24 @@
-//Initializing Firebase
-import { initializeApp } from "firebase/app";
-import { getDatabase, onValue, ref, set, get, child} from "firebase/database"
+import { getDatabase, ref, set, update, get, child, Database } from "firebase/database"
 
-// TODO: Replace the following with your app's Firebase project configuration
-// See: https://firebase.google.com/docs/web/learn-more#config-object
+import { initializeApp } from "firebase/app";
+
 const firebaseConfig = {
-// ...
-// The value of `databaseURL` depends on the location of the database
-databaseURL: "https://keyo-against-humanity-d9a9d-default-rtdb.firebaseio.com/",
+//PUT FIREBASE CONFIG HERE
 };
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-// Initialize Realtime Database and get a reference to the service
-const database = getDatabase();
+
 const db = getDatabase();
-
-
 
 export async function createRoom(roomCode: number): Promise<void> {
   //write this method
   //add a room object, set started to false
+
+  set(ref(db, "Rooms/" + roomCode), {
+    roomCode: roomCode,
+    started: false,
+  });
 }
 
 export async function joinRoom(
@@ -27,26 +26,48 @@ export async function joinRoom(
   roomCode: number
 ): Promise<void> {
   //join the room, add the user name
+
+  const postData = {
+    username: yourUserName,
+  };
+
+  return update(
+    ref(db, "/Rooms/" + roomCode + "/Userlist/" + yourUserName),
+    postData
+  );
 }
 
 export async function getUserList(roomCode: number): Promise<string[]> {
-  return [];
+  const snapshot = await get(
+    child(ref(db), "Rooms/" + roomCode + "/Userlist/")
+  );
+  console.log(snapshot.val())
+  return [snapshot.val()]; //Needs adjustment
 }
 
 export async function uploadImageURL(
   imageURL: string,
-  yourUserName: string,
-  roomCode: number
-): Promise<void> {}
-
-export async function fetchImageURL(
-  yourUserName: string,
-  roomCode: number
-): Promise<string> {
-  return "";
+  yourUserName: string, //This is also the appler username
+  roomCode: number,
+  prompt: string
+): Promise<void> {
+  set(ref(db, "Rooms/" + roomCode + "/Round/" + yourUserName + "/" + prompt), {
+    imageUrl: imageURL,
+})
 }
 
-//I do past this remove at commit
+export async function fetchImageURL(
+  yourUserName: string, //Also the appler username
+  roomCode: number,
+  prompt: string
+): Promise<string> {
+
+  const snapshot = await get(
+    child(ref(db), "Rooms/" + roomCode + "/Round/" + yourUserName + '/' + prompt)
+  );
+  console.log(snapshot.val().imageUrl)
+  return snapshot.val().imageUrl;
+}
 
 export async function uploadCaption(
   applerUserName: string,
