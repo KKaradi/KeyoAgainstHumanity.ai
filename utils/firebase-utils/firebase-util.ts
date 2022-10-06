@@ -4,10 +4,17 @@ import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
 //PUT FIREBASE CONFIG HERE
+  apiKey: "AIzaSyCv_iUUZHASCZ1fE5Xn2lU8BnxOSrLgBPY",
+  authDomain: "week-5-mvp-4768a.firebaseapp.com",
+  databaseURL: "https://week-5-mvp-4768a-default-rtdb.firebaseio.com",
+  projectId: "week-5-mvp-4768a",
+  storageBucket: "week-5-mvp-4768a.appspot.com",
+  messagingSenderId: "517741937666",
+  appId: "1:517741937666:web:c49ba3c0aee11b5fba131b"
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 
 const db = getDatabase();
 
@@ -70,86 +77,108 @@ export async function fetchImageURL(
 }
 
 export async function uploadCaption(
-  applerUserName: string,
   caption: string,
-  yourUserName: string,
-  roomCode: number
+  appleryourUserName: string,
+  roomCode: number,
+  prompt: string
 ) : Promise<void> {
   set(
     ref(
-      database,
+      db,
       "Rooms/" +
         roomCode +
-        "/" +
-        applerUserName + 
-        "/Userlist/" +
-        yourUserName +
-        "/" +
+        "/Round/" +
+        appleryourUserName +
+        '/' +
+        prompt +
+        "/captionList/" +
         caption
     ),
     {
-      votes: 0,
+      votes: 0
     }
   );
 }
 
 
 export async function fetchListOfCaptions(
-  applerUserName: string,
-  roomCode: number
+  appleryourUserName: string,
+  roomCode: number,
+  prompt: string
 ): Promise<{ caption: string; authorUserName: string }[]> { 
   const snapshot = await get(
     child(
-      ref(database), 
-      "Rooms/" + 
+      ref(db), 
+      "Rooms/" +
         roomCode +
-        "/" +
-        applerUserName + 
-        "/Userlist"
+        "/Round/" +
+        appleryourUserName +
+        prompt +
+        "/captionList"
       ) 
     ); 
       return [snapshot.val().key];
 }
 
 export async function vote(
-  applerUserName: string,
-  captionAuthor: string,
+  appleryourUserName: string,
   roomCode: number,
-  caption: string
+  caption: string,
+  prompt: string
 ): Promise<void> {
-  set(
-    ref(
-      database,
+  get(
+    child(
+      ref(db),
       "Rooms/" +
         roomCode +
+        "/Round/" +
+        appleryourUserName +
         "/" +
-        applerUserName +
-        "/Userlist/" +
-        captionAuthor +
-        "/" +
+        prompt +
+        "/captionList/" +
         caption
-    ),
-    {
-      votes: 1,
-    }
-  );
+    )
+  ).then((snapshot) => {
+    let captionVotesObject = snapshot.val();
+    let newVoteCount = captionVotesObject.votes + 1;
+    set(
+      ref(
+        db,
+        "Rooms/" +
+          roomCode +
+          "/Round/" +
+          appleryourUserName +
+          "/" +
+          prompt +
+          "/captionList/" +
+          caption
+      ),
+      {
+        votes: newVoteCount,
+      }
+    );
+  });
 }
 
 export async function fetchVoteList(
   roomCode: number,
-  applerUserName: string
+  applerUserName: string,
+  prompt: string
 ): Promise<
   { playerUserName: string; caption: string; numVotes: number }[]
 > { 
   const snapshot = await get(
     child(
-      ref(database), 
-      "Rooms/" + 
+      ref(db), 
+      "Rooms/" +
         roomCode +
-        "/" +
-        applerUserName + 
-        "/Userlist"
+        "/Round/" +
+        applerUserName +
+        '/' +
+        prompt +
+        "/captionList"
       ) 
     ); 
-      return [snapshot.val()];
+      console.log(snapshot.val())
+      return [snapshot.val()];  //Needs adjustment
 }

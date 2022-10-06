@@ -1,4 +1,3 @@
-import { fetchImageURL, getUserList } from "../../utils/firebase-utils/firebase-util";
+import { vote } from "../../utils/firebase-utils/firebase-util";
 
-getUserList(10000)
-fetchImageURL("Bob", 10000, 'Monkey Swinging');
+vote('Bob', 10000, 'monke 1', 'Monkey Swinging')
