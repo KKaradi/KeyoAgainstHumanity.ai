@@ -180,5 +180,5 @@ export async function fetchVoteList(
       ) 
     ); 
       console.log(snapshot.val())
-      return [snapshot.val()];  //Adjustment needed
+      return [snapshot.val()];  //Needs adjustment
 }
