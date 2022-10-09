@@ -2,7 +2,7 @@ import { getDatabase, ref, set, update, get, child, Database } from "firebase/da
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-  databaseURL: "https://keyo-against-humanity-d9a9d-default-rtdb.firebaseio.com/"
+  databaseURL: ""
 };
 
 // Initialize Firebase
