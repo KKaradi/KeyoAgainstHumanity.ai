@@ -3,14 +3,6 @@ import { getDatabase, ref, set, update, get, child, Database } from "firebase/da
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-//PUT FIREBASE CONFIG HERE
-  apiKey: "AIzaSyCv_iUUZHASCZ1fE5Xn2lU8BnxOSrLgBPY",
-  authDomain: "week-5-mvp-4768a.firebaseapp.com",
-  databaseURL: "https://week-5-mvp-4768a-default-rtdb.firebaseio.com",
-  projectId: "week-5-mvp-4768a",
-  storageBucket: "week-5-mvp-4768a.appspot.com",
-  messagingSenderId: "517741937666",
-  appId: "1:517741937666:web:c49ba3c0aee11b5fba131b"
 };
 
 // Initialize Firebase
@@ -30,7 +22,7 @@ export async function createRoom(roomCode: number): Promise<void> {
 
 export async function joinRoom(
   yourUserName: string,
-  roomCode: string
+  roomCode: number
 ): Promise<void> {
   //join the room, add the user name
 
