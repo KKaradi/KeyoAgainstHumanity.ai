@@ -1,16 +1,18 @@
-import { getDatabase, ref, set, update, get, child, Database } from "firebase/database"
+import {
+  getDatabase,
+  ref,
+  set,
+  update,
+  get,
+  child,
+  Database,
+} from "firebase/database";
 
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-//PUT FIREBASE CONFIG HERE
-  apiKey: "AIzaSyCv_iUUZHASCZ1fE5Xn2lU8BnxOSrLgBPY",
-  authDomain: "week-5-mvp-4768a.firebaseapp.com",
-  databaseURL: "https://week-5-mvp-4768a-default-rtdb.firebaseio.com",
-  projectId: "week-5-mvp-4768a",
-  storageBucket: "week-5-mvp-4768a.appspot.com",
-  messagingSenderId: "517741937666",
-  appId: "1:517741937666:web:c49ba3c0aee11b5fba131b"
+  //PUT FIREBASE CONFIG HERE
+  databaseURL: "https://kaikaraditest-default-rtdb.firebaseio.com/",
 };
 
 // Initialize Firebase
@@ -48,7 +50,7 @@ export async function getUserList(roomCode: number): Promise<string[]> {
   const snapshot = await get(
     child(ref(db), "Rooms/" + roomCode + "/Userlist/")
   );
-  console.log(snapshot.val())
+  console.log(snapshot.val());
   return [snapshot.val()]; //Needs adjustment
 }
 
@@ -60,7 +62,7 @@ export async function uploadImageURL(
 ): Promise<void> {
   set(ref(db, "Rooms/" + roomCode + "/Round/" + yourUserName + "/" + prompt), {
     imageUrl: imageURL,
-})
+  });
 }
 
 export async function fetchImageURL(
@@ -68,11 +70,13 @@ export async function fetchImageURL(
   roomCode: number,
   prompt: string
 ): Promise<string> {
-
   const snapshot = await get(
-    child(ref(db), "Rooms/" + roomCode + "/Round/" + yourUserName + '/' + prompt)
+    child(
+      ref(db),
+      "Rooms/" + roomCode + "/Round/" + yourUserName + "/" + prompt
+    )
   );
-  console.log(snapshot.val().imageUrl)
+  console.log(snapshot.val().imageUrl);
   return snapshot.val().imageUrl;
 }
 
@@ -81,7 +85,7 @@ export async function uploadCaption(
   appleryourUserName: string,
   roomCode: number,
   prompt: string
-) : Promise<void> {
+): Promise<void> {
   set(
     ref(
       db,
@@ -89,35 +93,34 @@ export async function uploadCaption(
         roomCode +
         "/Round/" +
         appleryourUserName +
-        '/' +
+        "/" +
         prompt +
         "/captionList/" +
         caption
     ),
     {
-      votes: 0
+      votes: 0,
     }
   );
 }
-
 
 export async function fetchListOfCaptions(
   appleryourUserName: string,
   roomCode: number,
   prompt: string
-): Promise<{ caption: string; authorUserName: string }[]> { 
+): Promise<{ caption: string; authorUserName: string }[]> {
   const snapshot = await get(
     child(
-      ref(db), 
+      ref(db),
       "Rooms/" +
         roomCode +
         "/Round/" +
         appleryourUserName +
         prompt +
         "/captionList"
-      ) 
-    ); 
-      return [snapshot.val().key];
+    )
+  );
+  return [snapshot.val().key];
 }
 
 export async function vote(
@@ -164,23 +167,21 @@ export async function fetchVoteList(
   roomCode: number,
   applerUserName: string,
   prompt: string
-): Promise<
-  { playerUserName: string; caption: string; numVotes: number }[]
-> { 
+): Promise<{ playerUserName: string; caption: string; numVotes: number }[]> {
   const snapshot = await get(
     child(
-      ref(db), 
+      ref(db),
       "Rooms/" +
         roomCode +
         "/Round/" +
         applerUserName +
-        '/' +
+        "/" +
         prompt +
         "/captionList"
-      ) 
-    ); 
-      console.log(snapshot.val())
-      return [snapshot.val()];  //Needs adjustment
+    )
+  );
+  console.log(snapshot.val());
+  return [snapshot.val()]; //Needs adjustment
 }
 
 // A function that anyone in the room can call to start the game for all people in the lobby.
