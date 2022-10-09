@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { Routes, Route, useNavigate } from 'react-router-dom'
+// import { Routes, Route, useNavigate } from "react-router-dom";
 import Router from 'next/router'
 import { SetStateAction, useState } from 'react'
 import {
@@ -17,10 +17,6 @@ import {
 const db = getDatabase()
 
 const Home: NextPage = () => {
-  function createRoom() {
-    console.log('null')
-  }
-
   const [userName, setUserName] = useState('')
 
   const inputUserName = (event: {
@@ -29,12 +25,24 @@ const Home: NextPage = () => {
     setUserName(event.target.value)
   }
 
-  const [roomID, setRoomID] = useState('')
+  let [roomID, setRoomID] = useState('')
 
   const inputRoomID = (event: {
     target: { value: SetStateAction<string> }
   }) => {
     setRoomID(event.target.value)
+  }
+
+  function createRoom() {
+    //make this random
+    let roomCode = 6720
+    Router.push({
+      pathname: '/mvp/lobby',
+      query: {
+        userName,
+        roomCode,
+      },
+    })
   }
 
   function navToLobby() {
@@ -83,7 +91,7 @@ const Home: NextPage = () => {
         <button onClick={() => test()}>Create Room</button>
       </div>
       <div>
-        <button onClick={() => navToLobby()}>Join Room</button>
+        <button onClick={() => createRoom()}>Create Room</button>
       </div>
     </main>
   )
