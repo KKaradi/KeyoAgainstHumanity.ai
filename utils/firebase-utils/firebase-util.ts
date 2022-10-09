@@ -1,21 +1,19 @@
 import { getDatabase, ref, set, update, get, child, Database } from "firebase/database"
-
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-//PUT FIREBASE CONFIG HERE
+  databaseURL: "https://keyo-against-humanity-d9a9d-default-rtdb.firebaseio.com/"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-const db = getDatabase();
+const database = getDatabase(app);
 
 export async function createRoom(roomCode: number): Promise<void> {
   //write this method
   //add a room object, set started to false
 
-  set(ref(db, "Rooms/" + roomCode), {
+  set(ref(database, "Rooms/" + roomCode), {
     roomCode: roomCode,
     started: false,
   });
@@ -32,14 +30,14 @@ export async function joinRoom(
   };
 
   return update(
-    ref(db, "/Rooms/" + roomCode + "/Userlist/" + yourUserName),
+    ref(database, "/Rooms/" + roomCode + "/Userlist/" + yourUserName),
     postData
   );
 }
 
 export async function getUserList(roomCode: number): Promise<string[]> {
   const snapshot = await get(
-    child(ref(db), "Rooms/" + roomCode + "/Userlist/")
+    child(ref(database), "Rooms/" + roomCode + "/Userlist/")
   );
   console.log(snapshot.val())
   return [snapshot.val()]; //Needs adjustment
@@ -51,7 +49,7 @@ export async function uploadImageURL(
   roomCode: number,
   prompt: string
 ): Promise<void> {
-  set(ref(db, "Rooms/" + roomCode + "/Round/" + yourUserName + "/" + prompt), {
+  set(ref(database, "Rooms/" + roomCode + "/Round/" + yourUserName + "/" + prompt), {
     imageUrl: imageURL,
 })
 }
@@ -63,11 +61,11 @@ export async function fetchImageURL(
 ): Promise<string> {
 
   const snapshot = await get(
-    child(ref(db), "Rooms/" + roomCode + "/Round/" + yourUserName + '/' + prompt)
+    child(ref(database), "Rooms/" + roomCode + "/Round/" + yourUserName + '/' + prompt)
   );
   console.log(snapshot.val().imageUrl)
-  return snapshot.val().imageUrl;
-}
+  return snapshot.val().imageUrl; 
+} 
 
 export async function uploadCaption(
   applerUserName: string,
@@ -107,8 +105,10 @@ export async function fetchListOfCaptions(
         applerUserName + 
         "/Userlist"
       ) 
+      
     ); 
-      return [snapshot.val().key];
+      return [snapshot.val()]
+      
 }
 
 export async function vote(
@@ -152,4 +152,20 @@ export async function fetchVoteList(
       ) 
     ); 
       return [snapshot.val()];
+}
+
+export async function tempStartGame(
+  roomCode: number,
+): Promise<void> {
+  set(ref(database, "Rooms/" + roomCode), {
+    started: true,
+  });
+}
+
+export async function resetRoom(
+  roomCode: number,
+): Promise<void> {
+  set(ref(database, "Rooms/" + roomCode), {
+    started: false,
+  });
 }
