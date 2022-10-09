@@ -30,7 +30,7 @@ export async function createRoom(roomCode: number): Promise<void> {
 
 export async function joinRoom(
   yourUserName: string,
-  roomCode: number
+  roomCode: string
 ): Promise<void> {
   //join the room, add the user name
 

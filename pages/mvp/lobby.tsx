@@ -1,12 +1,12 @@
 import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
 import React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
+import { getUserList } from "../../utils/firebase-utils/firebase-util";
+import { SetStateAction, useState, useEffect } from "react";
 
 const Lobby: NextPage = () => {
+  
   const router = useRouter();
   const {
     query: { userName, roomID, roomCode },
@@ -27,6 +27,22 @@ const Lobby: NextPage = () => {
     });
   }
 
+  function displayUserList() {
+    const [userList, setUserList] = useState([""])
+    useEffect(() => {
+      getUserList(Number(roomID)).then(
+        (userList) => {
+          setUserList(userList)
+        }
+      )
+    })
+    return (
+      <ul>{ userList.map(
+        (user) => <li>{ user }</li>
+      ) }</ul>
+    )
+  }
+
   function navToHome() {
     Router.push({
       pathname: "/mvp/home",
@@ -38,14 +54,12 @@ const Lobby: NextPage = () => {
       <h1>Lobby</h1>
       <h3>Room {roomID} {roomCode}</h3>
       <h4>Users:</h4>
-      <ul>
-        <li>{userName}</li>
-      </ul>
+      <div>{ displayUserList() }</div>
       <div>
         <button onClick={() => navToGenerate()}>Start Game</button>
       </div>
       <div>
-        <button onClick={() => navToHome()}>Home</button>
+        <button onClick={() => navToHome()}>Exit Room</button>
       </div>
     </main>
   );

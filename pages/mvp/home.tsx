@@ -1,20 +1,8 @@
 import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
-// import { Routes, Route, useNavigate } from "react-router-dom";
 import Router from "next/router";
 import { SetStateAction, useState } from "react";
-import {
-  getDatabase,
-  ref,
-  set,
-  get,
-  child,
-  update,
-  onChildAdded,
-} from "firebase/database";
-const db = getDatabase()
+import { createRoom } from "../../utils/firebase-utils/firebase-util";
+import { joinRoom } from "../../utils/firebase-utils/firebase-util";
 
 const Home: NextPage = () => {
 
@@ -26,7 +14,7 @@ const Home: NextPage = () => {
     setUserName(event.target.value);
   };
 
-  let [roomID, setRoomID] = useState("");
+  const [roomID, setRoomID] = useState("");
 
   const inputRoomID = (event: {
     target: { value: SetStateAction<string> };
@@ -34,17 +22,17 @@ const Home: NextPage = () => {
     setRoomID(event.target.value);
   };
 
-  function createRoom() {
-    //make this random
-    let roomCode = 6720
-    Router.push({
-      pathname: "/mvp/lobby",
-      query: {
-        userName,
-        roomCode,
-      },
-    });
-  }
+  // function createRoom() {
+  //   //make this random
+  //   let roomCode = 6720
+  //   Router.push({
+  //     pathname: "/mvp/lobby",
+  //     query: {
+  //       userName,
+  //       roomCode,
+  //     },
+  //   });
+  // }
 
   function navToLobby() {
     Router.push({
@@ -55,13 +43,10 @@ const Home: NextPage = () => {
       },
     });
   }
-const roomCode = 10000
-  async function test(){
-    const snapshot = await get(
-      child(ref(db), "Rooms/" + roomCode + "/Userlist/")
-    );
-    
-    console.log(snapshot.val());
+
+  function joinRoomNavToLobby() {
+    joinRoom(userName, Number(roomID));
+    navToLobby();
   }
 
   return (
@@ -84,14 +69,14 @@ const roomCode = 10000
           id="message"
           name="message"
           onChange={inputRoomID}
-          value={roomID}
+          value={Number(roomID)}
         />
       </div>
       <div>
-        <button onClick={() => navToLobby()}>Join Room</button>
+        <button onClick={() => joinRoomNavToLobby()}>Join Room</button>
       </div>
       <div>
-        <button onClick={() => createRoom()}>Create Room</button>
+        <button onClick={() => createRoom(0)}>Create Room</button>
       </div>
     </main>
   );
