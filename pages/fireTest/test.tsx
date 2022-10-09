@@ -10,6 +10,7 @@ import { createRoom } from "../../utils/firebase-utils/firebase-util";
 const Home: NextPage = () => {
   const callBack1 = () => {
     createRoom(100);
+    console.log("rooms created");
   };
   const callBack2 = () => {};
   const callBack3 = () => {};
@@ -19,12 +20,12 @@ const Home: NextPage = () => {
 
   return (
     <main>
-      <button onClick={() => callBack1}>Button 1</button>
-      <button onClick={() => callBack2}>Button 2</button>
-      <button onClick={() => callBack3}>Button 3</button>
-      <button onClick={() => callBack4}>Button 4</button>
-      <button onClick={() => callBack5}>Button 5</button>
-      <button onClick={() => callBack6}>Button 6</button>
+      <button onClick={() => callBack1()}>Button 1</button>
+      <button onClick={() => callBack2()}>Button 2</button>
+      <button onClick={() => callBack3()}>Button 3</button>
+      <button onClick={() => callBack4()}>Button 4</button>
+      <button onClick={() => callBack5()}>Button 5</button>
+      <button onClick={() => callBack6()}>Button 6</button>
     </main>
   );
 };

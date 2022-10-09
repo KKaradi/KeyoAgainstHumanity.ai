@@ -23,7 +23,6 @@ const db = getDatabase();
 export async function createRoom(roomCode: number): Promise<void> {
   //write this method
   //add a room object, set started to false
-
   set(ref(db, "Rooms/" + roomCode), {
     roomCode: roomCode,
     started: false,
