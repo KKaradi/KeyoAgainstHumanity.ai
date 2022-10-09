@@ -5,9 +5,18 @@ import styles from "../styles/Home.module.css";
 // import { Routes, Route, useNavigate } from "react-router-dom";
 import Router from "next/router";
 import { SetStateAction, useState } from "react";
+import {
+  getDatabase,
+  ref,
+  set,
+  get,
+  child,
+  update,
+  onChildAdded,
+} from "firebase/database";
+const db = getDatabase();
 
 const Home: NextPage = () => {
-
   const [userName, setUserName] = useState("");
 
   const inputUserName = (event: {
@@ -26,7 +35,7 @@ const Home: NextPage = () => {
 
   function createRoom() {
     //make this random
-    let roomCode = 6720
+    let roomCode = 6720;
     Router.push({
       pathname: "/mvp/lobby",
       query: {
@@ -44,6 +53,14 @@ const Home: NextPage = () => {
         roomID,
       },
     });
+  }
+  const roomCode = 10000;
+  async function test() {
+    const snapshot = await get(
+      child(ref(db), "Rooms/" + roomCode + "/Userlist/")
+    );
+
+    console.log(snapshot.val());
   }
 
   return (
@@ -70,7 +87,8 @@ const Home: NextPage = () => {
         />
       </div>
       <div>
-        <button onClick={() => navToLobby()}>Join Room</button>
+        <button onClick={() => createRoom()}>Create Room</button>
+        <button onClick={() => test()}>Create Room</button>
       </div>
       <div>
         <button onClick={() => createRoom()}>Create Room</button>
