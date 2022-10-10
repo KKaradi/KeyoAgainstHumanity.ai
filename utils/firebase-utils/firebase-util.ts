@@ -2,18 +2,28 @@ import { getDatabase, ref, set, update, get, child, Database } from "firebase/da
 
 import { initializeApp } from "firebase/app";
 
+
+  const apiKey = process.env.NEXT_PUBLIC_API_KEY
+  const authDomain = process.env.AUTH_DOMAIN
+  const databaseURL = process.env.DATABASE_URL
+  const projectID = process.env.PROJECT_ID 
+  const storagebucket = process.env.STORAGE_BUCKET
+  const messagingSenderId = process.env.MESSAGING_SENDER_ID 
+  const appId = process.env.APP_ID
+
 const firebaseConfig = {
 //PUT FIREBASE CONFIG HERE
-  apiKey: "AIzaSyCv_iUUZHASCZ1fE5Xn2lU8BnxOSrLgBPY",
-  authDomain: "week-5-mvp-4768a.firebaseapp.com",
-  databaseURL: "https://week-5-mvp-4768a-default-rtdb.firebaseio.com",
-  projectId: "week-5-mvp-4768a",
-  storageBucket: "week-5-mvp-4768a.appspot.com",
-  messagingSenderId: "517741937666",
-  appId: "1:517741937666:web:c49ba3c0aee11b5fba131b"
+  apiKey: apiKey,
+  authDomain: authDomain,
+  databaseURL: databaseURL,
+  projectId: projectID,
+  storageBucket: storagebucket,
+  messagingSenderId: messagingSenderId,
+  appId: appId
 };
 
-// Initialize Firebase
+console.log(firebaseConfig);
+
 initializeApp(firebaseConfig);
 
 const db = getDatabase();
@@ -36,6 +46,7 @@ export async function joinRoom(
 
   const postData = {
     username: yourUserName,
+    becameAppler: false
   };
 
   return update(
@@ -177,7 +188,7 @@ export async function fetchVoteList(
         '/' +
         prompt +
         "/captionList"
-      ) 
+      )
     ); 
       console.log(snapshot.val())
       return [snapshot.val()];  //Needs adjustment
