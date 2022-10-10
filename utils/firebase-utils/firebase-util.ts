@@ -12,7 +12,7 @@ import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
   //PUT FIREBASE CONFIG HERE
-  databaseURL: "put your own url",
+  databaseURL: "https://kaikaraditest-default-rtdb.firebaseio.com/", //process.env.FIREBASE_DATABASE_URL,
 };
 
 // Initialize Firebase
