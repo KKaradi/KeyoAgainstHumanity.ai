@@ -81,9 +81,7 @@ export async function fetchImageURL(
 
 export async function uploadCaption(
   caption: string,
-  appleryourUserName: string,
-  roomCode: number,
-  prompt: string
+  roomCode: number
 ): Promise<void> {
   set(
     ref(
@@ -119,6 +117,8 @@ export async function fetchListOfCaptions(
         "/captionList"
     )
   );
+  snapshot.ar;
+
   return [snapshot.val().key];
 }
 
