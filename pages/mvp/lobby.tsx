@@ -6,13 +6,10 @@ import React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
 
-const users = ["John", "Tom", "Rob"];
-const listUsers = users.map((user, index) => <li key={index}>{user}</li>);
-
 const Lobby: NextPage = () => {
   const router = useRouter();
   const {
-    query: { userName, roomID },
+    query: { userName, roomID, roomCode },
   } = router;
   const props = {
     userName,
@@ -25,6 +22,7 @@ const Lobby: NextPage = () => {
       query: {
         userName,
         roomID,
+        roomCode
       },
     });
   }
@@ -38,13 +36,17 @@ const Lobby: NextPage = () => {
   return (
     <main>
       <h1>Lobby</h1>
-      <h3>Room {roomID}</h3>
+      <h3>Room {roomID} {roomCode}</h3>
+      <h4>Users:</h4>
       <ul>
-        {listUsers}
         <li>{userName}</li>
       </ul>
-      <button onClick={() => navToGenerate()}>Start Game!</button>
-      <button onClick={() => navToHome()}>Home</button>
+      <div>
+        <button onClick={() => navToGenerate()}>Start Game</button>
+      </div>
+      <div>
+        <button onClick={() => navToHome()}>Home</button>
+      </div>
     </main>
   );
 };
