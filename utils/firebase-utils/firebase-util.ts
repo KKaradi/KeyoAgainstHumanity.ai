@@ -162,8 +162,7 @@ export async function uploadImageURL(
   );
 }
 
-export async function fetchImageURL(
-  yourUserName: string, //Also the appler username
+export async function fetchApplerImageURL(
   roomCode: number,
   prompt: string
 ): Promise<string> {
@@ -178,7 +177,6 @@ export async function fetchImageURL(
 }
 
 export async function uploadCaption(
-  applerUserName: string,
   caption: string,
   yourUserName: string,
   roomCode: number
@@ -202,7 +200,6 @@ export async function uploadCaption(
 }
 
 export async function fetchListOfCaptions(
-  applerUserName: string,
   roomCode: number
 ): Promise<{ caption: string; authorUserName: string }[]> {
   const snapshot = await get(
@@ -212,10 +209,8 @@ export async function fetchListOfCaptions(
 }
 
 export async function vote(
-  applerUserName: string,
   captionAuthor: string,
-  roomCode: number,
-  caption: string
+  roomCode: number
 ): Promise<void> {
   const snapshot = await get(
     child(
@@ -256,8 +251,7 @@ export async function vote(
 }
 
 export async function fetchVoteList(
-  roomCode: number,
-  applerUserName: string
+  roomCode: number
 ): Promise<{ playerUserName: string; caption: string; numVotes: number }[]> {
   const snapshot = await get(
     child(
@@ -274,6 +268,8 @@ export async function fetchVoteList(
   console.log(snapshot.val());
   return [snapshot.val()]; //Needs adjustment
 }
+
+export async function nextRound(roomCode: number): Promise<void> {}
 
 // A function that anyone in the room can call to start the game for all people in the lobby.
 // Sets the started value in the round to true
@@ -333,15 +329,10 @@ export async function everyoneCastAVoteListener(
   callBack: () => void
 ): Promise<void> {}
 
-export async function orderApplers(
+//Go through Userlist and assign index # by time stamp of users
+
+//checks if the next round number was increased by 1
+export async function nextRoundHasBeenClicked(
   roomCode: number,
   callBack: () => void
-): Promise<void> {
-  const topUserPostsRef = query(
-    ref(db, "Rooms/" + roomCode + "/Userlist"),
-    orderByChild("username")
-  );
-  console.log(topUserPostsRef);
-}
-
-//Go through Userlist and assign index # by time stamp of users
+) {}

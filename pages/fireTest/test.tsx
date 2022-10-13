@@ -1,36 +1,44 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import type { NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
 // import { Routes, Route, useNavigate } from "react-router-dom";
-import Router from 'next/router'
-import { SetStateAction, useState } from 'react'
-import { createRoom, fetchImageURL, getUserList, joinRoom, orderApplers, uploadCaption, uploadImageURL, uploadPrompt, vote } from '../../utils/firebase-utils/firebase-util'
-
+import Router from "next/router";
+import { SetStateAction, useState } from "react";
+import {
+  createRoom,
+  fetchApplerImageURL,
+  getUserList,
+  joinRoom,
+  orderApplers,
+  uploadCaption,
+  uploadImageURL,
+  uploadPrompt,
+  vote,
+} from "../../utils/firebase-utils/firebase-util";
 
 const Home: NextPage = () => {
   const callBack1 = () => {
-    createRoom(100)
-    console.log('rooms created')
-  }
+    createRoom(100);
+    console.log("rooms created");
+  };
   const callBack2 = () => {
-    vote("Bob", "John", 100, "monke")
-    console.log('voted')
-  }
+    vote("Bob", "John", 100, "monke");
+    console.log("voted");
+  };
   const callBack3 = () => {
-    joinRoom('Bob', 100)
-    console.log('joined')
-  }
+    joinRoom("Bob", 100);
+    console.log("joined");
+  };
   const callBack4 = () => {
-    uploadImageURL('123.jpg', 'User2', 100, 'banana')
-    console.log('url uploaded')
-  }
+    uploadImageURL("123.jpg", "User2", 100, "banana");
+    console.log("url uploaded");
+  };
   const callBack5 = () => {
-    uploadPrompt(100, 'User2', 'banana')
-    console.log('prompt uploaded')
-  }
-  const callBack6 = () => {
-  }
+    uploadPrompt(100, "User2", "banana");
+    console.log("prompt uploaded");
+  };
+  const callBack6 = () => {};
 
   return (
     <main>
@@ -41,7 +49,7 @@ const Home: NextPage = () => {
       <button onClick={() => callBack5()}>Button 5</button>
       <button onClick={() => callBack6()}>Button 6</button>
     </main>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
