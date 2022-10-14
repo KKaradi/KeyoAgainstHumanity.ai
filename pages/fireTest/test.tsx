@@ -5,17 +5,38 @@ import styles from '../styles/Home.module.css'
 // import { Routes, Route, useNavigate } from "react-router-dom";
 import Router from 'next/router'
 import { SetStateAction, useState } from 'react'
-import { createRoom } from '../../utils/firebase-utils/firebase-util'
+import {
+  createRoom,
+  fetchApplerImageURL,
+  getUserList,
+  joinRoom,
+  uploadCaption,
+  uploadImageURL,
+  uploadPrompt,
+  vote,
+} from '../../utils/firebase-utils/firebase-util'
 
 const Home: NextPage = () => {
   const callBack1 = () => {
     createRoom(100)
     console.log('rooms created')
   }
-  const callBack2 = () => {}
-  const callBack3 = () => {}
-  const callBack4 = () => {}
-  const callBack5 = () => {}
+  const callBack2 = () => {
+    vote('Bob', 100)
+    console.log('voted')
+  }
+  const callBack3 = () => {
+    joinRoom('Bob', 100)
+    console.log('joined')
+  }
+  const callBack4 = () => {
+    uploadImageURL('123.jpg', 'User2', 100, 'banana')
+    console.log('url uploaded')
+  }
+  const callBack5 = () => {
+    uploadPrompt(100, 'User2', 'banana')
+    console.log('prompt uploaded')
+  }
   const callBack6 = () => {}
 
   return (
