@@ -9,6 +9,7 @@ import {
   orderByChild,
   Database,
   push,
+  onValue
 } from "firebase/database";
 
 import { initializeApp } from "firebase/app";
@@ -47,6 +48,29 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const db = getDatabase(app);
 
+export async function getApplerUsername(roomCode:number): Promise<string[]> {
+  const snapshot1 = await get(
+    child(ref(database), "Rooms/" + roomCode + "/Game/")
+  );
+  console.log(snapshot1.val().roundCounter);
+  const roundNum = snapshot1.val().roundCounter
+  const snapshot2 = await get(
+    child(ref(database), "Rooms/" + roomCode + "/Userlist/")
+  );
+  let counter = 0
+  let applerName;
+  snapshot2.forEach((childSnapshot) => {
+    if(counter == roundNum){
+      applerName = childSnapshot.val()
+    }else{
+    counter = counter + 1
+    }
+  })
+  console.log(applerName);
+  return [snapshot1.val().roundCounter]; //Needs adjustment
+}
+
+
 export async function createRoom(roomCode: number): Promise<void> {
   //write this method
   //add a room object, set started to false
@@ -56,7 +80,18 @@ export async function createRoom(roomCode: number): Promise<void> {
   });
 }
 
-
+export async function joinRoom(
+  yourUserName: string,
+  roomCode: number
+): Promise<void> {
+  //join the room, add the user name
+  userListWithPush(roomCode, yourUserName);
+  addToRoundOrder(roomCode, yourUserName);
+  const snapshot = await get(
+    child(ref(database), "Rooms/" + roomCode + "/Userlist" + "/totalUsers")
+  );
+  let userIndex = snapshot.val() + 1;
+  }
 export async function userListWithPush(roomCode: number, yourUserName: string,): Promise<void> {
   let newTotalUsers;
 
@@ -77,27 +112,31 @@ export async function userListWithPush(roomCode: number, yourUserName: string,):
   })
 }
 
-export async function addToApplerOrder(
+export async function addToRoundOrder(
   roomCode: number,
   yourUserName: string
-  ): Promise<void> {
-  let newTotalUsers;
+): Promise<void> {
+  // let newTotalUsers;
 
-  const snapshot = await get(
-    child(ref(database), "Rooms/" + roomCode + "/Userlist" + "/totalUsers")
-  );
-  if (snapshot.val() == null) {
-    newTotalUsers = 1;
-  } else {
-    newTotalUsers = snapshot.val() + 1;
-  }
+  // const snapshot = await get(
+  //   child(ref(database), "Rooms/" + roomCode + "/Userlist" + "/totalUsers")
+  // );
+  // if (snapshot.val() == null) {
+  //   newTotalUsers = 1;
+  // } else {
+  //   newTotalUsers = snapshot.val() + 1;
+  // }
   const postData = {
-    yourUserName
-  };
+  x:'x'
+ };
 
-  return update(ref(database, "Rooms/" + roomCode + "/Userlist/" + 'ApplerOrder'), postData);
-}
+ return update(
+  ref(database, "Rooms/" + roomCode + "/Game/" + yourUserName),
+   postData
+);
+  }
 
+//Return userlist called whenever userlist in changed (onValue) to be displayed in lobby page
 export async function getUserList(roomCode: number): Promise<string[]> {
   const snapshot = await get(
     child(ref(database), "Rooms/" + roomCode + "/Userlist/")
@@ -106,6 +145,7 @@ export async function getUserList(roomCode: number): Promise<string[]> {
   return [snapshot.val()]; //Needs adjustment
 }
 
+//Uploads the prompt under your username when the submit button is clicked in generate image
 export async function uploadPrompt(
   roomCode: number,
   yourUserName: string,
@@ -115,9 +155,10 @@ export async function uploadPrompt(
     x: "x"
   };
 
-  return update(ref(database,"Rooms/" + roomCode + "/Userlist/" + yourUserName + "/" + prompt), postData);
+  return update(ref(database,"Rooms/" + roomCode + "/Game/" + yourUserName + "/" + prompt), postData);
 }
 
+//Uploads image Url under your username whenever the image is generated
 export async function uploadImageURL(
   imageURL: string,
   yourUserName: string, //This is also the appler username
@@ -132,29 +173,32 @@ export async function uploadImageURL(
   return update(ref(database,"Rooms/" + roomCode + "/Userlist/" + yourUserName + "/" + prompt), postData)
 }
 
-export async function fetchImageURL(
-  yourUserName: string, //Also the appler username
+//Returns an image URL every time the appler is changed, during the caption creation, and during voting
+export async function fetchApplerImageURL(
   roomCode: number,
   prompt: string
 ): Promise<string> {
+  const applerUsername = await getApplerUsername(roomCode)
   const snapshot = await get(
     child(
       ref(db),
-      "Rooms/" + roomCode + "/Userlist/" + yourUserName + "/" + prompt
+      "Rooms/" + roomCode + "/Game/" + applerUsername
     )
   );
   console.log(snapshot.val().imageUrl);
   return snapshot.val().imageUrl;
 }
 
+//Under the caption object, add your user name and caption. Called in caption creation when button is pressed
 export async function uploadCaption(
-  applerUserName: string,
   caption: string,
   yourUserName: string,
   roomCode: number,
   prompt: string
 ): Promise<void> {
 
+  const applerUsername = await getApplerUsername(roomCode)
+  
   const postData = {
     votes: 0,
   };
@@ -164,8 +208,8 @@ export async function uploadCaption(
     "Rooms/" +
       roomCode +
       "/" +
-      "Userlist/" +
-      applerUserName +
+      "Game/" +
+      applerUsername +
       '/' +
       prompt +
       '/' +
@@ -175,37 +219,38 @@ export async function uploadCaption(
   ), postData)
 }
 
+//returns list of captions for one prompt under appler username called when going to vote page
 export async function fetchListOfCaptions(
-  applerUserName: string,
-  roomCode: number,
-  prompt:string
+  roomCode: number
 ): Promise<{ caption: string; authorUserName: string }[]> {
+  const applerUsername = await getApplerUsername(roomCode)
   const snapshot = await get(
-    child(ref(db), "Rooms/" + roomCode + "/Userlist/" + applerUserName + "/" + prompt)
+    child(ref(db), "Rooms/" +
+    roomCode +
+    "/Game/" +
+    applerUsername +
+    "/" + 
+    "captions")
   );
   return [snapshot.val()];
 }
 
+//Add 1 to Num Votes under a caption. Called every time someone clicks a vote button
 export async function vote(
-  applerUserName: string,
   captionAuthor: string,
-  roomCode: number,
-  caption: string,
-  prompt: string
+  roomCode: number
 ): Promise<void> {
+  const applerUsername = await getApplerUsername(roomCode)
   const snapshot = await get(
     child(
       ref(db),
       "Rooms/" +
         roomCode +
-        "/Userlist/" +
-        applerUserName +
-        "/" +
-        prompt +
-        '/' +
-        captionAuthor +
-        "/" +
-        caption
+        "/Game/" +
+        applerUsername +
+        "/" + 
+        "captions/" +
+        captionAuthor
     )
   );
   let numVotes = snapshot.val().votes;
@@ -220,14 +265,11 @@ export async function vote(
       database,
       "Rooms/" +
         roomCode +
-        "/Userlist/" +
-        applerUserName +
-        "/" +
-        prompt +
-        '/' +
-        captionAuthor +
-        "/" +
-        caption
+        "/Game/" +
+        applerUsername +
+        "/" + 
+        "captions/" +
+        captionAuthor
     ),
     {
       votes: newNumVotes,
@@ -235,36 +277,50 @@ export async function vote(
   );
 }
 
+//
 export async function fetchVoteList(
-  roomCode: number,
-  applerUserName: string
+  roomCode: number
 ): Promise<{ playerUserName: string; caption: string; numVotes: number }[]> {
+  const applerUsername = await getApplerUsername(roomCode)
   const snapshot = await get(
     child(
       ref(db),
       "Rooms/" +
         roomCode +
-        "/Round/" +
-        applerUserName +
-        "/" +
-        prompt +
-        "/captionList"
+        "/Game/" +
+        applerUsername +
+        "/" + 
+        "captions"
     )
   );
   console.log(snapshot.val());
   return [snapshot.val()]; //Needs adjustment
 }
 
+export async function nextRound(roomCode: number): Promise<void> {}
+
 // A function that anyone in the room can call to start the game for all people in the lobby.
 // Sets the started value in the round to true
-export async function startRound(roomCode: number): Promise<void> {}
+export async function startRound(
+  roomCode: number
+  ): Promise<void> { 
+    set(ref(database, "Rooms/" + roomCode), {
+       roomCode: roomCode,
+        started: true, 
+      });
+    }
 
-// Started round listener calls the callback function when a user in the game chooses to start the game in the Lobby.
-// Checks if the started boolean is true
-export async function startedRoundListener(
-  roomCode: number,
-  callBack: () => void
-): Promise<void> {}
+
+    export async function startedGameListener(
+      roomCode: number,
+      //callBack: () => void
+    ): Promise<void> { 
+      const userListRef = ref(database, 'Rooms/' + roomCode);
+        onValue(userListRef, (snapshot) => {
+          const data = snapshot.val().started;
+          console.log(data)
+       }
+    )}
 
 // Calls a call back with a list of users everytime a new user enters the lobby
 // Checks if the userlist changes
@@ -313,15 +369,10 @@ export async function everyoneCastAVoteListener(
   callBack: () => void
 ): Promise<void> {}
 
-export async function orderApplers(
+//Go through Userlist and assign index # by time stamp of users
+
+//checks if the next round number was increased by 1
+export async function nextRoundHasBeenClicked(
   roomCode: number,
   callBack: () => void
-): Promise<void> {
-  const topUserPostsRef = query(
-    ref(db, "Rooms/" + roomCode + "/Userlist"),
-    orderByChild("username")
-  );
-  console.log(topUserPostsRef);
-}
-
-//Go through Userlist and assign index # by time stamp of users
+) {}
