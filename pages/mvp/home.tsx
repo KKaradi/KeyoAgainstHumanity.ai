@@ -14,6 +14,16 @@ import {
   update,
   onChildAdded,
 } from 'firebase/database'
+import { initializeApp } from 'firebase/app'
+
+const firebaseConfig = {
+  //PUT FIREBASE CONFIG HERE
+  databaseURL:
+    'https://keyo-against-humanity-d9a9d-default-rtdb.firebaseio.com/',
+}
+
+const app = initializeApp(firebaseConfig)
+
 const db = getDatabase()
 
 const Home: NextPage = () => {

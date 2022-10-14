@@ -7,13 +7,11 @@ import Router from 'next/router'
 import { SetStateAction, useState } from 'react'
 import {
   createRoom,
-  fetchApplerImageURL,
-  getUserList,
   joinRoom,
-  uploadCaption,
   uploadImageURL,
   uploadPrompt,
   vote,
+  userListChangedListener,
 } from '../../utils/firebase-utils/firebase-util'
 
 const Home: NextPage = () => {
@@ -37,7 +35,11 @@ const Home: NextPage = () => {
     uploadPrompt(100, 'User2', 'banana')
     console.log('prompt uploaded')
   }
-  const callBack6 = () => {}
+  const callBack6 = () => {
+    userListChangedListener(100)
+    console.log('UserList has changed')
+    console.log()
+  }
 
   return (
     <main>

@@ -12,32 +12,23 @@ import {
   onValue,
 } from "firebase/database";
 
-import { initializeApp } from "firebase/app";
 
-const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-const authDomain = process.env.NEXT_PUBLIC_AUTH_DOMAIN;
-const databaseURL = process.env.NEXT_PUBLIC_DATABASE_URL;
-const projectID = process.env.NEXT_PUBLIC_PROJECT_ID;
-const storagebucket = process.env.NEXT_PUBLIC_STORAGE_BUCKET;
-const messagingSenderId = process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID;
-const appId = process.env.NEXT_PUBLIC_APP_ID;
+import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
   //PUT FIREBASE CONFIG HERE
-  apiKey: apiKey,
-  authDomain: authDomain,
-  databaseURL: databaseURL,
-  projectId: projectID,
-  storageBucket: storagebucket,
-  messagingSenderId: messagingSenderId,
-  appId: appId,
-};
+  apiKey: "AIzaSyBC8r_HKc8SqQcyPTZ6eaiLk7eqG8HUm7o",
+  authDomain: "keyo-against-humanity-d9a9d.firebaseapp.com",
+   databaseURL: "https://keyo-against-humanity-d9a9d-default-rtdb.firebaseio.com",
+   projectId: "keyo-against-humanity-d9a9d",
+   storageBucket: "keyo-against-humanity-d9a9d.appspot.com",
+   messagingSenderId: "1021364487504",
+   appId: "1:1021364487504:web:4adf75a7c6c43c766cd855",
+ };
 
+    const app = initializeApp(firebaseConfig)
+    const database = getDatabase(app);
 
-const app = initializeApp(firebaseConfig);
-
-const database = getDatabase(app);
-const db = getDatabase(app);
 
 export async function createRoom(roomCode: number): Promise<void> {
   //write this method
@@ -160,7 +151,7 @@ export async function fetchApplerImageURL(
 ): Promise<string> {
   const snapshot = await get(
     child(
-      ref(db),
+      ref(database),
       "Rooms/" + roomCode + "/Round/" + roundNum + "/" + prompt
     )
   );
@@ -197,7 +188,7 @@ export async function fetchListOfCaptions(
   roundNum: number
 ): Promise<{ caption: string; authorUserName: string }[]> {
   const snapshot = await get(
-    child(ref(db), "Rooms/" + roomCode + "/" + roundNum + "/Userlist")
+    child(ref(database), "Rooms/" + roomCode + "/" + roundNum + "/Userlist")
   );
   return [snapshot.val()];
 }
@@ -285,11 +276,11 @@ export async function startedRoundListener(
 // Checks if the userlist changes
 export async function userListChangedListener(
   roomCode: number,
-  callBack: () => void
+  //callBack: () => void
 ): Promise<void> { 
-  const userListRef = ref(database, 'Rooms/' + roomCode + '/users');
+  const userListRef = ref(database, 'Rooms/' + roomCode);
     onValue(userListRef, (snapshot) => {
-      const data = snapshot.val();
+      const data = snapshot.val().started;
       /*const snapshot = await get(
         child(
           ref(database),
@@ -297,11 +288,12 @@ export async function userListChangedListener(
             "Userlist"
        )
       );*/
-      console.log(data)
+      console.log(data, "this is under 8")
       let lobbyMax = 8
       if ( data == lobbyMax) (
-       callBack
-      )     
+       //callBack
+       console.log(data, "this is at 8")
+      )   
    }
 )}
 // Calls a call back function when everyone in the lobby has generated an image
