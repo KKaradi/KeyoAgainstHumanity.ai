@@ -22,7 +22,7 @@ const Home: NextPage = () => {
     console.log("rooms created");
   };
   const callBack2 = () => {
-    startedGameListener(100)
+    startRound(100)
   };
   const callBack3 = () => {
     joinRoom("John", 100);

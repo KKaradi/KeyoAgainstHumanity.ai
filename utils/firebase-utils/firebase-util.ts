@@ -303,11 +303,16 @@ export async function nextRound(roomCode: number): Promise<void> {}
 // Sets the started value in the round to true
 export async function startRound(
   roomCode: number
-  ): Promise<void> { 
-    set(ref(database, "Rooms/" + roomCode), {
-       roomCode: roomCode,
+  ): Promise<void> {
+      const postData = {
+        roomCode: roomCode,
         started: true, 
-      });
+       };
+      
+       return update(
+        ref(database, "Rooms/" + roomCode),
+        postData
+      );
     }
 
 
