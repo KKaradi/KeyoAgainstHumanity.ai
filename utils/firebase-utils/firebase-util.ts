@@ -8,6 +8,7 @@ import {
   query,
   orderByChild,
   Database,
+  push,
 } from "firebase/database";
 
 import { initializeApp } from "firebase/app";
@@ -55,30 +56,8 @@ export async function createRoom(roomCode: number): Promise<void> {
   });
 }
 
-export async function joinRoom(
-  yourUserName: string,
-  roomCode: number
-): Promise<void> {
-  //join the room, add the user name
-  totalUsersInRoom(roomCode);
-  addToApplerOrder(roomCode, yourUserName)
-  const snapshot = await get(
-    child(ref(database), "Rooms/" + roomCode + "/Userlist" + "/totalUsers")
-  );
-  let userIndex = snapshot.val() + 1;
 
-  const postData = {
-    username: yourUserName,
-    userIndex: userIndex,
-  };
-
-  return update(
-    ref(database, "/Rooms/" + roomCode + "/Userlist/" + yourUserName),
-    postData
-  );
-}
-
-export async function totalUsersInRoom(roomCode: number): Promise<void> {
+export async function userListWithPush(roomCode: number, yourUserName: string,): Promise<void> {
   let newTotalUsers;
 
   const snapshot = await get(
@@ -90,10 +69,12 @@ export async function totalUsersInRoom(roomCode: number): Promise<void> {
     newTotalUsers = snapshot.val() + 1;
   }
   const postData = {
-    totalUsers: newTotalUsers,
+    username: yourUserName
   };
-
-  return update(ref(database, "Rooms/" + roomCode + "/Userlist/"), postData);
+  const ref2 = push(ref(database, "Rooms/" + roomCode + "/Userlist/"))
+  set(ref2, {
+    username: yourUserName
+  })
 }
 
 export async function addToApplerOrder(
@@ -111,7 +92,7 @@ export async function addToApplerOrder(
     newTotalUsers = snapshot.val() + 1;
   }
   const postData = {
-    yourUserName: newTotalUsers
+    yourUserName
   };
 
   return update(ref(database, "Rooms/" + roomCode + "/Userlist/" + 'ApplerOrder'), postData);
@@ -130,15 +111,11 @@ export async function uploadPrompt(
   yourUserName: string,
   prompt: string
 ): Promise<void> {
-  set(
-    ref(
-      database,
-      "Rooms/" + roomCode + "/Userlist/" + yourUserName + "/" + prompt
-    ),
-    {
-      x: "x",
-    }
-  );
+  const postData = {
+    x: "x"
+  };
+
+  return update(ref(database,"Rooms/" + roomCode + "/Userlist/" + yourUserName + "/" + prompt), postData);
 }
 
 export async function uploadImageURL(
@@ -147,16 +124,12 @@ export async function uploadImageURL(
   roomCode: number,
   prompt: string
 ): Promise<void> {
-  set(
-    ref(
-      database,
-      "Rooms/" + roomCode + "/Userlist/" + yourUserName + "/" + prompt
-    ),
-    {
-      imageUrl: imageURL,
+  const postData = {
+    imageUrl: imageURL,
       x: null,
-    }
-  );
+  };
+
+  return update(ref(database,"Rooms/" + roomCode + "/Userlist/" + yourUserName + "/" + prompt), postData)
 }
 
 export async function fetchImageURL(
@@ -178,32 +151,37 @@ export async function uploadCaption(
   applerUserName: string,
   caption: string,
   yourUserName: string,
-  roomCode: number
+  roomCode: number,
+  prompt: string
 ): Promise<void> {
-  set(
-    ref(
-      database,
-      "Rooms/" +
-        roomCode +
-        "/" +
-        applerUserName +
-        "/Userlist/" +
-        yourUserName +
-        "/" +
-        caption
-    ),
-    {
-      votes: 0,
-    }
-  );
+
+  const postData = {
+    votes: 0,
+  };
+
+  return update(ref(
+    database,
+    "Rooms/" +
+      roomCode +
+      "/" +
+      "Userlist/" +
+      applerUserName +
+      '/' +
+      prompt +
+      '/' +
+      yourUserName +
+      "/" +
+      caption
+  ), postData)
 }
 
 export async function fetchListOfCaptions(
   applerUserName: string,
-  roomCode: number
+  roomCode: number,
+  prompt:string
 ): Promise<{ caption: string; authorUserName: string }[]> {
   const snapshot = await get(
-    child(ref(db), "Rooms/" + roomCode + "/" + applerUserName + "/Userlist")
+    child(ref(db), "Rooms/" + roomCode + "/Userlist/" + applerUserName + "/" + prompt)
   );
   return [snapshot.val()];
 }
@@ -212,16 +190,19 @@ export async function vote(
   applerUserName: string,
   captionAuthor: string,
   roomCode: number,
-  caption: string
+  caption: string,
+  prompt: string
 ): Promise<void> {
   const snapshot = await get(
     child(
       ref(db),
       "Rooms/" +
         roomCode +
-        "/" +
-        applerUserName +
         "/Userlist/" +
+        applerUserName +
+        "/" +
+        prompt +
+        '/' +
         captionAuthor +
         "/" +
         caption
@@ -239,9 +220,11 @@ export async function vote(
       database,
       "Rooms/" +
         roomCode +
-        "/" +
-        applerUserName +
         "/Userlist/" +
+        applerUserName +
+        "/" +
+        prompt +
+        '/' +
         captionAuthor +
         "/" +
         caption
