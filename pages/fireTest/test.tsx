@@ -7,10 +7,14 @@ import Router from "next/router";
 import { SetStateAction, useState } from "react";
 import {
   createRoom,
+  fetchListOfCaptions,
+  fetchVoteList,
   getApplerUsername,
+  getUserList,
   joinRoom,
   startedGameListener,
   startRound,
+  uploadCaption,
   uploadImageURL,
   uploadPrompt,
   vote,
@@ -22,22 +26,25 @@ const Home: NextPage = () => {
     console.log("rooms created");
   };
   const callBack2 = () => {
-    startRound(100)
+    startedGameListener(100)
   };
   const callBack3 = () => {
     joinRoom("John", 100);
     console.log("joined");
   };
   const callBack4 = () => {
-    uploadImageURL("123.jpg", "User2", 100, "banana");
+    uploadImageURL("123.jpg", "Bob", 100);
     console.log("url uploaded");
   };
   const callBack5 = () => {
-    uploadPrompt(100, "User2", "banana");
+    uploadPrompt(100, "Bob", "banana");
     console.log("prompt uploaded");
   };
   const callBack6 = () => {
-    getApplerUsername(100)
+    startRound(100)
+  };
+  const callBack7 = () => {
+    uploadCaption('banana(caption)', 'John', 100)
   };
 
   return (
@@ -48,6 +55,7 @@ const Home: NextPage = () => {
       <button onClick={() => callBack4()}>Button 4</button>
       <button onClick={() => callBack5()}>Button 5</button>
       <button onClick={() => callBack6()}>Button 6</button>
+      <button onClick={() => callBack7()}>Button 7</button>
     </main>
   );
 };
