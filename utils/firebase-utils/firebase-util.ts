@@ -33,16 +33,6 @@ const firebaseConfig = {
   appId: appId,
 };
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyCv_iUUZHASCZ1fE5Xn2lU8BnxOSrLgBPY",
-//   authDomain: "week-5-mvp-4768a.firebaseapp.com",
-//   databaseURL: "https://week-5-mvp-4768a-default-rtdb.firebaseio.com",
-//   projectId: "week-5-mvp-4768a",
-//   storageBucket: "week-5-mvp-4768a.appspot.com",
-//   messagingSenderId: "517741937666",
-//   appId: "1:517741937666:web:c49ba3c0aee11b5fba131b"
-// };
-
 const app = initializeApp(firebaseConfig);
 
 const database = getDatabase(app);
@@ -85,7 +75,7 @@ export async function createRoom(roomCode: number): Promise<void> {
   });
 
   set(ref(db, "Rooms/" + roomCode + '/Game'), {
-    roundCounter: 1
+    roundCounter: 0
   });
 }
 
@@ -98,19 +88,6 @@ export async function joinRoom(
   }
 
 export async function userListWithPush(roomCode: number, yourUserName: string,): Promise<void> {
-  let newTotalUsers;
-
-  const snapshot = await get(
-    child(ref(database), "Rooms/" + roomCode + "/Userlist" + "/totalUsers")
-  );
-  if (snapshot.val() == null) {
-    newTotalUsers = 1;
-  } else {
-    newTotalUsers = snapshot.val() + 1;
-  }
-  const postData = {
-    username: yourUserName
-  };
   const ref2 = push(ref(database, "Rooms/" + roomCode + "/Userlist/"))
   set(ref2, {
     username: yourUserName

@@ -29,7 +29,7 @@ const Home: NextPage = () => {
     startedGameListener(100)
   };
   const callBack3 = () => {
-    joinRoom("John", 100);
+    joinRoom("Hank", 100);
     console.log("joined");
   };
   const callBack4 = () => {
