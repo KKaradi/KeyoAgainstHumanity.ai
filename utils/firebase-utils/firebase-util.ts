@@ -282,7 +282,29 @@ export async function fetchVoteList(
   return [voteList]; //Needs adjustment
 }
 
-export async function nextRound(roomCode: number): Promise<void> {}
+export async function nextRound(roomCode: number): Promise<void> {
+  const snapshot = await get(
+    child(
+      ref(db),
+      "Rooms/" +
+        roomCode +
+        "/Game" +
+        '/roundCounter'
+    )
+  );
+  
+  console.log(snapshot.val() + 1)
+  let newRoundNum = snapshot.val() + 1
+  
+  const postData = {
+    roundCounter: newRoundNum, 
+   };
+  
+   return update(
+    ref(database, "Rooms/" + roomCode + '/Game'),
+    postData
+  );
+}
 
 // A function that anyone in the room can call to start the game for all people in the lobby.
 // Sets the started value in the round to true

@@ -12,6 +12,7 @@ import {
   getApplerUsername,
   getUserList,
   joinRoom,
+  nextRound,
   startedGameListener,
   startRound,
   uploadCaption,
@@ -41,7 +42,7 @@ const Home: NextPage = () => {
     console.log("prompt uploaded");
   };
   const callBack6 = () => {
-    startRound(100)
+    nextRound(100)
   };
   const callBack7 = () => {
     uploadCaption('banana(caption)', 'John', 100)
