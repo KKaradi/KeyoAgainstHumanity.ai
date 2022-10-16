@@ -7,11 +7,17 @@ import Router from 'next/router'
 import { SetStateAction, useState } from 'react'
 import {
   createRoom,
+  getApplerUsername,
   joinRoom,
+  startedGameListener,
+  startRound,
   uploadImageURL,
   uploadPrompt,
   vote,
   userListChangedListener,
+  tempGameUserList,
+  tempReset,
+  tempIncreaseUsers,
 } from '../../utils/firebase-utils/firebase-util'
 
 const Home: NextPage = () => {
@@ -20,25 +26,28 @@ const Home: NextPage = () => {
     console.log('rooms created')
   }
   const callBack2 = () => {
-    vote('Bob', 100)
-    console.log('voted')
+    tempGameUserList(100, 'Bob')
+    tempGameUserList(100, 'Jack')
+    tempGameUserList(100, 'James')
+    tempGameUserList(100, 'Mary')
+    tempGameUserList(100, 'Macy')
+    tempGameUserList(100, 'Ryan')
+    tempGameUserList(100, 'Taran')
+    tempGameUserList(100, 'Barron')
+    console.log('Temp users Added')
   }
   const callBack3 = () => {
-    joinRoom('Bob', 100)
-    console.log('joined')
+    tempIncreaseUsers(100)
+    console.log('temp User Number has increased by one')
   }
   const callBack4 = () => {
-    uploadImageURL('123.jpg', 'User2', 100, 'banana')
-    console.log('url uploaded')
-  }
-  const callBack5 = () => {
-    uploadPrompt(100, 'User2', 'banana')
-    console.log('prompt uploaded')
-  }
-  const callBack6 = () => {
     userListChangedListener(100)
-    console.log('UserList has changed')
-    console.log()
+    console.log('The userlist has been logged and analyzed.')
+  }
+  const callBack5 = () => {}
+  const callBack6 = () => {
+    tempReset(100)
+    console.log('The Firebase Database has been nuked.')
   }
 
   return (
