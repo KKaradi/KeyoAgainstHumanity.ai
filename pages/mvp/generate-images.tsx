@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Image from "next/image";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useState, useEffect } from "react";
 import { generateImage } from "../../utils/image-utils/image-util";
 import { uploadImageURL } from "../../utils/firebase-utils/firebase-util";
 import { everyoneGeneratedAnImageListener } from "../../utils/firebase-utils/firebase-util";
@@ -49,6 +49,10 @@ const GenerateImages: NextPage = () => {
     uploadImageURL(URL, String(userName), Number(roomID), prompt);
   }
 
+  useEffect(() => {
+    everyoneGeneratedAnImageListener(Number(roomID), navToPromptCreate);
+  }, [])
+
   return (
     <main>
       <h1>Generate Image</h1>
@@ -72,7 +76,7 @@ const GenerateImages: NextPage = () => {
         <button onClick={() => generateImageUploadURL()}>Generate</button>
       </div>
       <div>
-        <button onClick={() => everyoneGeneratedAnImageListener(Number(roomID), navToPromptCreate())}>Submit</button>
+        <button onClick={() => navToPromptCreate()}>Submit</button>
       </div>
     </main>
   );

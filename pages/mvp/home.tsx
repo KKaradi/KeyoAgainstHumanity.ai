@@ -41,13 +41,13 @@ const Home: NextPage = () => {
     })
   }
 
-  function createRoomNavToLobby() {
-    createRoom(0);
-    navToLobby();
-  }
-
   function joinRoomNavToLobby() {
     joinRoom(userName, Number(roomID));
+    navToLobby();
+  }
+  
+  function createRoomNavToLobby() {
+    createRoom(0);
     navToLobby();
   }
 

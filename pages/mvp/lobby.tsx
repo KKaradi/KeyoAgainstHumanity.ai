@@ -53,11 +53,6 @@ const Lobby: NextPage = () => {
     });
   }
 
-  // function startRoundNavToGenerate() {
-  //   startRound(Number(roomID));
-  //   navToGenerate();
-  // }
-
   let userListCallback = async(userList: string[]) => {
     setUserList(userList);
   }
