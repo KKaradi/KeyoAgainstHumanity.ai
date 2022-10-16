@@ -2,8 +2,11 @@ import type { NextPage } from "next";
 import React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { getUserList } from "../../utils/firebase-utils/firebase-util";
 import { SetStateAction, useState, useEffect } from "react";
+import { getUserList } from "../../utils/firebase-utils/firebase-util";
+import { startRound } from "../../utils/firebase-utils/firebase-util";
+import { startedRoundListener } from "../../utils/firebase-utils/firebase-util";
+import { userListChangedListener } from "../../utils/firebase-utils/firebase-util";
 
 const Lobby: NextPage = () => {
   
@@ -16,19 +19,9 @@ const Lobby: NextPage = () => {
     roomID,
   };
 
-  function navToGenerate() {
-    Router.push({
-      pathname: "/mvp/generate-images",
-      query: {
-        userName,
-        roomID,
-        roomCode
-      },
-    });
-  }
+  const [userList, setUserList] = useState([""])
 
   function displayUserList() {
-    const [userList, setUserList] = useState([""])
     useEffect(() => {
       getUserList(Number(roomID)).then(
         (userList) => {
@@ -48,6 +41,34 @@ const Lobby: NextPage = () => {
       pathname: "/mvp/home",
     });
   }
+  
+  function navToGenerate() {
+    Router.push({
+      pathname: "/mvp/generate-images",
+      query: {
+        userName,
+        roomID,
+        roomCode
+      },
+    });
+  }
+
+  // function startRoundNavToGenerate() {
+  //   startRound(Number(roomID));
+  //   navToGenerate();
+  // }
+
+  let userListCallback = async(userList: string[]) => {
+    setUserList(userList);
+  }
+
+  useEffect(() => {
+    userListChangedListener(Number(roomID), userListCallback);
+  }, [])
+
+  useEffect(() => {
+    startedRoundListener(Number(roomID), navToGenerate);
+  }, [])
 
   return (
     <main>
@@ -56,7 +77,7 @@ const Lobby: NextPage = () => {
       <h4>Users:</h4>
       <div>{ displayUserList() }</div>
       <div>
-        <button onClick={() => navToGenerate()}>Start Game</button>
+        <button onClick={() => startRound(Number(roomID))}>Start Round</button>
       </div>
       <div>
         <button onClick={() => navToHome()}>Exit Room</button>

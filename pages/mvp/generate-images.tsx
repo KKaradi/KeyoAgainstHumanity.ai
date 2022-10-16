@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { SetStateAction, useState } from "react";
 import { generateImage } from "../../utils/image-utils/image-util";
 import { uploadImageURL } from "../../utils/firebase-utils/firebase-util";
+import { everyoneGeneratedAnImageListener } from "../../utils/firebase-utils/firebase-util";
 
 const GenerateImages: NextPage = () => {
   const router = useRouter();
@@ -71,7 +72,7 @@ const GenerateImages: NextPage = () => {
         <button onClick={() => generateImageUploadURL()}>Generate</button>
       </div>
       <div>
-        <button onClick={() => navToPromptCreate()}>Submit</button>
+        <button onClick={() => everyoneGeneratedAnImageListener(Number(roomID), navToPromptCreate())}>Submit</button>
       </div>
     </main>
   );

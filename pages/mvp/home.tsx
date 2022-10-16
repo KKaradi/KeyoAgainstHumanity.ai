@@ -22,18 +22,6 @@ const Home: NextPage = () => {
     setRoomID(event.target.value);
   };
 
-  // function createRoom() {
-  //   //make this random
-  //   let roomCode = 6720
-  //   Router.push({
-  //     pathname: "/mvp/lobby",
-  //     query: {
-  //       userName,
-  //       roomCode,
-  //     },
-  //   });
-  // }
-
   function navToLobby() {
     Router.push({
       pathname: "/mvp/lobby",
@@ -42,6 +30,11 @@ const Home: NextPage = () => {
         roomID,
       },
     });
+  }
+
+  function createRoomNavToLobby() {
+    createRoom(0);
+    navToLobby();
   }
 
   function joinRoomNavToLobby() {
@@ -69,14 +62,14 @@ const Home: NextPage = () => {
           id="message"
           name="message"
           onChange={inputRoomID}
-          value={Number(roomID)}
+          value={roomID}
         />
       </div>
       <div>
         <button onClick={() => joinRoomNavToLobby()}>Join Room</button>
       </div>
       <div>
-        <button onClick={() => createRoom(0)}>Create Room</button>
+        <button onClick={() => createRoomNavToLobby()}>Create Room</button>
       </div>
     </main>
   );
