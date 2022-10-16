@@ -7,10 +7,15 @@ import Router from 'next/router'
 import { SetStateAction, useState } from 'react'
 import {
   createRoom,
+  fetchListOfCaptions,
+  fetchVoteList,
   getApplerUsername,
+  getUserList,
   joinRoom,
+  nextRound,
   startedGameListener,
   startRound,
+  uploadCaption,
   uploadImageURL,
   uploadPrompt,
   vote,
@@ -49,6 +54,7 @@ const Home: NextPage = () => {
     tempReset(100)
     console.log('The Firebase Database has been nuked.')
   }
+  const callBack7 = () => {}
 
   return (
     <main>
@@ -58,6 +64,7 @@ const Home: NextPage = () => {
       <button onClick={() => callBack4()}>Button 4</button>
       <button onClick={() => callBack5()}>Button 5</button>
       <button onClick={() => callBack6()}>Button 6</button>
+      <button onClick={() => callBack7()}>Button 7</button>
     </main>
   )
 }
