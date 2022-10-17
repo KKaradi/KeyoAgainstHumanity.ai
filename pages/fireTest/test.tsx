@@ -7,7 +7,11 @@ import Router from "next/router";
 import { SetStateAction, useState } from "react";
 import {
   createRoom,
+  everyoneCastAVoteListener,
+  everyoneCreatedACaptionListener,
+  everyoneGeneratedAnImageListener,
   fetchListOfCaptions,
+  fetchListOfImageURL,
   fetchVoteList,
   getApplerUsername,
   getUserList,
@@ -18,8 +22,13 @@ import {
   uploadCaption,
   uploadImageURL,
   uploadPrompt,
+  userListChangedListener,
   vote,
 } from "../../utils/firebase-utils/firebase-util";
+
+const testFunc = async function test(): Promise<void> {
+  console.log("yeah");
+};
 
 const Home: NextPage = () => {
   const callBack1 = () => {
@@ -27,10 +36,10 @@ const Home: NextPage = () => {
     console.log("rooms created");
   };
   const callBack2 = () => {
-    startedGameListener(100)
+    everyoneGeneratedAnImageListener(100, testFunc);
   };
   const callBack3 = () => {
-    joinRoom("Hank", 100);
+    joinRoom("John", 100);
     console.log("joined");
   };
   const callBack4 = () => {
@@ -42,10 +51,10 @@ const Home: NextPage = () => {
     console.log("prompt uploaded");
   };
   const callBack6 = () => {
-    nextRound(100)
+    uploadCaption("caption", "CaptionAuthor", 100);
   };
   const callBack7 = () => {
-    uploadCaption('banana(caption)', 'John', 100)
+    vote("CaptionAuthor", 100);
   };
 
   return (
