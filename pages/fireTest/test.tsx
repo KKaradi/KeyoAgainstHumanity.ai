@@ -22,8 +22,12 @@ import {
   userListChangedListener,
   tempGameUserList,
   tempReset,
-  tempIncreaseUsers,
+  everyoneCastAVoteListener,
+  everyoneGeneratedAnImageListener,
+  tempMoveRoomPlaceholder,
 } from '../../utils/firebase-utils/firebase-util'
+
+const tempMoveRoomPlaceholderVar = () => tempMoveRoomPlaceholder()
 
 const Home: NextPage = () => {
   const callBack1 = () => {
@@ -31,30 +35,46 @@ const Home: NextPage = () => {
     console.log('rooms created')
   }
   const callBack2 = () => {
-    tempGameUserList(100, 'Bob')
-    tempGameUserList(100, 'Jack')
-    tempGameUserList(100, 'James')
-    tempGameUserList(100, 'Mary')
-    tempGameUserList(100, 'Macy')
-    tempGameUserList(100, 'Ryan')
-    tempGameUserList(100, 'Taran')
-    tempGameUserList(100, 'Barron')
-    console.log('Temp users Added')
+    // tempGameUserList(100, 'Bob')
+    // tempGameUserList(100, 'Jack')
+    // tempGameUserList(100, 'James')
+    // tempGameUserList(100, 'Mary')
+    // tempGameUserList(100, 'Macy')
+
+    // uploadCaption('Monke Flies', 'Jackson', 100, 'Jamy')
+    // uploadImageURL('Haha.com/haha-image', 'Jamy', 100)
+    // uploadImageURL('Monke.com/haha-image', 'Jacky', 100)
+    // uploadImageURL('Lala.com/haha-image', 'Race', 100)
+    // uploadImageURL('Blah.com/haha-image', 'Marvin', 100)
+    // uploadImageURL('a.com/haha-image', 'Recker', 100)
+    // uploadImageURL('b.com/haha-image', 'MK', 100)
+    // uploadImageURL('c.com/haha-image', 'JUg', 100)
+    // uploadImageURL('d.com/haha-image', 'Harven', 100)
+    console.log('Temp items Added')
   }
   const callBack3 = () => {
-    tempIncreaseUsers(100)
-    console.log('temp User Number has increased by one')
+    vote('Jackson', 100)
   }
-  const callBack4 = () => {
-    userListChangedListener(100)
-    console.log('The userlist has been logged and analyzed.')
+  const callBack4 = async () => {
+    userListChangedListener(100, await tempMoveRoomPlaceholderVar())
+    tempGameUserList(100, 'Barron')
   }
-  const callBack5 = () => {}
-  const callBack6 = () => {
+  const callBack5 = async () => {
+    everyoneGeneratedAnImageListener(
+      100,
+      'Jamy',
+      await tempMoveRoomPlaceholderVar(),
+    )
+    console.log('The images have been logged and analyzed.')
+  }
+  const callBack6 = async () => {
+    everyoneCastAVoteListener(100, 'Jamy', await tempMoveRoomPlaceholderVar())
+    console.log('The votes have been logged and analyzed.')
+  }
+  const callBack7 = () => {
     tempReset(100)
     console.log('The Firebase Database has been nuked.')
   }
-  const callBack7 = () => {}
 
   return (
     <main>

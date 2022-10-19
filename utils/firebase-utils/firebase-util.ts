@@ -13,14 +13,20 @@ import {
 
 import { initializeApp } from "firebase/app";
 
+const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+const authDomain = process.env.NEXT_PUBLIC_AUTH_DOMAIN;
+const databaseURL = process.env.NEXT_PUBLIC_DATABASE_URL;
+const projectID = process.env.NEXT_PUBLIC_PROJECT_ID;
+const storagebucket = process.env.NEXT_PUBLIC_STORAGE_BUCKET;
+const messagingSenderId = process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID;
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBC8r_HKc8SqQcyPTZ6eaiLk7eqG8HUm7o",
-  authDomain: "keyo-against-humanity-d9a9d.firebaseapp.com",
-   databaseURL: "https://keyo-against-humanity-d9a9d-default-rtdb.firebaseio.com",
-   projectId: "keyo-against-humanity-d9a9d",
-   storageBucket: "keyo-against-humanity-d9a9d.appspot.com",
-   messagingSenderId: "1021364487504",
-   appId: "1:1021364487504:web:4adf75a7c6c43c766cd855",
+  apiKey: apiKey,
+  authDomain: authDomain,
+   databaseURL: databaseURL,
+   projectId: projectID,
+   storageBucket: storagebucket,
+   messagingSenderId: messagingSenderId,
  };
 
 const app = initializeApp(firebaseConfig);
@@ -61,10 +67,6 @@ export async function createRoom(roomCode: number): Promise<void> {
     roomCode: roomCode,
     started: false,
   });
-  let totalUsers:number = 0
-  set(ref(database, "Rooms/" + roomCode + "/GameUserlist/"), {
-    totalUsers: totalUsers
-  })
   const snapshot = await get(
     child(
       ref(database),
@@ -110,23 +112,23 @@ export async function addToRoundOrder(
 }
 
 //Return userlist called whenever userlist in changed (onValue) to be displayed in lobby page
-export async function getUserList(roomCode: number): Promise<any[]> {
-  let UserList: any[] = [];
+export async function getUserList(roomCode: number): Promise<string[]> {
+  let UserList: string[] = [];
   const snapshot = await get(
-    child(ref(database), "Rooms/" + roomCode + "/Userlist/")
+    child(ref(database), "Rooms/" + roomCode + "/GameUserlist")
   );
   snapshot.forEach((childSnapshot) => {
-    UserList.push(childSnapshot.val().username);
+    UserList.push(childSnapshot.val().GameUserList);
   });
   console.log(UserList);
-  return [UserList]; //Needs adjustment
+  return UserList; //Needs adjustment
 }
 
 //Uploads the prompt under your username when the submit button is clicked in generate image
 export async function uploadPrompt(
   roomCode: number,
   yourUserName: string,
-  prompt: string
+  prompt: string,
 ): Promise<void> {
   const postData = {
     prompt: prompt,
@@ -142,7 +144,7 @@ export async function uploadPrompt(
 export async function uploadImageURL(
   imageURL: string,
   yourUserName: string, //This is also the appler username
-  roomCode: number
+  roomCode: number,
 ): Promise<void> {
   const postData = {
     imageUrl: imageURL,
@@ -169,9 +171,10 @@ export async function fetchApplerImageURL(roomCode: number): Promise<string> {
 export async function uploadCaption(
   caption: string,
   yourUserName: string,
-  roomCode: number
+  roomCode: number,
+  applerUsername:string
 ): Promise<void> {
-  const applerUsername = await getApplerUsername(roomCode);
+  //const applerUsername = await getApplerUsername(roomCode);
 
   const postData = {
     votes: 0,
@@ -323,21 +326,30 @@ export async function startedGameListener(
 // Checks if the userlist changes
 export async function userListChangedListener(
   roomCode: number,
-  //callBack: () => void
-): Promise<{userList:string}[]> { 
-  const userListRef = ref(database, 'Rooms/' + roomCode);
-    onValue(userListRef, async (snapshot) => {
-      const userAmount = snapshot.val().GameUserlist.totalUsers;
-      const data = snapshot.val().GameUserlist;
-      console.log(data, userAmount, "there are "+ userAmount +" users, less then the lobby max of 8 Staying.")
-      let lobbyMax = 8
-      if ( userAmount == lobbyMax) (
-       //callBack
-       console.log(data, userAmount, "there is 8 users, the lobby Max. Starting Game.")
-      )   
-   }
-); return[]
-}
+  callBack: () => void): 
+  Promise<void> { 
+    const userListRef = ref(database, 'Rooms/' + roomCode);
+      onValue(userListRef, async (snapshot) => {
+        
+        const UserListAmount=getUserList(roomCode)
+        let listLength = 8 //(await UserListAmount).length
+  
+        const data = snapshot.val().GameUserlist;
+
+        let lobbyMax = 8
+        if ( listLength != lobbyMax) 
+          (console.log(data, listLength, "there are (is) "+ listLength +" user(s), less then the lobby max of "+ lobbyMax +". Staying.")
+        )
+        if (listLength == lobbyMax) {
+        callBack()
+        console.log("There is the Lobby Max amount of users. Moving");
+        }
+     }
+  );  
+  }
+    
+  
+ 
 
 export async function tempGameUserList(roomCode: number, yourUserName: string,): Promise<void> {
 
@@ -346,22 +358,7 @@ export async function tempGameUserList(roomCode: number, yourUserName: string,):
     username: yourUserName
   })
 }
-export async function tempIncreaseUsers(roomCode:number) {
-  const snapshot = await get(
-    child(
-      ref(database),
-      "Rooms/" +
-        roomCode +
-          "/GameUserList"
-    ) 
-  );
-      console.log(snapshot.val())
-    let newtotalUsers = (snapshot.val() + 1)
-      console.log(newtotalUsers)
-    update(ref(database, "Rooms/" + roomCode + "/GameUserlist"), {
-      totalUsers: newtotalUsers
-  })
-}
+
 export async function tempReset(roomCode:number) {
   set(ref(database, "Rooms/" + roomCode), {
     started: false
@@ -372,13 +369,40 @@ export async function tempReset(roomCode:number) {
 // Evertime the round object is changed, checks if the number of people who gnerated an image = the number of people in the lobby
 export async function everyoneGeneratedAnImageListener(
   roomCode: number,
-  callBack: () => void
-): Promise<void> {
-  // onValue(round reference is changed,(the state of the database)=>{
-  //   if(our coditions are met){
-  //     callBack();
-  //   }
-  // })
+  applerUserName: string,
+  callBack: () => {}
+): Promise<{userList:string}[]> { 
+  const userListRef = ref(database, 'Rooms/' + roomCode + "Game/");
+    onValue(userListRef, async (snapshot) => {
+      
+      const imageListAmount = tempGetUserImageList(roomCode, applerUserName)
+      let listLength = (await imageListAmount).length - 1 //subtract 1 because of roundCounter
+
+      const data = snapshot.val();
+      let lobbyMax = 8
+      if ( listLength != lobbyMax) 
+        (console.log(data, listLength, "there are (is) "+ listLength +" image(s), less then the lobby max of "+ lobbyMax +". Staying.")
+      )
+
+      if ( listLength == lobbyMax) {
+       callBack()
+       console.log(data, listLength, "there is "+ listLength + " images, the lobby Max (temp, testing to ensure lobbyMax = the lobby max "+ lobbyMax +"). Moving past stage.") 
+      } 
+   }
+); return[]
+}
+
+export async function tempGetUserImageList(roomCode: number, applerUserName: string): Promise<string[]> {
+  let ImageList: string[] = [];
+  //const applerUserName = getApplerUsername(roomCode)
+  const snapshot = await get(
+    child(ref(database), "Rooms/" + roomCode + "/Game/")
+  );
+  snapshot.forEach((childSnapshot) => {
+    ImageList.push(childSnapshot.val().GameUserList);
+  });
+  console.log(ImageList);
+  return ImageList; //Needs adjustment
 }
 
 export async function tempStartGame(roomCode: number): Promise<void> {
@@ -405,8 +429,51 @@ export async function everyoneCreatedACaptionListener(
 export async function everyoneCastAVoteListener(
   roomCode: number,
   applerUsername: string,
-  callBack: () => void
-): Promise<void> {}
+  callBack: () => void): 
+  Promise<void> { 
+  const userListRef = ref(database, 'Rooms/' + roomCode + "/Game/" + applerUsername + "/Captions");
+    onValue(userListRef, async (snapshot) => {
+      
+      const UserListAmount=getUserList(roomCode)
+      let listLength = (await UserListAmount).length
+
+      const data = snapshot.val();
+      let lobbyMax = 8
+      if ( listLength != lobbyMax) 
+        (console.log(data, listLength, "there are (is) "+ listLength +" vote(s), less then the lobby max of " + lobbyMax + ". Staying.")
+      )
+
+      if ( listLength == lobbyMax) (
+       callBack
+      )
+    }
+  );
+}
+
+
+export async function blah(
+  roomCode: number,
+  callBack: () => void): 
+  Promise<void> { 
+    const userListRef = ref(database, 'Rooms/' + roomCode);
+      onValue(userListRef, async (snapshot) => {
+        
+        const UserListAmount=getUserList(roomCode)
+        let listLength = 8 //(await UserListAmount).length
+  
+        const data = snapshot.val().GameUserlist;
+
+        let lobbyMax = 8
+        if ( listLength != lobbyMax) 
+          (console.log(data, listLength, "there are (is) "+ listLength +" user(s), less then the lobby max of "+ lobbyMax +". Staying.")
+        )
+        if (listLength == lobbyMax) {
+        callBack;
+        console.log("There is the Lobby Max amount of users. Moving");
+        }
+     }
+  );  
+  }
 
 //Go through Userlist and assign index # by time stamp of users
 
@@ -415,3 +482,7 @@ export async function nextRoundHasBeenClicked(
   roomCode: number,
   callBack: () => void
 ) {}
+
+export async function tempMoveRoomPlaceholder():Promise<any> {
+ console.log('The userlist has been logged and analyzed.'); 
+}
