@@ -7,9 +7,7 @@ import Router from 'next/router'
 import { SetStateAction, useState } from 'react'
 import {
   createRoom,
-  everyoneCastAVoteListener,
   everyoneCreatedACaptionListener,
-  everyoneGeneratedAnImageListener,
   fetchListOfCaptions,
   fetchListOfImageURL,
   fetchVoteList,
@@ -23,11 +21,8 @@ import {
   uploadCaption,
   uploadImageURL,
   uploadPrompt,
-  userListChangedListener,
   vote,
   userListChangedListener,
-  tempGameUserList,
-  tempReset,
   everyoneCastAVoteListener,
   everyoneGeneratedAnImageListener,
   tempMoveRoomPlaceholder,
@@ -36,8 +31,8 @@ import {
 const tempMoveRoomPlaceholderVar = () => tempMoveRoomPlaceholder()
 
 const testFunc = async function test(): Promise<void> {
-  console.log("callback");
-};
+  console.log('callback')
+}
 
 const Home: NextPage = () => {
   const callBack1 = () => {
@@ -45,75 +40,33 @@ const Home: NextPage = () => {
     console.log('rooms created')
   }
   const callBack2 = () => {
-<<<<<<< HEAD
-    // tempGameUserList(100, 'Bob')
-    // tempGameUserList(100, 'Jack')
-    // tempGameUserList(100, 'James')
-    // tempGameUserList(100, 'Mary')
-    // tempGameUserList(100, 'Macy')
-
-    // uploadCaption('Monke Flies', 'Jackson', 100, 'Jamy')
-    // uploadImageURL('Haha.com/haha-image', 'Jamy', 100)
-    // uploadImageURL('Monke.com/haha-image', 'Jacky', 100)
-    // uploadImageURL('Lala.com/haha-image', 'Race', 100)
-    // uploadImageURL('Blah.com/haha-image', 'Marvin', 100)
-    // uploadImageURL('a.com/haha-image', 'Recker', 100)
-    // uploadImageURL('b.com/haha-image', 'MK', 100)
-    // uploadImageURL('c.com/haha-image', 'JUg', 100)
-    // uploadImageURL('d.com/haha-image', 'Harven', 100)
-    console.log('Temp items Added')
-  }
-  const callBack3 = () => {
-    vote('Jackson', 100)
-  }
-  const callBack4 = async () => {
-    userListChangedListener(100, await tempMoveRoomPlaceholderVar())
-    tempGameUserList(100, 'Barron')
-  }
-  const callBack5 = async () => {
-    everyoneGeneratedAnImageListener(
-      100,
-      'Jamy',
-      await tempMoveRoomPlaceholderVar(),
-    )
-    console.log('The images have been logged and analyzed.')
-  }
-  const callBack6 = async () => {
-    everyoneCastAVoteListener(100, 'Jamy', await tempMoveRoomPlaceholderVar())
-    console.log('The votes have been logged and analyzed.')
-  }
-  const callBack7 = () => {
-    tempReset(100)
-    console.log('The Firebase Database has been nuked.')
-  }
-=======
     userListChangedListener(100, testFunc)
-  };
+  }
   const callBack3 = () => {
-    joinRoom("Bob", 100);
-    console.log("joined");
-  };
+    joinRoom('Bob', 100)
+    console.log('joined')
+  }
   const callBack4 = () => {
-    uploadImageURL("123.jpg", "John", 100);
-    console.log("url uploaded");
-  };
+    uploadImageURL('123.jpg', 'John', 100)
+    console.log('url uploaded')
+  }
   const callBack5 = () => {
-    uploadPrompt(100, "John", "banana");
-    console.log("prompt uploaded");
-  };
+    uploadPrompt(100, 'John', 'banana')
+    console.log('prompt uploaded')
+  }
   const callBack6 = () => {
-    uploadCaption("caption2", "CaptionAuthor2", 100);
-  };
+    uploadCaption('caption2', 'CaptionAuthor2', 100)
+  }
   const callBack7 = () => {
-    vote("CaptionAuthor2", 100);
-  };
+    vote('CaptionAuthor2', 100)
+  }
   const callBack8 = () => {
     startGame(100)
-  };
+  }
   const callBack9 = () => {
-    fetchVoteList(100)
-  };
->>>>>>> 45521f43f099cf6dc49ef2803ea5dca4eb8b8cde
+    everyoneCastAVoteListener(100, tempMoveRoomPlaceholder)
+    console.log('Button 9 has been clicked')
+  }
 
   return (
     <main>

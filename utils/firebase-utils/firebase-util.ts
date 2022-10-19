@@ -169,7 +169,6 @@ export async function uploadCaption(
   caption: string,
   yourUserName: string,
   roomCode: number,
-  applerUsername:string
 ): Promise<void> {
   const applerUsername = await getApplerForRound(roomCode);
 
@@ -364,7 +363,7 @@ export async function everyoneGeneratedAnImageListener(
     let imageUrlListLength = (await imageUrlList).length;
 
     if (userListLength === imageUrlListLength) {
-      callBack;
+      callBack();
     }
   });
 }
@@ -403,10 +402,14 @@ export async function everyoneCastAVoteListener(
   onValue(ref(database, "Rooms/" + roomCode + "/Game/"), async (snapshot) => {
     let Userlist = getUserList(roomCode);
     let UserListLength = (await Userlist).length;
+    console.log(UserListLength)
 
     let totalVotes = await fetchTotalVotes(roomCode);
+    console.log(totalVotes)
 
-    if (UserListLength === totalVotes) callBack;
+    if (UserListLength === totalVotes) {
+      callBack()
+    };
   });
 }
 
@@ -423,6 +426,6 @@ export async function nextRoundHasBeenClicked(
   );
 }
 
-export async function tempMoveRoomPlaceholder():Promise<any> {
- console.log('The userlist has been logged and analyzed.'); 
+export async function tempMoveRoomPlaceholder(){
+ console.log('This function works correctly!'); 
 }
