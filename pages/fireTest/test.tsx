@@ -13,12 +13,13 @@ import {
   fetchListOfCaptions,
   fetchListOfImageURL,
   fetchVoteList,
-  getApplerUsername,
+  getApplerForRound,
   getUserList,
   joinRoom,
   nextRound,
+  resetRoom,
   startedGameListener,
-  startRound,
+  startGame,
   uploadCaption,
   uploadImageURL,
   uploadPrompt,
@@ -27,7 +28,7 @@ import {
 } from "../../utils/firebase-utils/firebase-util";
 
 const testFunc = async function test(): Promise<void> {
-  console.log("yeah");
+  console.log("callback");
 };
 
 const Home: NextPage = () => {
@@ -36,25 +37,31 @@ const Home: NextPage = () => {
     console.log("rooms created");
   };
   const callBack2 = () => {
-    everyoneGeneratedAnImageListener(100, testFunc);
+    userListChangedListener(100, testFunc)
   };
   const callBack3 = () => {
-    joinRoom("John", 100);
+    joinRoom("Bob", 100);
     console.log("joined");
   };
   const callBack4 = () => {
-    uploadImageURL("123.jpg", "Bob", 100);
+    uploadImageURL("123.jpg", "John", 100);
     console.log("url uploaded");
   };
   const callBack5 = () => {
-    uploadPrompt(100, "Bob", "banana");
+    uploadPrompt(100, "John", "banana");
     console.log("prompt uploaded");
   };
   const callBack6 = () => {
-    uploadCaption("caption", "CaptionAuthor", 100);
+    uploadCaption("caption2", "CaptionAuthor2", 100);
   };
   const callBack7 = () => {
-    vote("CaptionAuthor", 100);
+    vote("CaptionAuthor2", 100);
+  };
+  const callBack8 = () => {
+    startGame(100)
+  };
+  const callBack9 = () => {
+    fetchVoteList(100)
   };
 
   return (
@@ -66,6 +73,8 @@ const Home: NextPage = () => {
       <button onClick={() => callBack5()}>Button 5</button>
       <button onClick={() => callBack6()}>Button 6</button>
       <button onClick={() => callBack7()}>Button 7</button>
+      <button onClick={() => callBack8()}>Button 8</button>
+      <button onClick={() => callBack9()}>Button 9</button>
     </main>
   );
 };
