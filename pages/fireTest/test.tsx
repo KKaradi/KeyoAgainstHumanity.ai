@@ -7,17 +7,23 @@ import Router from 'next/router'
 import { SetStateAction, useState } from 'react'
 import {
   createRoom,
+  everyoneCastAVoteListener,
+  everyoneCreatedACaptionListener,
+  everyoneGeneratedAnImageListener,
   fetchListOfCaptions,
+  fetchListOfImageURL,
   fetchVoteList,
-  getApplerUsername,
+  getApplerForRound,
   getUserList,
   joinRoom,
   nextRound,
+  resetRoom,
   startedGameListener,
-  startRound,
+  startGame,
   uploadCaption,
   uploadImageURL,
   uploadPrompt,
+  userListChangedListener,
   vote,
   userListChangedListener,
   tempGameUserList,
@@ -29,12 +35,17 @@ import {
 
 const tempMoveRoomPlaceholderVar = () => tempMoveRoomPlaceholder()
 
+const testFunc = async function test(): Promise<void> {
+  console.log("callback");
+};
+
 const Home: NextPage = () => {
   const callBack1 = () => {
     createRoom(100)
     console.log('rooms created')
   }
   const callBack2 = () => {
+<<<<<<< HEAD
     // tempGameUserList(100, 'Bob')
     // tempGameUserList(100, 'Jack')
     // tempGameUserList(100, 'James')
@@ -75,6 +86,34 @@ const Home: NextPage = () => {
     tempReset(100)
     console.log('The Firebase Database has been nuked.')
   }
+=======
+    userListChangedListener(100, testFunc)
+  };
+  const callBack3 = () => {
+    joinRoom("Bob", 100);
+    console.log("joined");
+  };
+  const callBack4 = () => {
+    uploadImageURL("123.jpg", "John", 100);
+    console.log("url uploaded");
+  };
+  const callBack5 = () => {
+    uploadPrompt(100, "John", "banana");
+    console.log("prompt uploaded");
+  };
+  const callBack6 = () => {
+    uploadCaption("caption2", "CaptionAuthor2", 100);
+  };
+  const callBack7 = () => {
+    vote("CaptionAuthor2", 100);
+  };
+  const callBack8 = () => {
+    startGame(100)
+  };
+  const callBack9 = () => {
+    fetchVoteList(100)
+  };
+>>>>>>> 45521f43f099cf6dc49ef2803ea5dca4eb8b8cde
 
   return (
     <main>
@@ -85,6 +124,8 @@ const Home: NextPage = () => {
       <button onClick={() => callBack5()}>Button 5</button>
       <button onClick={() => callBack6()}>Button 6</button>
       <button onClick={() => callBack7()}>Button 7</button>
+      <button onClick={() => callBack8()}>Button 8</button>
+      <button onClick={() => callBack9()}>Button 9</button>
     </main>
   )
 }

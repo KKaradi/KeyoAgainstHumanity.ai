@@ -5,26 +5,6 @@ import styles from '../styles/Home.module.css'
 // import { Routes, Route, useNavigate } from "react-router-dom";
 import Router from 'next/router'
 import { SetStateAction, useState } from 'react'
-import {
-  getDatabase,
-  ref,
-  set,
-  get,
-  child,
-  update,
-  onChildAdded,
-} from 'firebase/database'
-import { initializeApp } from 'firebase/app'
-
-const firebaseConfig = {
-  //PUT FIREBASE CONFIG HERE
-  databaseURL:
-    'https://keyo-against-humanity-d9a9d-default-rtdb.firebaseio.com/',
-}
-
-const app = initializeApp(firebaseConfig)
-
-const db = getDatabase()
 
 const Home: NextPage = () => {
   const [userName, setUserName] = useState('')
@@ -64,14 +44,6 @@ const Home: NextPage = () => {
       },
     })
   }
-  const roomCode = 10000
-  async function test() {
-    const snapshot = await get(
-      child(ref(db), 'Rooms/' + roomCode + '/Userlist/'),
-    )
-
-    console.log(snapshot.val())
-  }
 
   return (
     <main>
@@ -97,8 +69,7 @@ const Home: NextPage = () => {
         />
       </div>
       <div>
-        <button onClick={() => createRoom()}>Create Room</button>
-        <button onClick={() => test()}>Create Room</button>
+        <button onClick={() => navToLobby()}>Join Room</button>
       </div>
       <div>
         <button onClick={() => createRoom()}>Create Room</button>
