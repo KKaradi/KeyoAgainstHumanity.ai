@@ -1,10 +1,10 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import type { NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
 // import { Routes, Route, useNavigate } from "react-router-dom";
-import Router from 'next/router'
-import { SetStateAction, useState } from 'react'
+import Router from "next/router";
+import { SetStateAction, useState } from "react";
 import {
   createRoom,
   everyoneCreatedACaptionListener,
@@ -25,48 +25,51 @@ import {
   userListChangedListener,
   everyoneCastAVoteListener,
   everyoneGeneratedAnImageListener,
-  tempMoveRoomPlaceholder,
-} from '../../utils/firebase-utils/firebase-util'
+} from "../../utils/firebase-utils/firebase-util";
 
-const tempMoveRoomPlaceholderVar = () => tempMoveRoomPlaceholder()
-
-const testFunc = async function test(): Promise<void> {
-  console.log('callback')
+export async function testCallbackFunc() {
+  console.log("This function works correctly!");
 }
+
+const testCallback = () => testCallbackFunc();
 
 const Home: NextPage = () => {
   const callBack1 = () => {
-    createRoom(100)
-    console.log('rooms created')
-  }
+    createRoom(100);
+    console.log("rooms created");
+  };
   const callBack2 = () => {
-    userListChangedListener(100, testFunc)
-  }
+    userListChangedListener(100, testCallback);
+  };
   const callBack3 = () => {
-    joinRoom('Bob', 100)
-    console.log('joined')
-  }
+    joinRoom("Bob", 100);
+    console.log("joined");
+  };
   const callBack4 = () => {
-    uploadImageURL('123.jpg', 'John', 100)
-    console.log('url uploaded')
-  }
+    uploadImageURL("123.jpg", "John", 100);
+    console.log("url uploaded");
+  };
   const callBack5 = () => {
-    uploadPrompt(100, 'John', 'banana')
-    console.log('prompt uploaded')
-  }
+    uploadPrompt(100, "John", "banana");
+    console.log("prompt uploaded");
+  };
   const callBack6 = () => {
-    uploadCaption('caption2', 'CaptionAuthor2', 100)
-  }
+    uploadCaption("caption2", "CaptionAuthor2", 100);
+  };
   const callBack7 = () => {
-    vote('CaptionAuthor2', 100)
-  }
+    vote("CaptionAuthor2", 100);
+  };
   const callBack8 = () => {
-    startGame(100)
-  }
+    startGame(100);
+  };
   const callBack9 = () => {
-    everyoneCastAVoteListener(100, tempMoveRoomPlaceholder)
-    console.log('Button 9 has been clicked')
-  }
+    everyoneCastAVoteListener(100, testCallback);
+    console.log("Button 9 has been clicked");
+  };
+  const callBack10 = () => {
+    everyoneCreatedACaptionListener(100, testCallback);
+    console.log("Button 10 has been clicked");
+  };
 
   return (
     <main>
@@ -79,8 +82,9 @@ const Home: NextPage = () => {
       <button onClick={() => callBack7()}>Button 7</button>
       <button onClick={() => callBack8()}>Button 8</button>
       <button onClick={() => callBack9()}>Button 9</button>
+      <button onClick={() => callBack10()}>Button 10</button>
     </main>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

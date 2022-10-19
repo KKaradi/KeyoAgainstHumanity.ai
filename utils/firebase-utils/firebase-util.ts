@@ -11,7 +11,6 @@ import {
   remove,
 } from "firebase/database";
 
-
 import { initializeApp } from "firebase/app";
 
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
@@ -24,11 +23,11 @@ const messagingSenderId = process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID;
 const firebaseConfig = {
   apiKey: apiKey,
   authDomain: authDomain,
-   databaseURL: databaseURL,
-   projectId: projectID,
-   storageBucket: storagebucket,
-   messagingSenderId: messagingSenderId,
- };
+  databaseURL: databaseURL,
+  projectId: projectID,
+  storageBucket: storagebucket,
+  messagingSenderId: messagingSenderId,
+};
 
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
@@ -61,13 +60,7 @@ export async function createRoom(roomCode: number): Promise<void> {
     roomCode: roomCode,
     started: false,
   });
-  const snapshot = await get(
-    child(
-      ref(database),
-      "Rooms/" +
-        roomCode
-    )
-  );
+  const snapshot = await get(child(ref(database), "Rooms/" + roomCode));
 
   set(ref(database, "Rooms/" + roomCode + "/Game"), {
     roundCounter: 0,
@@ -108,7 +101,7 @@ export async function getUserList(roomCode: number): Promise<string[]> {
 export async function uploadPrompt(
   roomCode: number,
   yourUserName: string,
-  prompt: string,
+  prompt: string
 ): Promise<void> {
   const dataToFirebase = {
     prompt: prompt,
@@ -168,7 +161,7 @@ export async function fetchListOfImageURL(
 export async function uploadCaption(
   caption: string,
   yourUserName: string,
-  roomCode: number,
+  roomCode: number
 ): Promise<void> {
   const applerUsername = await getApplerForRound(roomCode);
 
@@ -278,7 +271,6 @@ export async function fetchVoteList(
       captionVoteObject[caption] = childSnapshot.val().votes;
     }
   });
-  console.log(captionVoteObject);
   return captionVoteObject;
 }
 
@@ -329,7 +321,7 @@ export async function startedGameListener(
     const startedData = snapshot.val().started;
 
     if (startedData === true) {
-      callBack;
+      callBack();
     }
   });
 }
@@ -388,7 +380,7 @@ export async function everyoneCreatedACaptionListener(
 
     if (UserListLength - 1 === captionListLength) {
       // -1 because the appler doesn't caption
-      callBack;
+      callBack();
     }
   });
 }
@@ -402,14 +394,11 @@ export async function everyoneCastAVoteListener(
   onValue(ref(database, "Rooms/" + roomCode + "/Game/"), async (snapshot) => {
     let Userlist = getUserList(roomCode);
     let UserListLength = (await Userlist).length;
-    console.log(UserListLength)
-
     let totalVotes = await fetchTotalVotes(roomCode);
-    console.log(totalVotes)
 
     if (UserListLength === totalVotes) {
-      callBack()
-    };
+      callBack();
+    }
   });
 }
 
@@ -421,11 +410,7 @@ export async function nextRoundHasBeenClicked(
   onValue(
     ref(database, "Rooms/" + roomCode + "/Game" + "/roundCounter"),
     (snapshot) => {
-      callBack;
+      callBack();
     }
   );
-}
-
-export async function tempMoveRoomPlaceholder(){
- console.log('This function works correctly!'); 
 }
