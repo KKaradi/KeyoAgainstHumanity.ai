@@ -5,7 +5,6 @@ import {
   update,
   get,
   child,
-  onChildChanged,
   push,
   onValue,
   remove,
@@ -42,7 +41,7 @@ export async function getApplerForRound(roomCode: number): Promise<any> {
     child(ref(database), "Rooms/" + roomCode + "/Userlist/")
   );
 
-  let applerList: any[] = [];
+  let applerList: string[] = [];
   let applerName;
 
   userListData.forEach((childSnapshot) => {
@@ -56,13 +55,12 @@ export async function getApplerForRound(roomCode: number): Promise<any> {
 }
 
 export async function createRoom(roomCode: number): Promise<void> {
-  set(ref(database, "Rooms/" + roomCode), {
+  await set(ref(database, "Rooms/" + roomCode), {
     roomCode: roomCode,
     started: false,
   });
-  const snapshot = await get(child(ref(database), "Rooms/" + roomCode));
 
-  set(ref(database, "Rooms/" + roomCode + "/Game"), {
+  await set(ref(database, "Rooms/" + roomCode + "/Game"), {
     roundCounter: 0,
   });
 }
@@ -71,21 +69,21 @@ export async function joinRoom(
   roomCode: number
 ): Promise<void> {
   const userListRef = push(ref(database, "Rooms/" + roomCode + "/Userlist/"));
-  set(userListRef, {
+  await set(userListRef, {
     username: yourUserName,
   });
 
-  const dataToFirebasePlaceholder = {
-    x: "x",
+  const dataToFirebase = {
+    username: yourUserName,
   };
 
   return update(
     ref(database, "Rooms/" + roomCode + "/Game/" + yourUserName),
-    dataToFirebasePlaceholder
+    dataToFirebase
   );
 }
 
-//Return userlist called whenever userlist in changed (onValue) to be displayed in lobby page
+//Return userlist called whenever userlist in changed; to be displayed in lobby page
 export async function getUserList(roomCode: number): Promise<string[]> {
   let userList: string[] = [];
   const userListData = await get(
@@ -121,7 +119,6 @@ export async function uploadImageURL(
 ): Promise<void> {
   const dataToFirebase = {
     imageUrl: imageURL,
-    x: null,
   };
 
   return update(
@@ -141,15 +138,12 @@ export async function fetchApplerImageURL(roomCode: number): Promise<string> {
   return applerData.val().imageUrl;
 }
 
-export async function fetchListOfImageURL(
-  roomCode: number
-  //): Promise<{ caption: string; authorUserName: string }[]> {
-): Promise<string[]> {
+export async function fetchListOfImageURL(roomCode: number): Promise<string[]> {
   const gameData = await get(
     child(ref(database), "Rooms/" + roomCode + "/Game/")
   );
 
-  let imageUrlList: string[] = [];
+  const imageUrlList: string[] = [];
   gameData.forEach((childSnapshot) => {
     if (childSnapshot.val().imageUrl != null) {
       imageUrlList.push(childSnapshot.val().imageUrl);
@@ -198,7 +192,7 @@ export async function fetchListOfCaptions(roomCode: number): Promise<string[]> {
     )
   );
 
-  let captionList: string[] = [];
+  const captionList: string[] = [];
 
   captionData.forEach((childSnapshot) => {
     captionList.push(childSnapshot.val().caption);
@@ -253,7 +247,8 @@ export async function vote(
     dataToFirebase
   );
 }
-export async function fetchVoteList(
+
+export async function fetchCaptionVoteObject(
   roomCode: number
 ): Promise<{ [index: string]: number }> {
   const applerUsername = await getApplerForRound(roomCode);
@@ -332,13 +327,10 @@ export async function userListChangedListener(
   roomCode: number,
   callBack: ([]: string[]) => void
 ): Promise<void> {
-  onValue(
-    ref(database, "Rooms/" + roomCode + "/Userlist"),
-    async (snapshot) => {
-      let userList = await getUserList(roomCode);
-      callBack(userList);
-    }
-  );
+  onValue(ref(database, "Rooms/" + roomCode + "/Userlist"), async () => {
+    let userList = await getUserList(roomCode);
+    callBack(userList);
+  });
 }
 
 // Calls a call back function when everyone in the lobby has generated an image
@@ -347,7 +339,7 @@ export async function everyoneGeneratedAnImageListener(
   roomCode: number,
   callBack: () => void
 ): Promise<void> {
-  onValue(ref(database, "Rooms/" + roomCode + "/Game/"), async (snapshot) => {
+  onValue(ref(database, "Rooms/" + roomCode + "/Game/"), async () => {
     let userList = getUserList(roomCode);
     let userListLength = (await userList).length;
 
@@ -371,7 +363,7 @@ export async function everyoneCreatedACaptionListener(
   roomCode: number,
   callBack: () => void
 ): Promise<void> {
-  onValue(ref(database, "Rooms/" + roomCode + "/Game/"), async (snapshot) => {
+  onValue(ref(database, "Rooms/" + roomCode + "/Game/"), async () => {
     let Userlist = getUserList(roomCode);
     let UserListLength = (await Userlist).length;
 
@@ -391,7 +383,7 @@ export async function everyoneCastAVoteListener(
   roomCode: number,
   callBack: () => void
 ): Promise<void> {
-  onValue(ref(database, "Rooms/" + roomCode + "/Game/"), async (snapshot) => {
+  onValue(ref(database, "Rooms/" + roomCode + "/Game/"), async () => {
     let Userlist = getUserList(roomCode);
     let UserListLength = (await Userlist).length;
     let totalVotes = await fetchTotalVotes(roomCode);
@@ -409,7 +401,7 @@ export async function nextRoundHasBeenClicked(
 ) {
   onValue(
     ref(database, "Rooms/" + roomCode + "/Game" + "/roundCounter"),
-    (snapshot) => {
+    () => {
       callBack();
     }
   );

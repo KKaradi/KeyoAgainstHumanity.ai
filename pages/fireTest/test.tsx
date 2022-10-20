@@ -10,7 +10,7 @@ import {
   everyoneCreatedACaptionListener,
   fetchListOfCaptions,
   fetchListOfImageURL,
-  fetchVoteList,
+  fetchCaptionVoteObject,
   getApplerForRound,
   getUserList,
   joinRoom,
@@ -28,7 +28,7 @@ import {
 } from "../../utils/firebase-utils/firebase-util";
 
 export async function testCallbackFunc() {
-  console.log("This function works correctly!");
+  console.log("Everyone has voted");
 }
 
 const testCallback = () => testCallbackFunc();
@@ -39,10 +39,11 @@ const Home: NextPage = () => {
     console.log("rooms created");
   };
   const callBack2 = () => {
-    userListChangedListener(100, testCallback);
+    everyoneCastAVoteListener(100, testCallback);
+    console.log('everyoneCastAVoteListener has started')
   };
   const callBack3 = () => {
-    joinRoom("Bob", 100);
+    joinRoom("Billy", 100);
     console.log("joined");
   };
   const callBack4 = () => {
@@ -54,17 +55,18 @@ const Home: NextPage = () => {
     console.log("prompt uploaded");
   };
   const callBack6 = () => {
-    uploadCaption("caption2", "CaptionAuthor2", 100);
+    uploadCaption("long yellow thing(this is also a caption)", "Jimmy", 100);
   };
   const callBack7 = () => {
-    vote("CaptionAuthor2", 100);
+    vote("John", 100);
+    console.log('John Voted')
   };
   const callBack8 = () => {
     startGame(100);
   };
   const callBack9 = () => {
-    everyoneCastAVoteListener(100, testCallback);
-    console.log("Button 9 has been clicked");
+    vote("Jimmy", 100)
+    console.log("Jimmy voted")
   };
   const callBack10 = () => {
     everyoneCreatedACaptionListener(100, testCallback);
