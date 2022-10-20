@@ -220,7 +220,7 @@ export async function vote(
     )
   );
 
-  let votesForCaption = captionAuthorData.val().votes;
+  let votesForCaption = await captionAuthorData.val().votes;
   let newVotesForCaption = 0;
 
   if (votesForCaption === null) {
@@ -289,7 +289,7 @@ export async function nextRound(roomCode: number): Promise<void> {
     child(ref(database), "Rooms/" + roomCode + "/Game" + "/roundCounter")
   );
 
-  let newRoundNum = roundNumData.val() + 1;
+  let newRoundNum = await roundNumData.val() + 1;
 
   const dataToFirebase = {
     roundCounter: newRoundNum,
@@ -312,8 +312,8 @@ export async function startedGameListener(
   roomCode: number,
   callBack: () => void
 ): Promise<void> {
-  onValue(ref(database, "Rooms/" + roomCode), (snapshot) => {
-    const startedData = snapshot.val().started;
+  onValue(ref(database, "Rooms/" + roomCode), async (snapshot) => {
+    const startedData = await snapshot.val().started;
 
     if (startedData === true) {
       callBack();
@@ -340,10 +340,10 @@ export async function everyoneGeneratedAnImageListener(
   callBack: () => void
 ): Promise<void> {
   onValue(ref(database, "Rooms/" + roomCode + "/Game/"), async () => {
-    let userList = getUserList(roomCode);
+    let userList = await getUserList(roomCode);
     let userListLength = (await userList).length;
 
-    let imageUrlList = fetchListOfImageURL(roomCode);
+    let imageUrlList = await fetchListOfImageURL(roomCode);
     let imageUrlListLength = (await imageUrlList).length;
 
     if (userListLength === imageUrlListLength) {
@@ -364,10 +364,10 @@ export async function everyoneCreatedACaptionListener(
   callBack: () => void
 ): Promise<void> {
   onValue(ref(database, "Rooms/" + roomCode + "/Game/"), async () => {
-    let Userlist = getUserList(roomCode);
+    let Userlist = await getUserList(roomCode);
     let UserListLength = (await Userlist).length;
 
-    let captionList = fetchListOfCaptions(roomCode);
+    let captionList = await fetchListOfCaptions(roomCode);
     let captionListLength = (await captionList).length;
 
     if (UserListLength - 1 === captionListLength) {
@@ -384,7 +384,7 @@ export async function everyoneCastAVoteListener(
   callBack: () => void
 ): Promise<void> {
   onValue(ref(database, "Rooms/" + roomCode + "/Game/"), async () => {
-    let Userlist = getUserList(roomCode);
+    let Userlist = await getUserList(roomCode);
     let UserListLength = (await Userlist).length;
     let totalVotes = await fetchTotalVotes(roomCode);
 
