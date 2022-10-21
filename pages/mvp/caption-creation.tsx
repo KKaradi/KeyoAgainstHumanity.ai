@@ -6,6 +6,8 @@ import Router from "next/router";
 import { useRouter } from "next/router";
 import { SetStateAction, useState } from "react";
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
+import { uploadCaption } from "../../utils/firebase-utils/firebase-util";
+import { getApplerForRound } from "../../utils/firebase-utils/firebase-util";
 
 const PromptCreation: NextPage = () => {
   const router = useRouter();
@@ -51,12 +53,28 @@ const PromptCreation: NextPage = () => {
     return (imgURL)
   }
 
+  function uploadCaptionNavToVote () {
+    uploadCaption(caption, String(userName), Number(roomID));
+    navToVote();
+  }
+
+  const [applerUsername, setApplerUsername] = useState("")
+
+  function displayApplerUsername() {
+    getApplerForRound(Number(roomID)).then(
+      (applerUsername) => {
+        setApplerUsername(applerUsername)
+      }
+    )
+    return (applerUsername)
+  }
+
   return (
     <main>
       <h1>Caption the image</h1>
       <h3>Room {roomID} {roomCode}</h3>
-      <h3>Appler: {userName}</h3>
-      <h4>This is the picture {userName} generated</h4>
+      <h3>Appler: { displayApplerUsername() }</h3>
+      <h4>This is the picture { displayApplerUsername() } generated</h4>
       <div>
       <Image src={getImgURL()} width={100} height={100} alt="Pretty Picture"></Image>
       </div>
@@ -71,7 +89,7 @@ const PromptCreation: NextPage = () => {
         />
       </div>
       <div>
-        <button onClick={() => navToVote()}>submit</button>
+        <button onClick={() => uploadCaptionNavToVote()}>submit</button>
       </div>
     </main>
   );
