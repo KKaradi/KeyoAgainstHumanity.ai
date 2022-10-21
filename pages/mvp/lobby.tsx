@@ -4,8 +4,8 @@ import Router from "next/router";
 import { useRouter } from "next/router";
 import { SetStateAction, useState, useEffect } from "react";
 import { getUserList } from "../../utils/firebase-utils/firebase-util";
-import { startRound } from "../../utils/firebase-utils/firebase-util";
-import { startedRoundListener } from "../../utils/firebase-utils/firebase-util";
+import { startGame } from "../../utils/firebase-utils/firebase-util";
+import { startedGameListener } from "../../utils/firebase-utils/firebase-util";
 import { userListChangedListener } from "../../utils/firebase-utils/firebase-util";
 
 const Lobby: NextPage = () => {
@@ -18,23 +18,6 @@ const Lobby: NextPage = () => {
     userName,
     roomID,
   };
-
-  const [userList, setUserList] = useState([""])
-
-  function displayUserList() {
-    useEffect(() => {
-      getUserList(Number(roomID)).then(
-        (userList) => {
-          setUserList(userList)
-        }
-      )
-    })
-    return (
-      <ul>{ userList.map(
-        (user) => <li>{ user }</li>
-      ) }</ul>
-    )
-  }
 
   function navToHome() {
     Router.push({
@@ -53,17 +36,28 @@ const Lobby: NextPage = () => {
     });
   }
 
-  let userListCallback = async(userList: string[]) => {
-    setUserList(userList);
+  const [userList, setUserList] = useState([""])
+
+  function displayUserList() {
+      getUserList(Number(roomID)).then(
+        (userList) => {
+          setUserList(userList)
+        }
+      )
+    return (
+      <ul>{ userList.map(
+        (user) => <li key = { user }>{ user }</li>
+      ) }</ul>
+    )
   }
 
   useEffect(() => {
-    userListChangedListener(Number(roomID), userListCallback);
-  }, [])
+    userListChangedListener(Number(roomID), displayUserList);
+  })
 
   useEffect(() => {
-    startedRoundListener(Number(roomID), navToGenerate);
-  }, [])
+    startedGameListener(Number(roomID), navToGenerate);
+  })
 
   return (
     <main>
@@ -72,7 +66,7 @@ const Lobby: NextPage = () => {
       <h4>Users:</h4>
       <div>{ displayUserList() }</div>
       <div>
-        <button onClick={() => startRound(Number(roomID))}>Start Round</button>
+        <button onClick={() => startGame(Number(roomID))}>Start Round</button>
       </div>
       <div>
         <button onClick={() => navToHome()}>Exit Room</button>

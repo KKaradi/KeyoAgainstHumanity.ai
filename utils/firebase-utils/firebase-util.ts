@@ -20,25 +20,18 @@ const storagebucket = process.env.NEXT_PUBLIC_STORAGE_BUCKET;
 const messagingSenderId = process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID;
 
 const firebaseConfig = {
-<<<<<<< HEAD
-=======
   apiKey: apiKey,
   authDomain: authDomain,
   databaseURL: databaseURL,
   projectId: projectID,
   storageBucket: storagebucket,
   messagingSenderId: messagingSenderId,
-<<<<<<< HEAD
-  appId: appId,
->>>>>>> c7aa53d964e01463b503e14d3f5d0560bde209d4
-=======
->>>>>>> 083a8ff4bbc6f790b972322f8244d8ca2e3abdf0
 };
 
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-export async function getApplerForRound(roomCode: number): Promise<any> {
+export async function getApplerForRound(roomCode: number): Promise<string> {
   const gameData = await get(
     child(ref(database), "Rooms/" + roomCode + "/Game/")
   );
@@ -49,7 +42,7 @@ export async function getApplerForRound(roomCode: number): Promise<any> {
   );
 
   let applerList: string[] = [];
-  let applerName;
+  let applerName: string;
 
   userListData.forEach((childSnapshot) => {
     if (childSnapshot.val() != null) {
@@ -332,18 +325,12 @@ export async function startedGameListener(
 // Checks if the userlist changes
 export async function userListChangedListener(
   roomCode: number,
-<<<<<<< HEAD
-  callBack: () => {}
-): Promise<void> {}
-=======
-  callBack: ([]: string[]) => void
+  callBack: () => void
 ): Promise<void> {
   onValue(ref(database, "Rooms/" + roomCode + "/Userlist"), async () => {
-    let userList = await getUserList(roomCode);
-    callBack(userList);
+    callBack();
   });
 }
->>>>>>> 083a8ff4bbc6f790b972322f8244d8ca2e3abdf0
 
 // Calls a call back function when everyone in the lobby has generated an image
 // Evertime the round object is changed, checks if the number of people who gnerated an image = the number of people in the lobby

@@ -4,7 +4,7 @@ import Router from "next/router";
 import { useRouter } from "next/router";
 import { SetStateAction, useState, useEffect } from "react";
 import { generateImage } from "../../utils/image-utils/image-util";
-import { uploadImageURL } from "../../utils/firebase-utils/firebase-util";
+import { getApplerForRound, uploadImageURL, uploadPrompt } from "../../utils/firebase-utils/firebase-util";
 import { everyoneGeneratedAnImageListener } from "../../utils/firebase-utils/firebase-util";
 
 const GenerateImages: NextPage = () => {
@@ -44,20 +44,32 @@ const GenerateImages: NextPage = () => {
     setURL(newURL)
   }
 
-  const generateImageUploadURL = () => {
-    generateImageWrapper(prompt);
-    uploadImageURL(URL, String(userName), Number(roomID), prompt);
+  const uploadURLUploadPrompt = () => {
+    uploadImageURL(URL, String(userName), Number(roomID));
+    uploadPrompt(Number(roomID), String(userName), prompt);
+  }
+
+  const [applerUsername, setApplerUsername] = useState("")
+
+  function displayApplerUsername() {
+    getApplerForRound(Number(roomID)).then(
+      (applerUsername) => {
+        setApplerUsername(applerUsername)
+      }
+    )
+    return (applerUsername)
   }
 
   useEffect(() => {
     everyoneGeneratedAnImageListener(Number(roomID), navToPromptCreate);
-  }, [])
+  })
 
   return (
     <main>
       <h1>Generate Image</h1>
       <h3>Room {roomID} {roomCode}</h3>
-      <h3>Appler: {userName}</h3>
+      <h3>Appler: </h3>
+      <div>{ displayApplerUsername() }</div>
       <h4>Generate your image</h4>
       <div>
         <Image src={URL} width={100} height={100} alt="Pretty Picture"></Image>
@@ -73,10 +85,10 @@ const GenerateImages: NextPage = () => {
         />
       </div>
       <div>
-        <button onClick={() => generateImageUploadURL()}>Generate</button>
+        <button onClick={() => generateImageWrapper(prompt)}>Generate</button>
       </div>
       <div>
-        <button onClick={() => navToPromptCreate()}>Submit</button>
+        <button onClick={() => uploadURLUploadPrompt()}>Submit</button>
       </div>
     </main>
   );

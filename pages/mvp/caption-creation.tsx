@@ -5,6 +5,7 @@ import styles from "../styles/Home.module.css";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { SetStateAction, useState } from "react";
+import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 
 const PromptCreation: NextPage = () => {
   const router = useRouter();
@@ -39,10 +40,15 @@ const PromptCreation: NextPage = () => {
     setCaption(event.target.value);
   };
 
-  const displayPicture = () => {
-    return (
-      <Image src={URL as string} width={100} height={100} alt="Pretty Picture" />
+  const [imgURL, setImgURL] = useState("")
+
+  function getImgURL() {
+    fetchApplerImageURL(Number(roomID)).then(
+      (imgURL) => {
+        setImgURL(imgURL)
+      }
     )
+    return (imgURL)
   }
 
   return (
@@ -52,7 +58,7 @@ const PromptCreation: NextPage = () => {
       <h3>Appler: {userName}</h3>
       <h4>This is the picture {userName} generated</h4>
       <div>
-        {displayPicture()}
+      <Image src={getImgURL()} width={100} height={100} alt="Pretty Picture"></Image>
       </div>
       <h4>Caption this picture</h4>
       <div>
