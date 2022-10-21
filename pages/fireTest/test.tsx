@@ -7,19 +7,31 @@ import Router from "next/router";
 import { SetStateAction, useState } from "react";
 import {
   createRoom,
+  everyoneCreatedACaptionListener,
   fetchListOfCaptions,
-  fetchVoteList,
-  getApplerUsername,
+  fetchListOfImageURL,
+  fetchCaptionVoteObject,
+  getApplerForRound,
   getUserList,
   joinRoom,
   nextRound,
+  resetRoom,
   startedGameListener,
-  startRound,
+  startGame,
   uploadCaption,
   uploadImageURL,
   uploadPrompt,
   vote,
+  userListChangedListener,
+  everyoneCastAVoteListener,
+  everyoneGeneratedAnImageListener,
 } from "../../utils/firebase-utils/firebase-util";
+
+export async function testCallbackFunc() {
+  console.log("Everyone has voted");
+}
+
+const testCallback = () => testCallbackFunc();
 
 const Home: NextPage = () => {
   const callBack1 = () => {
@@ -27,25 +39,38 @@ const Home: NextPage = () => {
     console.log("rooms created");
   };
   const callBack2 = () => {
-    startedGameListener(100)
+    everyoneCastAVoteListener(100, testCallback);
+    console.log('everyoneCastAVoteListener has started')
   };
   const callBack3 = () => {
-    joinRoom("Hank", 100);
+    joinRoom("Billy", 100);
     console.log("joined");
   };
   const callBack4 = () => {
-    uploadImageURL("123.jpg", "Bob", 100);
+    uploadImageURL("123.jpg", "John", 100);
     console.log("url uploaded");
   };
   const callBack5 = () => {
-    uploadPrompt(100, "Bob", "banana");
+    uploadPrompt(100, "John", "banana");
     console.log("prompt uploaded");
   };
   const callBack6 = () => {
-    nextRound(100)
+    uploadCaption("long yellow thing(this is also a caption)", "Jimmy", 100);
   };
   const callBack7 = () => {
-    uploadCaption('banana(caption)', 'John', 100)
+    vote("John", 100);
+    console.log('John Voted')
+  };
+  const callBack8 = () => {
+    startGame(100);
+  };
+  const callBack9 = () => {
+    vote("Jimmy", 100)
+    console.log("Jimmy voted")
+  };
+  const callBack10 = () => {
+    everyoneCreatedACaptionListener(100, testCallback);
+    console.log("Button 10 has been clicked");
   };
 
   return (
@@ -57,6 +82,9 @@ const Home: NextPage = () => {
       <button onClick={() => callBack5()}>Button 5</button>
       <button onClick={() => callBack6()}>Button 6</button>
       <button onClick={() => callBack7()}>Button 7</button>
+      <button onClick={() => callBack8()}>Button 8</button>
+      <button onClick={() => callBack9()}>Button 9</button>
+      <button onClick={() => callBack10()}>Button 10</button>
     </main>
   );
 };
