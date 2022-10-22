@@ -17,18 +17,6 @@ const GenerateImages: NextPage = () => {
     roomID,
   };
 
-  function navToPromptCreate() {
-    Router.push({
-      pathname: "/mvp/prompt-creation",
-      query: {
-        userName,
-        roomID,
-        roomCode,
-        URL
-      },
-    });
-  }
-
   const [prompt, setPrompt] = useState("");
 
   const inputPrompt = (event: {
@@ -51,25 +39,47 @@ const GenerateImages: NextPage = () => {
 
   const [applerUsername, setApplerUsername] = useState("")
 
-  function displayApplerUsername() {
-    getApplerForRound(Number(roomID)).then(
-      (applerUsername) => {
-        setApplerUsername(applerUsername)
-      }
-    )
-    return (applerUsername)
-  }
+  useEffect(() => {
+    getApplerForRound(Number(roomID)).then(applerUsername =>
+      setApplerUsername(applerUsername))
+      return() => {applerUsername}
+  })
+  
 
   useEffect(() => {
-    everyoneGeneratedAnImageListener(Number(roomID), navToPromptCreate);
+    everyoneGeneratedAnImageListener(Number(roomID), navToCaptionCreate);
   })
+
+  function navToCaptionCreate() {
+    if(applerUsername != userName){
+    Router.push({
+      pathname: "/mvp/caption-creation",
+      query: {
+        userName,
+        roomID,
+        roomCode,
+        URL
+      },
+    });
+  }else{
+    Router.push({
+      pathname: "/mvp/appler-wait",
+      query: {
+        userName,
+        roomID,
+        roomCode,
+        URL
+      },
+    });
+  }
+  }
 
   return (
     <main>
       <h1>Generate Image</h1>
       <h3>Room {roomID} {roomCode}</h3>
       <h3>Appler: </h3>
-      <div>{ displayApplerUsername() }</div>
+      <div>{ applerUsername }</div>
       <h4>Generate your image</h4>
       <div>
         <Image src={URL} width={100} height={100} alt="Pretty Picture"></Image>
@@ -83,7 +93,6 @@ const GenerateImages: NextPage = () => {
           onChange={inputPrompt}
           value={prompt}
         />
-        <textarea onChange={inputPrompt}>Test</textarea>
       </div>
       <div>
         <button onClick={() => generateImageWrapper(prompt)}>Generate</button>

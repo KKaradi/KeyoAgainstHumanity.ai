@@ -36,7 +36,7 @@ export async function getApplerForRound(roomCode: number): Promise<any> {
   const gameData = await get(
     child(ref(database), "Rooms/" + roomCode + "/Game/")
   );
-  const roundNumData = gameData.val().roundCounter;
+  const roundNumData = await gameData.val().roundCounter;
 
   const userListData = await get(
     child(ref(database), "Rooms/" + roomCode + "/Userlist/")
@@ -162,7 +162,7 @@ export async function uploadCaption(
 
   const dataToFirebase = {
     votes: 0,
-    caption: caption,
+    username: yourUserName,
   };
 
   return update(
@@ -176,7 +176,7 @@ export async function uploadCaption(
         "/" +
         "Captions" +
         "/" +
-        yourUserName
+        caption
     ),
     dataToFirebase
   );
@@ -196,7 +196,9 @@ export async function fetchListOfCaptions(roomCode: number): Promise<string[]> {
   const captionList: string[] = [];
 
   captionData.forEach((childSnapshot) => {
-    captionList.push(childSnapshot.val().caption);
+    if(typeof childSnapshot.key === "string"){
+    captionList.push(childSnapshot.key);
+    }
   });
 
   return captionList;
@@ -204,11 +206,11 @@ export async function fetchListOfCaptions(roomCode: number): Promise<string[]> {
 
 //Add 1 to Num Votes under a caption. Called every time someone clicks a vote button
 export async function vote(
-  captionAuthor: string,
+  caption: string,
   roomCode: number
 ): Promise<void> {
   const applerUsername = await getApplerForRound(roomCode);
-  const captionAuthorData = await get(
+  const captionData = await get(
     child(
       ref(database),
       "Rooms/" +
@@ -217,11 +219,11 @@ export async function vote(
         applerUsername +
         "/" +
         "Captions/" +
-        captionAuthor
+        caption
     )
   );
 
-  let votesForCaption = await captionAuthorData.val().votes;
+  let votesForCaption = await captionData.val().votes;
   let newVotesForCaption = 0;
 
   if (votesForCaption === null) {
@@ -243,7 +245,7 @@ export async function vote(
         applerUsername +
         "/" +
         "Captions/" +
-        captionAuthor
+        caption
     ),
     dataToFirebase
   );
@@ -262,7 +264,7 @@ export async function fetchCaptionVoteObject(
   let captionVoteObject: { [index: string]: number } = {};
   captionData.forEach((childSnapshot) => {
     let caption: unknown;
-    caption = childSnapshot.val().caption;
+    caption = childSnapshot.key;
     if (typeof caption === "string") {
       captionVoteObject[caption] = childSnapshot.val().votes;
     }
@@ -313,12 +315,12 @@ export async function startedGameListener(
   roomCode: number,
   callBack: () => void
 ): Promise<void> {
-  let counter = 0
+  let calledBack = true
   onValue(ref(database, "Rooms/" + roomCode), async (snapshot) => {
     const startedData = await snapshot.val().started;
-    if (startedData === true) {
+    if (startedData === true && calledBack) {
       callBack()
-      off(ref(database, "Rooms/" + roomCode), 'value', callBack)
+      calledBack = false
     }
   });
 }
@@ -389,7 +391,7 @@ export async function everyoneCastAVoteListener(
     let Userlist = await getUserList(roomCode);
     let UserListLength = (await Userlist).length;
     let totalVotes = await fetchTotalVotes(roomCode);
-
+    console.log(UserListLength + ' ' + totalVotes)
     if (UserListLength === totalVotes) {
       callBack();
     }

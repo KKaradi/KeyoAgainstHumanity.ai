@@ -3,16 +3,6 @@ import Router from "next/router";
 import { SetStateAction, useState } from "react";
 import { createRoom } from "../../utils/firebase-utils/firebase-util";
 import { joinRoom } from "../../utils/firebase-utils/firebase-util";
-import {
-  getDatabase,
-  ref,
-  set,
-  get,
-  child,
-  update,
-  onChildAdded,
-} from 'firebase/database'
-const db = getDatabase()
 
 
 const Home: NextPage = () => {

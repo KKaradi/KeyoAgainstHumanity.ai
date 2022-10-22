@@ -1,19 +1,13 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import Image from "next/image";
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 import Router from "next/router";
 import { useRouter } from "next/router";
+import { getApplerForRound } from "../../utils/firebase-utils/firebase-util";
+import { SetStateAction, useState, useEffect } from "react";
+import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 
 const Results: NextPage = () => {
-  // function displayVotes() {
-  //   return playerVotes.map(({ player, votes, id }) => (
-  //     <li key={id}>
-  //       {player} got {votes} votes.
-  //     </li>
-  //   ));
-  // }
 
   function navToHome() {
     Router.push({
@@ -42,19 +36,36 @@ const Results: NextPage = () => {
 
   const displayVotes = () => {
     if (votes === "1") {
-      return (<li>{userName} wrote "{caption}"! It got 1 vote</li>)
+      return (<li>{userName} wrote: {caption}! It got 1 vote</li>)
     } else {
-      return (<li>{userName} wrote "{caption}"! It got {votes} votes</li>)
+      return (<li>{userName} wrote: {caption}! It got {votes} votes</li>)
     }
   }
+
+  const [applerUsername, setApplerUsername] = useState("")
+
+  useEffect(() => {
+    getApplerForRound(Number(roomID)).then(applerUsername =>
+      setApplerUsername(applerUsername))
+      return() => {applerUsername}
+  })
+
+  const [imgURL, setImgURL] = useState("")
+
+  useEffect(() => {
+    fetchApplerImageURL(Number(roomID)).then(imgURL => {
+      setImgURL(imgURL)
+    })
+      return() => {imgURL}
+  })
 
   return (
     <main>
       <h1>Game Over</h1>
-      <h3>Room {roomCode} {roomID}</h3>
-      <h3>Appler: {props.userName}</h3>
+      <h3>Room {roomCode}</h3>
+      <h3>Appler: {applerUsername}</h3>
       <div>
-        <Image src={URL as string} width={100} height={100} alt="Pretty Picture"></Image>
+        <Image src={imgURL} width={100} height={100} alt="Pretty Picture"></Image>
       </div>
       <h3>Leaderboard:</h3>
       <ol>
