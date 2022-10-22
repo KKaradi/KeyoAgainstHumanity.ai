@@ -32,6 +32,7 @@ const database = getDatabase(app);
 
 
 const Lobby: NextPage = () => {
+  
   const router = useRouter();
   const {
     query: { userName, roomID, roomCode },
@@ -41,50 +42,45 @@ const Lobby: NextPage = () => {
     roomID,
   };
 
-  const [userList, setUserList] = useState([""]);
-
-  function displayUserList() {
-    getUserList(Number(roomID)).then((userList) => {
-        setUserList(userList);
-      });
-    return (
-      <ul>
-        {userList.map((user) => (
-          <li key = { user }>{ user }</li>
-        ))}
-      </ul>
-    );
-  }
-
   function navToHome() {
     Router.push({
       pathname: "/mvp/home",
     });
   }
-
+  
   function navToGenerate() {
-    console.log('navToGenerate')
     Router.push({
       pathname: "/mvp/generate-images",
       query: {
         userName,
         roomID,
-        roomCode,
+        roomCode
       },
     });
   }
 
-  let userListCallback = async (userList: string[]) => {
-    setUserList(userList);
-  };
+  const [userList, setUserList] = useState([""])
+
+  function displayUserList() {
+      getUserList(Number(roomID)).then(
+        (userList) => {
+          setUserList(userList)
+        }
+      )
+    return (
+      <ul>{ userList.map(
+        (user) => <li key = { user }>{ user }</li>
+      ) }</ul>
+    )
+  }
 
   useEffect(() => {
-    userListChangedListener(Number(roomID), userListCallback);
-  });
+    userListChangedListener(Number(roomID), displayUserList);
+  })
 
   useEffect(() => {
     startedGameListener(Number(roomID), navToGenerate);
-  });
+  })
 
   return (
     <main>

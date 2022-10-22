@@ -32,7 +32,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-export async function getApplerForRound(roomCode: number): Promise<any> {
+export async function getApplerForRound(roomCode: number): Promise<string> {
   const gameData = await get(
     child(ref(database), "Rooms/" + roomCode + "/Game/")
   );
@@ -43,7 +43,7 @@ export async function getApplerForRound(roomCode: number): Promise<any> {
   );
 
   let applerList: string[] = [];
-  let applerName;
+  let applerName: string;
 
   userListData.forEach((childSnapshot) => {
     if (childSnapshot.val() != null) {
@@ -329,11 +329,10 @@ export async function startedGameListener(
 // Checks if the userlist changes
 export async function userListChangedListener(
   roomCode: number,
-  callBack: ([]: string[]) => void
+  callBack: () => void
 ): Promise<void> {
   onValue(ref(database, "Rooms/" + roomCode + "/Userlist"), async () => {
-    let userList = await getUserList(roomCode);
-    callBack(userList);
+    callBack();
   });
 }
 
