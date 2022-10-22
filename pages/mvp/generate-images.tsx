@@ -17,9 +17,9 @@ const GenerateImages: NextPage = () => {
     roomID,
   };
 
-  function navToPromptCreate() {
+  function navToCaptionCreate() {
     Router.push({
-      pathname: "/mvp/prompt-creation",
+      pathname: "/mvp/caption-creation",
       query: {
         userName,
         roomID,
@@ -61,13 +61,13 @@ const GenerateImages: NextPage = () => {
   }
 
   useEffect(() => {
-    everyoneGeneratedAnImageListener(Number(roomID), navToPromptCreate);
+    everyoneGeneratedAnImageListener(Number(roomID), navToCaptionCreate);
   })
 
   return (
     <main>
       <h1>Generate Image</h1>
-      <h3>Room {roomID} {roomCode}</h3>
+      <h3>Room {roomID}</h3>
       <h3>Appler: </h3>
       <div>{ displayApplerUsername() }</div>
       <h4>Generate your image</h4>

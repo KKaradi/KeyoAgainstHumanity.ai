@@ -4,10 +4,11 @@ import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useState, useEffect } from "react";
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 import { uploadCaption } from "../../utils/firebase-utils/firebase-util";
 import { getApplerForRound } from "../../utils/firebase-utils/firebase-util";
+import { everyoneCreatedACaptionListener } from "../../utils/firebase-utils/firebase-util";
 
 const PromptCreation: NextPage = () => {
   const router = useRouter();
@@ -69,14 +70,18 @@ const PromptCreation: NextPage = () => {
     return (applerUsername)
   }
 
+  useEffect(() => {
+    everyoneCreatedACaptionListener(Number(roomID), navToVote);
+  })
+
   return (
     <main>
       <h1>Caption the image</h1>
-      <h3>Room {roomID} {roomCode}</h3>
+      <h3>Room {roomID}</h3>
       <h3>Appler: { displayApplerUsername() }</h3>
       <h4>This is the picture { displayApplerUsername() } generated</h4>
       <div>
-      <Image src={getImgURL()} width={100} height={100} alt="Pretty Picture"></Image>
+        <Image src={getImgURL()} width={100} height={100} alt="Pretty Picture"></Image>
       </div>
       <h4>Caption this picture</h4>
       <div>
