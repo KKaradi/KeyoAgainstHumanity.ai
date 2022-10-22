@@ -1,10 +1,13 @@
 import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
 import React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
+import { SetStateAction, useState, useEffect } from "react";
+import { getUserList } from "../../utils/firebase-utils/firebase-util";
+import { startGame } from "../../utils/firebase-utils/firebase-util";
+import { startedGameListener } from "../../utils/firebase-utils/firebase-util";
+import { userListChangedListener } from "../../utils/firebase-utils/firebase-util";
+import { off } from "firebase/database";
 
 const Lobby: NextPage = () => {
   const router = useRouter();
@@ -16,15 +19,19 @@ const Lobby: NextPage = () => {
     roomID,
   };
 
-  function navToGenerate() {
-    Router.push({
-      pathname: "/mvp/generate-images",
-      query: {
-        userName,
-        roomID,
-        roomCode
-      },
-    });
+  const [userList, setUserList] = useState([""]);
+
+  function displayUserList() {
+    getUserList(Number(roomID)).then((userList) => {
+        setUserList(userList);
+      });
+    return (
+      <ul>
+        {userList.map((user) => (
+          <li key = { user }>{ user }</li>
+        ))}
+      </ul>
+    );
   }
 
   function navToHome() {
@@ -33,19 +40,43 @@ const Lobby: NextPage = () => {
     });
   }
 
+  function navToGenerate() {
+    console.log('navToGenerate')
+    Router.push({
+      pathname: "/mvp/generate-images",
+      query: {
+        userName,
+        roomID,
+        roomCode,
+      },
+    });
+  }
+
+  let userListCallback = async (userList: string[]) => {
+    setUserList(userList);
+  };
+
+  useEffect(() => {
+    userListChangedListener(Number(roomID), userListCallback);
+  });
+
+  useEffect(() => {
+    startedGameListener(Number(roomID), navToGenerate);
+  });
+
   return (
     <main>
       <h1>Lobby</h1>
-      <h3>Room {roomID} {roomCode}</h3>
+      <h3>
+        Room {roomID} {roomCode}
+      </h3>
       <h4>Users:</h4>
-      <ul>
-        <li>{userName}</li>
-      </ul>
+      <div>{displayUserList()}</div>
       <div>
-        <button onClick={() => navToGenerate()}>Start Game</button>
+        <button onClick={() => startGame(Number(roomID))}>Start Round</button>
       </div>
       <div>
-        <button onClick={() => navToHome()}>Home</button>
+        <button onClick={() => navToHome()}>Exit Room</button>
       </div>
     </main>
   );

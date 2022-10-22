@@ -1,11 +1,11 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useState, useEffect } from "react";
 import { generateImage } from "../../utils/image-utils/image-util";
+import { getApplerForRound, uploadImageURL, uploadPrompt } from "../../utils/firebase-utils/firebase-util";
+import { everyoneGeneratedAnImageListener } from "../../utils/firebase-utils/firebase-util";
 
 const GenerateImages: NextPage = () => {
   const router = useRouter();
@@ -16,13 +16,6 @@ const GenerateImages: NextPage = () => {
     userName,
     roomID,
   };
-
-  // const generateImage = () => {
-  //   return "/pretty-picture.jpg";
-  // };
-
-  // let imgURL = generateImage();
-  let imgURL = "/pretty-picture.jpg"
 
   function navToPromptCreate() {
     Router.push({
@@ -46,24 +39,37 @@ const GenerateImages: NextPage = () => {
 
   const [URL, setURL] = useState("https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921");
 
-  // const reroll = () => {
-  //   console.log("reroll");
-  // };
-
-  // const finalize = () => {
-  //   console.log("finalize");
-  // };
-
   const generateImageWrapper = async(prompt: string) => {
     const newURL = await generateImage(prompt);
     setURL(newURL)
   }
 
+  const uploadURLUploadPrompt = () => {
+    uploadImageURL(URL, String(userName), Number(roomID));
+    uploadPrompt(Number(roomID), String(userName), prompt);
+  }
+
+  const [applerUsername, setApplerUsername] = useState("")
+
+  function displayApplerUsername() {
+    getApplerForRound(Number(roomID)).then(
+      (applerUsername) => {
+        setApplerUsername(applerUsername)
+      }
+    )
+    return (applerUsername)
+  }
+
+  useEffect(() => {
+    everyoneGeneratedAnImageListener(Number(roomID), navToPromptCreate);
+  })
+
   return (
     <main>
       <h1>Generate Image</h1>
       <h3>Room {roomID} {roomCode}</h3>
-      <h3>Appler: {userName}</h3>
+      <h3>Appler: </h3>
+      <div>{ displayApplerUsername() }</div>
       <h4>Generate your image</h4>
       <div>
         <Image src={URL} width={100} height={100} alt="Pretty Picture"></Image>
@@ -77,16 +83,13 @@ const GenerateImages: NextPage = () => {
           onChange={inputPrompt}
           value={prompt}
         />
+        <textarea onChange={inputPrompt}>Test</textarea>
       </div>
       <div>
         <button onClick={() => generateImageWrapper(prompt)}>Generate</button>
       </div>
-      {/* <div>
-        <button onClick={() => reroll()}>Reroll</button>
-        <button onClick={() => finalize()}>Finalize</button>
-      </div> */}
       <div>
-        <button onClick={() => navToPromptCreate()}>Submit</button>
+        <button onClick={() => uploadURLUploadPrompt()}>Submit</button>
       </div>
     </main>
   );

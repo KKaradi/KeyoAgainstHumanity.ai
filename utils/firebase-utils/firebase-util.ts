@@ -8,6 +8,7 @@ import {
   push,
   onValue,
   remove,
+  off,
 } from "firebase/database";
 
 import { initializeApp } from "firebase/app";
@@ -312,11 +313,12 @@ export async function startedGameListener(
   roomCode: number,
   callBack: () => void
 ): Promise<void> {
+  let counter = 0
   onValue(ref(database, "Rooms/" + roomCode), async (snapshot) => {
     const startedData = await snapshot.val().started;
-
     if (startedData === true) {
-      callBack();
+      callBack()
+      off(ref(database, "Rooms/" + roomCode), 'value', callBack)
     }
   });
 }
