@@ -46,14 +46,11 @@ const Results: NextPage = () => {
       <ul>
         {
           Object.keys(captionVotes).map(
-            (key) => <li key = {key}>{key}</li>
-            )
-        }
-        {/* {
-          Object.values(captionVotes).map(
-            (value) => <li key = {value}>{value}</li>
+            (caption, index) => {
+              return(<li key = {index}>{caption}: {captionVotes[caption as keyof typeof captionVotes]}</li>)
+            }
           )
-        } */}
+        }
       </ul>
     )
   }
