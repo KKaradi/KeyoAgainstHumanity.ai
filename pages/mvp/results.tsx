@@ -3,21 +3,15 @@ import Image from "next/image";
 import * as React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { getApplerForRound } from "../../utils/firebase-utils/firebase-util";
+import { getApplerForRound, getUserList } from "../../utils/firebase-utils/firebase-util";
 import { SetStateAction, useState, useEffect } from "react";
-import { fetchApplerImageURL, fetchCaptionVoteObject } from "../../utils/firebase-utils/firebase-util";
+import { fetchApplerImageURL, fetchCaptionVoteObject, nextRound, nextRoundHasBeenClicked } from "../../utils/firebase-utils/firebase-util";
 
 const Results: NextPage = () => {
 
   function navToHome() {
     Router.push({
       pathname: "/mvp/home",
-    });
-  }
-
-  function navToLobby() {
-    Router.push({
-      pathname: "/mvp/lobby",
     });
   }
 
@@ -61,6 +55,28 @@ const Results: NextPage = () => {
       return() => {imgURL}
   })
 
+  function navToLobby(roundNum: Number, UserListLength: Number) {
+
+    if(roundNum >= UserListLength){
+      Router.push({
+        pathname: "/mvp/home",
+      });
+
+    }else{
+    Router.push({
+      pathname: '/mvp/lobby',
+      query: {
+        userName,
+        roomID,
+      },
+    })
+  }
+  }
+
+  useEffect(() => {
+    nextRoundHasBeenClicked(Number(roomID), function(roundNum, UserListLength){navToLobby(roundNum, UserListLength)});
+  })
+
   return (
     <main>
       <h1>Game Over</h1>
@@ -82,7 +98,7 @@ const Results: NextPage = () => {
       </ul>
       </div>
       {/* <h3>Winning Caption: { props.caption }</h3> */}
-      <button onClick={() => navToLobby()}>New Game</button>
+      <button onClick={() => nextRound(Number(roomID))}>Next Round</button>
       <div>
         <button onClick={() => navToHome()}>End Session</button>
       </div>

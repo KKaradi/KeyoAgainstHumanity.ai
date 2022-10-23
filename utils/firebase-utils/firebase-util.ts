@@ -85,7 +85,7 @@ export async function joinRoom(
 }
 
 //Return userlist called whenever userlist in changed; to be displayed in lobby page
-export async function getUserList(roomCode: number): Promise<string[]> {
+export async function getUserList(roomCode: any): Promise<string[]> {
   let userList: string[] = [];
   const userListData = await get(
     child(ref(database), "Rooms/" + roomCode + "/Userlist/")
@@ -390,7 +390,6 @@ export async function everyoneCastAVoteListener(
     let Userlist = await getUserList(roomCode);
     let UserListLength = (await Userlist).length;
     let totalVotes = await fetchTotalVotes(roomCode);
-    console.log(UserListLength + ' ' + totalVotes)
     if (UserListLength === totalVotes) {
       callBack();
     }
@@ -400,12 +399,22 @@ export async function everyoneCastAVoteListener(
 //checks if the next round number was increased by 1
 export async function nextRoundHasBeenClicked(
   roomCode: number,
-  callBack: () => void
+  callBack: (roundNum: Number, UserListLength: Number) => void
 ) {
+
+  const roundCounterRef = await get(ref(database, "Rooms/" + roomCode + "/Game" + "/roundCounter"))
+  let roundNum = roundCounterRef.val()
+
   onValue(
     ref(database, "Rooms/" + roomCode + "/Game" + "/roundCounter"),
-    () => {
-      callBack();
+    async (snapshot) => {
+      let Userlist = await getUserList(roomCode);
+      let UserListLength = (await Userlist).length;
+
+      if(snapshot.val() === roundNum + 1){
+        roundNum = snapshot.val()
+        callBack(roundNum, UserListLength);
+      }
     }
   );
 }

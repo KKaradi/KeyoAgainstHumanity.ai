@@ -44,7 +44,7 @@ const GenerateImages: NextPage = () => {
       setApplerUsername(applerUsername))
       return() => {applerUsername}
   })
-  
+
   function navToCaptionCreate() {
     if(applerUsername == userName){
     Router.push({

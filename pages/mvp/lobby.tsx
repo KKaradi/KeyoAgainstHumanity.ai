@@ -7,7 +7,7 @@ import { getUserList } from "../../utils/firebase-utils/firebase-util";
 import { startGame } from "../../utils/firebase-utils/firebase-util";
 import { startedGameListener } from "../../utils/firebase-utils/firebase-util";
 import { userListChangedListener } from "../../utils/firebase-utils/firebase-util";
-import { off, ref, getDatabase } from "firebase/database";
+import { get, ref, getDatabase, child } from "firebase/database";
 
 import { initializeApp } from "firebase/app";
 
@@ -48,7 +48,7 @@ const Lobby: NextPage = () => {
     });
   }
   
-  function navToGenerate() {
+  async function navToGenerate() {
     Router.push({
       pathname: "/mvp/generate-images",
       query: {
