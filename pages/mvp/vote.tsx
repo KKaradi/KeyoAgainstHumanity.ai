@@ -75,10 +75,6 @@ const Vote: NextPage = () => {
     everyoneCastAVoteListener(Number(roomID), navToResults);
   })
 
-  useEffect(() => {
-    everyoneCastAVoteListener(Number(roomID), navToResults);
-  })
-
   return (
     <main>
       <h1>Voting</h1>

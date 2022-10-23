@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 import { getApplerForRound } from "../../utils/firebase-utils/firebase-util";
 import { SetStateAction, useState, useEffect } from "react";
 import { fetchApplerImageURL, fetchCaptionVoteObject } from "../../utils/firebase-utils/firebase-util";
+import { nextRoundHasBeenClicked } from "../../utils/firebase-utils/firebase-util";
+import { nextRound } from "../../utils/firebase-utils/firebase-util";
 
 const Results: NextPage = () => {
 
@@ -47,7 +49,7 @@ const Results: NextPage = () => {
         {
           Object.keys(captionVotes).map(
             (caption, index) => {
-              return(<li key = {index}>{caption}: {captionVotes[caption as keyof typeof captionVotes]}</li>)
+              return(<li key = {index}>{caption} got {captionVotes[caption as keyof typeof captionVotes]} votes.</li>)
             }
           )
         }
@@ -72,6 +74,34 @@ const Results: NextPage = () => {
       return() => {imgURL}
   })
 
+  function navToCaptionCreate() {
+    if(applerUsername == userName){
+    Router.push({
+      pathname: "/mvp/appler-wait",
+      query: {
+        userName,
+        roomID,
+        roomCode,
+        URL
+      },
+    });
+  }else{
+    Router.push({
+      pathname: "/mvp/caption-creation",
+      query: {
+        userName,
+        roomID,
+        roomCode,
+        URL
+      },
+    });
+  }
+  }
+
+  useEffect(() => {
+    nextRoundHasBeenClicked(Number(roomID), navToCaptionCreate);
+  })
+
   return (
     <main>
       <h1>Game Over</h1>
@@ -81,11 +111,10 @@ const Results: NextPage = () => {
         <Image src={imgURL} width={100} height={100} alt="Pretty Picture"></Image>
       </div>
       <h3>Leaderboard:</h3>
-      <ol>
+      <div>
         {displayVotes()}
-      </ol>
-      {/* <h3>Winning Caption: { props.caption }</h3> */}
-      <button onClick={() => navToLobby()}>New Game</button>
+      </div>
+      <button onClick={() => nextRound(Number(roomID))}>Next Round</button>
       <div>
         <button onClick={() => navToHome()}>End Session</button>
       </div>
