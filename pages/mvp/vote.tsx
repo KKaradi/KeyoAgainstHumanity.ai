@@ -54,13 +54,25 @@ const Vote: NextPage = () => {
 
   const [captionList, setCaptionList] = useState([""])
 
+  function displayCaptions() {
+    fetchListOfCaptions(Number(roomID)).then(
+      (captionList) => {
+        setCaptionList(captionList)
+      }
+    )
+    return( 
+      <div>
+        {
+          captionList.map(
+            (caption) => <button key = { caption } onClick = {() => vote(caption, Number(roomID))}>{ caption }</button>
+          )
+        }
+      </div>
+    )
+  }
+
   useEffect(() => {
-    fetchListOfCaptions(Number(roomID)).then(captionList => {
-      setCaptionList(captionList)
-    })
-      return() => {captionList.map(
-        (caption) => <button key = { caption } onClick = {() => vote(caption, Number(roomID))}>{ caption }</button>
-      )}
+    everyoneCastAVoteListener(Number(roomID), navToResults);
   })
 
   useEffect(() => {
@@ -77,7 +89,7 @@ const Vote: NextPage = () => {
       <h4>These are the captions the players came up with</h4>
       <h4>Vote for your favorite caption!</h4>
       <div>
-        { captionList }
+        { displayCaptions() }
       </div>
     </main>
   );

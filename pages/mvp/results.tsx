@@ -5,7 +5,7 @@ import Router from "next/router";
 import { useRouter } from "next/router";
 import { getApplerForRound } from "../../utils/firebase-utils/firebase-util";
 import { SetStateAction, useState, useEffect } from "react";
-import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
+import { fetchApplerImageURL, fetchCaptionVoteObject } from "../../utils/firebase-utils/firebase-util";
 
 const Results: NextPage = () => {
 
@@ -34,12 +34,28 @@ const Results: NextPage = () => {
     votes
   };
 
-  const displayVotes = () => {
-    if (votes === "1") {
-      return (<li>{userName} wrote: {caption}! It got 1 vote</li>)
-    } else {
-      return (<li>{userName} wrote: {caption}! It got {votes} votes</li>)
-    }
+  const [captionVotes, setCaptionVotes] = useState({})
+
+  function displayVotes () {
+    fetchCaptionVoteObject(Number(roomID)).then(
+      (captionVotes) => {
+        setCaptionVotes(captionVotes)
+      }
+    )
+    return (
+      <ul>
+        {
+          Object.keys(captionVotes).map(
+            (key) => <li key = {key}>{key}</li>
+            )
+        }
+        {/* {
+          Object.values(captionVotes).map(
+            (value) => <li key = {value}>{value}</li>
+          )
+        } */}
+      </ul>
+    )
   }
 
   const [applerUsername, setApplerUsername] = useState("")

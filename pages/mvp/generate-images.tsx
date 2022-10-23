@@ -51,9 +51,9 @@ const GenerateImages: NextPage = () => {
   })
 
   function navToCaptionCreate() {
-    if(applerUsername != userName){
+    if(applerUsername == userName){
     Router.push({
-      pathname: "/mvp/caption-creation",
+      pathname: "/mvp/appler-wait",
       query: {
         userName,
         roomID,
@@ -63,7 +63,7 @@ const GenerateImages: NextPage = () => {
     });
   }else{
     Router.push({
-      pathname: "/mvp/appler-wait",
+      pathname: "/mvp/caption-creation",
       query: {
         userName,
         roomID,
