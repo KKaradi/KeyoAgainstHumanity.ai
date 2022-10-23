@@ -45,11 +45,6 @@ const GenerateImages: NextPage = () => {
       return() => {applerUsername}
   })
   
-
-  useEffect(() => {
-    everyoneGeneratedAnImageListener(Number(roomID), navToCaptionCreate);
-  })
-
   function navToCaptionCreate() {
     if(applerUsername == userName){
     Router.push({
@@ -73,6 +68,10 @@ const GenerateImages: NextPage = () => {
     });
   }
   }
+
+  useEffect(() => {
+    everyoneGeneratedAnImageListener(Number(roomID), navToCaptionCreate);
+  })
 
   return (
     <main>

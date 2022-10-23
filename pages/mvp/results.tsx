@@ -36,27 +36,13 @@ const Results: NextPage = () => {
 
   const [captionVotes, setCaptionVotes] = useState({})
 
-  function displayVotes () {
+  useEffect(() => {
     fetchCaptionVoteObject(Number(roomID)).then(
       (captionVotes) => {
         setCaptionVotes(captionVotes)
       }
     )
-    return (
-      <ul>
-        {
-          Object.keys(captionVotes).map(
-            (key) => <li key = {key}>{key}</li>
-            )
-        }
-        {/* {
-          Object.values(captionVotes).map(
-            (value) => <li key = {value}>{value}</li>
-          )
-        } */}
-      </ul>
-    )
-  }
+  })
 
   const [applerUsername, setApplerUsername] = useState("")
 
@@ -84,9 +70,17 @@ const Results: NextPage = () => {
         <Image src={imgURL} width={100} height={100} alt="Pretty Picture"></Image>
       </div>
       <h3>Leaderboard:</h3>
-      <ol>
-        {displayVotes()}
-      </ol>
+      <div>
+        <ul>
+        {
+          Object.keys(captionVotes).map(
+            (caption, index) => {
+              return(<li key = {index}>{caption} got {captionVotes[caption as keyof typeof captionVotes]} votes.</li>)
+            }
+          )
+        }
+      </ul>
+      </div>
       {/* <h3>Winning Caption: { props.caption }</h3> */}
       <button onClick={() => navToLobby()}>New Game</button>
       <div>
