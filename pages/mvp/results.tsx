@@ -3,23 +3,15 @@ import Image from "next/image";
 import * as React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { getApplerForRound } from "../../utils/firebase-utils/firebase-util";
+import { getApplerForRound, getUserList, resetRoom } from "../../utils/firebase-utils/firebase-util";
 import { SetStateAction, useState, useEffect } from "react";
-import { fetchApplerImageURL, fetchCaptionVoteObject } from "../../utils/firebase-utils/firebase-util";
-import { nextRoundHasBeenClicked } from "../../utils/firebase-utils/firebase-util";
-import { nextRound } from "../../utils/firebase-utils/firebase-util";
+import { fetchApplerImageURL, fetchCaptionVoteObject, nextRound, nextRoundHasBeenClicked } from "../../utils/firebase-utils/firebase-util";
 
 const Results: NextPage = () => {
 
   function navToHome() {
     Router.push({
       pathname: "/mvp/home",
-    });
-  }
-
-  function navToLobby() {
-    Router.push({
-      pathname: "/mvp/lobby",
     });
   }
 
@@ -38,31 +30,24 @@ const Results: NextPage = () => {
 
   const [captionVotes, setCaptionVotes] = useState({})
 
-  function displayVotes () {
+  useEffect(() => {
     fetchCaptionVoteObject(Number(roomID)).then(
       (captionVotes) => {
         setCaptionVotes(captionVotes)
       }
     )
-    return (
-      <ul>
-        {
-          Object.keys(captionVotes).map(
-            (caption, index) => {
-              return(<li key = {index}>{caption} got {captionVotes[caption as keyof typeof captionVotes]} votes.</li>)
-            }
-          )
-        }
-      </ul>
-    )
-  }
+  })
 
   const [applerUsername, setApplerUsername] = useState("")
 
-  useEffect(() => {
-    getApplerForRound(Number(roomID)).then(applerUsername =>
+  async function getAppler(){
+    await getApplerForRound(Number(roomID)).then(applerUsername =>
       setApplerUsername(applerUsername))
       return() => {applerUsername}
+    }
+
+  useEffect(() => {
+    getAppler()
   })
 
   const [imgURL, setImgURL] = useState("")
@@ -74,32 +59,26 @@ const Results: NextPage = () => {
       return() => {imgURL}
   })
 
-  function navToCaptionCreate() {
-    if(applerUsername == userName){
-    Router.push({
-      pathname: "/mvp/appler-wait",
+  async function navToLobbyOrHome(roundNum: Number, UserListLength: Number) {
+
+    if(roundNum >= UserListLength){
+      await Router.push({
+        pathname: "/mvp/home",
+      });
+
+    }else if(roundNum < UserListLength){
+    await Router.push({
+      pathname: '/mvp/lobby',
       query: {
         userName,
         roomID,
-        roomCode,
-        URL
       },
-    });
-  }else{
-    Router.push({
-      pathname: "/mvp/caption-creation",
-      query: {
-        userName,
-        roomID,
-        roomCode,
-        URL
-      },
-    });
+    })
   }
   }
 
   useEffect(() => {
-    nextRoundHasBeenClicked(Number(roomID), navToCaptionCreate);
+    nextRoundHasBeenClicked(Number(roomID), function(roundNum, UserListLength){navToLobbyOrHome(roundNum, UserListLength)});
   })
 
   return (
@@ -112,8 +91,17 @@ const Results: NextPage = () => {
       </div>
       <h3>Leaderboard:</h3>
       <div>
-        {displayVotes()}
+        <ul>
+        {
+          Object.keys(captionVotes).map(
+            (caption, index) => {
+              return(<li key = {index}>{caption} got {captionVotes[caption as keyof typeof captionVotes]} votes.</li>)
+            }
+          )
+        }
+      </ul>
       </div>
+      {/* <h3>Winning Caption: { props.caption }</h3> */}
       <button onClick={() => nextRound(Number(roomID))}>Next Round</button>
       <div>
         <button onClick={() => navToHome()}>End Session</button>
