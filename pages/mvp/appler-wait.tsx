@@ -20,8 +20,8 @@ const ApplerWait: NextPage = () => {
     URL
   };
 
-  function navToVote() {
-    Router.push({
+  async function navToVote() {
+    await Router.push({
       pathname: "/mvp/vote",
       query: {
         userName,

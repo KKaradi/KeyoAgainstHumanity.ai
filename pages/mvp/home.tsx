@@ -31,8 +31,8 @@ const Home: NextPage = () => {
     setRoomID(event.target.value);
   };
 
-  function navToLobby() {
-    Router.push({
+  async function navToLobby() {
+    await Router.push({
       pathname: '/mvp/lobby',
       query: {
         userName,

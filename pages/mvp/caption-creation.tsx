@@ -22,8 +22,28 @@ const CaptionCreation: NextPage = () => {
     URL
   };
 
-  function navToVote() {
-    Router.push({
+  async function checkIfApplerWentToWait(){
+    const applerName = await getApplerForRound(Number(roomID))
+    
+      if(applerName == userName){
+        await Router.push({
+          pathname: "/mvp/appler-wait",
+          query: {
+            userName,
+            roomID,
+            roomCode,
+            URL
+          },
+        });
+      }
+    }
+
+useEffect(() => {
+  checkIfApplerWentToWait()
+})
+  
+  async function navToVote() {
+    await Router.push({
       pathname: "/mvp/vote",
       query: {
         userName,
@@ -53,8 +73,10 @@ const CaptionCreation: NextPage = () => {
   })
 
   function uploadCaptionNavToVote () {
+    if(caption != null){
     uploadCaption(caption, String(userName), Number(roomID));
     navToVote();
+    }
   }
 
   const [applerUsername, setApplerUsername] = useState("")

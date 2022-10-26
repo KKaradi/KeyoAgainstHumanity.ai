@@ -3,11 +3,11 @@ import React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { SetStateAction, useState, useEffect } from "react";
-import { getUserList } from "../../utils/firebase-utils/firebase-util";
+import { getUserList, resetRoom, returnUserListAndRoundNum } from "../../utils/firebase-utils/firebase-util";
 import { startGame } from "../../utils/firebase-utils/firebase-util";
 import { startedGameListener } from "../../utils/firebase-utils/firebase-util";
 import { userListChangedListener } from "../../utils/firebase-utils/firebase-util";
-import { off, ref, getDatabase } from "firebase/database";
+import { get, ref, getDatabase, child } from "firebase/database";
 
 import { initializeApp } from "firebase/app";
 
@@ -42,14 +42,14 @@ const Lobby: NextPage = () => {
     roomID,
   };
 
-  function navToHome() {
-    Router.push({
+  async function navToHome() {
+    await Router.push({
       pathname: "/mvp/home",
     });
   }
-  
-  function navToGenerate() {
-    Router.push({
+
+  async function navToGenerate() {
+    await Router.push({
       pathname: "/mvp/generate-images",
       query: {
         userName,
@@ -61,7 +61,7 @@ const Lobby: NextPage = () => {
 
   const [userList, setUserList] = useState([""])
 
-  function displayUserList() {
+  const displayUserList = () => {
       getUserList(Number(roomID)).then(
         (userList) => {
           setUserList(userList)

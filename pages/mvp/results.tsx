@@ -3,7 +3,7 @@ import Image from "next/image";
 import * as React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { getApplerForRound, getUserList, resetRoom } from "../../utils/firebase-utils/firebase-util";
+import { getApplerForRound, getUserList, resetRoom, returnUserListAndRoundNum } from "../../utils/firebase-utils/firebase-util";
 import { SetStateAction, useState, useEffect } from "react";
 import { fetchApplerImageURL, fetchCaptionVoteObject, nextRound, nextRoundHasBeenClicked } from "../../utils/firebase-utils/firebase-util";
 
@@ -59,13 +59,14 @@ const Results: NextPage = () => {
       return() => {imgURL}
   })
 
+
   async function navToLobbyOrHome(roundNum: Number, UserListLength: Number) {
 
     if(roundNum >= UserListLength){
       await Router.push({
         pathname: "/mvp/home",
       });
-
+      resetRoom(Number(roomID))
     }else if(roundNum < UserListLength){
     await Router.push({
       pathname: '/mvp/lobby',

@@ -28,31 +28,34 @@ const GenerateImages: NextPage = () => {
   const [URL, setURL] = useState("https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921");
 
   const generateImageWrapper = async(prompt: string) => {
+    if(prompt != null){
     const newURL = await generateImage(prompt);
     setURL(newURL)
+    }
   }
 
   const uploadURLUploadPrompt = () => {
+    if(URL != null && prompt != null){
     uploadImageURL(URL, String(userName), Number(roomID));
     uploadPrompt(Number(roomID), String(userName), prompt);
+    }
   }
 
   const [applerUsername, setApplerUsername] = useState("")
 
-  useEffect(() => {
-    getApplerForRound(Number(roomID)).then(applerUsername =>
+  async function getAppler(){
+    await getApplerForRound(Number(roomID)).then(applerUsername =>
       setApplerUsername(applerUsername))
       return() => {applerUsername}
-  })
-  
+    }
 
   useEffect(() => {
-    everyoneGeneratedAnImageListener(Number(roomID), navToCaptionCreate);
+    getAppler()
   })
 
-  function navToCaptionCreate() {
-    if(applerUsername == userName){
-    Router.push({
+  async function navToCaptionCreate() {
+    if(applerUsername === userName){
+    await Router.push({
       pathname: "/mvp/appler-wait",
       query: {
         userName,
@@ -62,7 +65,7 @@ const GenerateImages: NextPage = () => {
       },
     });
   }else{
-    Router.push({
+    await Router.push({
       pathname: "/mvp/caption-creation",
       query: {
         userName,
@@ -74,12 +77,14 @@ const GenerateImages: NextPage = () => {
   }
   }
 
+  useEffect(() => {
+    everyoneGeneratedAnImageListener(Number(roomID), navToCaptionCreate);
+  })
+
   return (
     <main>
       <h1>Generate Image</h1>
       <h3>Room {roomID} {roomCode}</h3>
-      <h3>Appler: </h3>
-      <div>{ applerUsername }</div>
       <h4>Generate your image</h4>
       <div>
         <Image src={URL} width={100} height={100} alt="Pretty Picture"></Image>
@@ -98,7 +103,7 @@ const GenerateImages: NextPage = () => {
         <button onClick={() => generateImageWrapper(prompt)}>Generate</button>
       </div>
       <div>
-        <button onClick={() => uploadURLUploadPrompt()}>Submit</button>
+        <button onClick={uploadURLUploadPrompt}>Submit</button>
       </div>
     </main>
   );
