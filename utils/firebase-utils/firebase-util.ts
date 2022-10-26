@@ -59,6 +59,7 @@ export async function createRoom(roomCode: number): Promise<void> {
   await set(ref(database, "Rooms/" + roomCode), {
     roomCode: roomCode,
     started: false,
+    everyoneWent: false
   });
 
   await set(ref(database, "Rooms/" + roomCode + "/Game"), {
@@ -422,16 +423,36 @@ export async function nextRoundHasBeenClicked(
 
 export async function returnUserListAndRoundNum(
   roomCode: number
-): Promise<Boolean> {
+): Promise<string> {
   const roundCounterRef = await get(ref(database, "Rooms/" + roomCode + "/Game" + "/roundCounter"))
   let roundNum = roundCounterRef.val()
 
   let Userlist = await getUserList(roomCode);
   let UserListLength = Userlist.length;
 
-  if(roundNum >= UserListLength){
-    return(true)
+  if(roundNum + 1 >= UserListLength){
+    return('reset')
   }else{
-    return(false)
+    return('no reset')
   }
+}
+
+export async function everyoneWentListener(
+  roomCode: number,
+  callBack: () => void
+): Promise<void> {
+  onValue(ref(database, "Rooms/" + roomCode), async (snapshot) => {
+    const everyoneWentData = await snapshot.val().everyoneWent;
+    if (everyoneWentData === true) {
+      callBack()
+    }
+  });
+}
+
+export async function endSessionClicked(roomCode: number): Promise<void> {
+  const dataToFirebase = {
+    everyoneWent: true
+  };
+
+  return update(ref(database, "Rooms/" + roomCode), dataToFirebase);
 }

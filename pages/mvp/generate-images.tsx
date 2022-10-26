@@ -64,7 +64,7 @@ const GenerateImages: NextPage = () => {
         URL
       },
     });
-  }else{
+  }else if(applerUsername != userName && applerUsername != null){
     await Router.push({
       pathname: "/mvp/caption-creation",
       query: {
@@ -73,6 +73,10 @@ const GenerateImages: NextPage = () => {
         roomCode,
         URL
       },
+    });
+  }else{
+    await Router.push({
+      pathname: "/mvp/home",
     });
   }
   }

@@ -3,16 +3,28 @@ import Image from "next/image";
 import * as React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { getApplerForRound, getUserList, resetRoom, returnUserListAndRoundNum } from "../../utils/firebase-utils/firebase-util";
+import { endSessionClicked, everyoneWentListener, getApplerForRound, getUserList, resetRoom, returnUserListAndRoundNum } from "../../utils/firebase-utils/firebase-util";
 import { SetStateAction, useState, useEffect } from "react";
 import { fetchApplerImageURL, fetchCaptionVoteObject, nextRound, nextRoundHasBeenClicked } from "../../utils/firebase-utils/firebase-util";
 
 const Results: NextPage = () => {
 
-  function navToHome() {
-    Router.push({
+  async function navToHome() {
+    await Router.push({
       pathname: "/mvp/home",
     });
+    resetRoom(Number(roomID))
+  }
+
+  async function navToLobby() {
+    await Router.push({
+      pathname: '/mvp/lobby',
+      query: {
+        userName,
+        roomID,
+      },
+    })
+
   }
 
   const router = useRouter();
@@ -59,27 +71,29 @@ const Results: NextPage = () => {
       return() => {imgURL}
   })
 
-
-  async function navToLobbyOrHome(roundNum: Number, UserListLength: Number) {
-
-    if(roundNum >= UserListLength){
-      await Router.push({
-        pathname: "/mvp/home",
-      });
-      resetRoom(Number(roomID))
-    }else if(roundNum < UserListLength){
-    await Router.push({
-      pathname: '/mvp/lobby',
-      query: {
-        userName,
-        roomID,
-      },
+  const [nav, setNav] = useState(String)
+  
+  useEffect(() => {
+    returnUserListAndRoundNum(Number(roomID)).then(nav => {
+      setNav(nav)
     })
-  }
+      return() => {nav}
+  })
+
+  function resetOrNo() {
+    if(nav === 'reset'){
+      return(<button onClick={() => endSessionClicked(Number(roomID))}>End Session</button>)
+    }else if(nav === 'no reset'){
+      return(<button onClick={() => nextRound(Number(roomID))}>Next Round</button>)
+    }
   }
 
   useEffect(() => {
-    nextRoundHasBeenClicked(Number(roomID), function(roundNum, UserListLength){navToLobbyOrHome(roundNum, UserListLength)});
+    nextRoundHasBeenClicked(Number(roomID), navToLobby);
+  })
+
+  useEffect(() => {
+    everyoneWentListener(Number(roomID), navToHome)
   })
 
   return (
@@ -103,10 +117,7 @@ const Results: NextPage = () => {
       </ul>
       </div>
       {/* <h3>Winning Caption: { props.caption }</h3> */}
-      <button onClick={() => nextRound(Number(roomID))}>Next Round</button>
-      <div>
-        <button onClick={() => navToHome()}>End Session</button>
-      </div>
+      <div>{resetOrNo()}</div>
     </main>
   );
 };
