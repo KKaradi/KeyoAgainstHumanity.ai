@@ -9,11 +9,15 @@ import { fetchApplerImageURL, fetchCaptionVoteObject, nextRound, nextRoundHasBee
 
 const Results: NextPage = () => {
 
+  const resetRoomConst = () =>{
+    resetRoom(Number(roomID))
+  }
+
   async function navToHome() {
     await Router.push({
       pathname: "/mvp/home",
     });
-    resetRoom(Number(roomID))
+    setTimeout(resetRoomConst, 10000)
   }
 
   async function navToLobby() {

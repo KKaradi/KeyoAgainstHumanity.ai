@@ -413,7 +413,7 @@ export async function nextRoundHasBeenClicked(
       let Userlist = await getUserList(roomCode);
       let UserListLength = Userlist.length;
 
-      if(snapshot.val() === roundNum + 1){
+      if(snapshot.val() === roundNum + 1 && snapshot.val() != null){
         roundNum = snapshot.val()
         callBack(roundNum, UserListLength);
       }
