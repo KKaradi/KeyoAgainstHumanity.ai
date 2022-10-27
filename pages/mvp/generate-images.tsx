@@ -25,7 +25,9 @@ const GenerateImages: NextPage = () => {
     setPrompt(event.target.value);
   };
 
-  const [URL, setURL] = useState("https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921");
+  const [URL, setURL] = useState(
+    "https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921"
+  );
 
   const generateImageWrapper = async(prompt: string) => {
     if(prompt != null){
