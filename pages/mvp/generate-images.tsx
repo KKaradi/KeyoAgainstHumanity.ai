@@ -22,7 +22,7 @@ const GenerateImages: NextPage = () => {
   // };
 
   // let imgURL = generateImage();
-  let imgURL = "/pretty-picture.jpg"
+  let imgURL = "/pretty-picture.jpg";
 
   function navToPromptCreate() {
     Router.push({
@@ -31,7 +31,7 @@ const GenerateImages: NextPage = () => {
         userName,
         roomID,
         roomCode,
-        URL
+        URL,
       },
     });
   }
@@ -44,25 +44,21 @@ const GenerateImages: NextPage = () => {
     setPrompt(event.target.value);
   };
 
-  const [URL, setURL] = useState("https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921");
+  const [URL, setURL] = useState(
+    "https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921"
+  );
 
-  // const reroll = () => {
-  //   console.log("reroll");
-  // };
-
-  // const finalize = () => {
-  //   console.log("finalize");
-  // };
-
-  const generateImageWrapper = async(prompt: string) => {
+  const generateImageWrapper = async (prompt: string) => {
     const newURL = await generateImage(prompt);
-    setURL(newURL)
-  }
+    setURL(newURL);
+  };
 
   return (
     <main>
       <h1>Generate Image</h1>
-      <h3>Room {roomID} {roomCode}</h3>
+      <h3>
+        Room {roomID} {roomCode}
+      </h3>
       <h3>Appler: {userName}</h3>
       <h4>Generate your image</h4>
       <div>
