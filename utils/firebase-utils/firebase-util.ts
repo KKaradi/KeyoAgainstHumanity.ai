@@ -70,7 +70,7 @@ export async function startedRoundListener(
 // Checks if the userlist changes
 export async function userListChangedListener(
   roomCode: number,
-  callBack: () => void
+  callBack: (userList: string[]) => void
 ): Promise<void> {}
 
 // Calls a call back function when everyone in the lobby has generated an image
