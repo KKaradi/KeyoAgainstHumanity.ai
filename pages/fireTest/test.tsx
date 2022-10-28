@@ -69,7 +69,7 @@ const Home: NextPage = () => {
     console.log("Jimmy voted")
   };
   const callBack10 = () => {
-    everyoneCreatedACaptionListener(100, testCallback);
+    getApplerForRound(100)
     console.log("Button 10 has been clicked");
   };
 

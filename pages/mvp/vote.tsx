@@ -37,10 +37,17 @@ const Vote: NextPage = () => {
 
   const [applerUsername, setApplerUsername] = useState("")
 
-  useEffect(() => {
-    getApplerForRound(Number(roomID)).then(applerUsername =>
-      setApplerUsername(applerUsername))
+  async function getAppler(){
+    const applerName = await getApplerForRound(Number(roomID)) ?? undefined
+    if(applerName === undefined){
+    }else{
+      setApplerUsername(applerName)
       return() => {applerUsername}
+    }
+    }
+
+  useEffect(() => {
+    getAppler()
   })
 
   const [imgURL, setImgURL] = useState("")
