@@ -5,7 +5,7 @@ import styles from "../styles/Home.module.css";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { SetStateAction, useState, useEffect } from "react";
-import { fetchListOfCaptions, getApplerForRound, vote, voted, setVotedToFalse, fetchVoted } from "../../utils/firebase-utils/firebase-util";
+import { fetchListOfCaptions, getApplerForRound, vote, hasVoted, setVotedToFalse, fetchVoted } from "../../utils/firebase-utils/firebase-util";
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCastAVoteListener } from "../../utils/firebase-utils/firebase-util";
 
@@ -22,7 +22,7 @@ const Vote: NextPage = () => {
     URL
   };
 
-  setVotedToFalse(String(caption), Number(roomID), String(userName))
+  setVotedToFalse(Number(roomID), String(userName))
 
   function navToResults() {
     Router.push({
@@ -58,13 +58,18 @@ const Vote: NextPage = () => {
 
   const [voted, setVoted] = useState(Boolean)
 
+  async function voteAndVoted(cap: string, id: number, user: string) {
+    vote(cap, id)
+    hasVoted(id, user)
+  }
+
   const displayCaptions = () => {
     fetchListOfCaptions(Number(roomID)).then(
       (captionList) => {
         setCaptionList(captionList)
       }
     )
-    fetchVoted(String(caption), Number(roomID), String(userName)).then(
+    fetchVoted(Number(roomID), String(userName)).then(
       (voted) => {
         setVoted(Boolean(voted))
       }
@@ -74,7 +79,7 @@ const Vote: NextPage = () => {
         <div>
           {
             captionList.map(
-              (caption) => <button key = { caption } onClick = {() => vote(caption, Number(roomID), String(userName))}>{ caption }</button>
+              (caption) => <button key = { caption } onClick = {() => voteAndVoted(caption, Number(roomID), String(userName))}>{ caption }</button>
             )
           }
         </div>

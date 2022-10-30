@@ -190,14 +190,14 @@ export async function fetchListOfCaptions(roomCode: number): Promise<string[]> {
   const captionData = await get(
     child(
       ref(database),
-      "Rooms/" + roomCode + "/Game/" + applerUsername + "/" + "Captions"
+      "Rooms/" + roomCode + "/Game/" + applerUsername + "/Captions"
     )
   );
 
   const captionList: string[] = [];
 
   captionData.forEach((childSnapshot) => {
-    if(typeof childSnapshot.key === "string"){
+    if(typeof childSnapshot.key === "string" && childSnapshot.key != "voteList"){
     captionList.push(childSnapshot.key);
     }
   });
@@ -209,7 +209,6 @@ export async function fetchListOfCaptions(roomCode: number): Promise<string[]> {
 export async function vote(
   caption: string,
   roomCode: number,
-  yourUsername: string
 ): Promise<void> {
   const applerUsername = await getApplerForRound(roomCode);
   const captionData = await get(
@@ -237,7 +236,6 @@ export async function vote(
   const dataToFirebase = {
     votes: newVotesForCaption,
   };
-  voted(caption, roomCode, yourUsername)
   return update(
     ref(
       database,
@@ -314,7 +312,6 @@ export async function fetchTotalVotes(roomCode: number): Promise<number> {
 //   }
 
 export async function setVotedToFalse(
-  caption: string,
   roomCode: number,
   yourUsername: string
 ): Promise<void> {
@@ -330,8 +327,7 @@ export async function setVotedToFalse(
         "/Game/" +
         applerUsername +
         "/Captions/" +
-        caption +
-        "/votes/" +
+        "/voteList/" +
         yourUsername
     ),
     dataToFirebase
@@ -339,7 +335,6 @@ export async function setVotedToFalse(
 }
 
 export async function fetchVoted(
-  caption: string,
   roomCode: number,
   yourUsername: string
 ): Promise<Boolean> {
@@ -347,14 +342,13 @@ export async function fetchVoted(
   const votedData = await get(
     child(
       ref(database),
-      "Rooms/" + roomCode + "/Game/" + applerUsername + "/Captions/" + caption + "/votes/" + yourUsername + "/voted"
+      "Rooms/" + roomCode + "/Game/" + applerUsername + "/Captions/" + "/voteList" + yourUsername + "/voted"
     )
   );
   return votedData.val()
 }
 
-export async function voted(
-  caption: string,
+export async function hasVoted(
   roomCode: number,
   yourUsername: string,
 ): Promise<void> {
@@ -365,15 +359,14 @@ export async function voted(
   return update(
     ref(
       database,
-      "Rooms/" +
+        "Rooms/" +
         roomCode +
         "/Game/" +
         applerUsername +
         "/Captions/" +
-        caption +
-        "/votes" +
+        "/voteList/" +
         yourUsername
-    ),
+      ),
     dataToFirebase
   );
 }
@@ -440,7 +433,7 @@ export async function everyoneGeneratedAnImageListener(
     let imageUrlList = await fetchListOfImageURL(roomCode);
     let imageUrlListLength = (await imageUrlList).length;
 
-    if (userListLength === imageUrlListLength) {
+    if (userListLength <= imageUrlListLength) {
       callBack();
     }
   });
