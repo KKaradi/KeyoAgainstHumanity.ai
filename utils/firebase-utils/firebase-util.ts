@@ -290,7 +290,7 @@ export async function nextRound(roomCode: number): Promise<void> {
     child(ref(database), "Rooms/" + roomCode + "/Game" + "/roundCounter")
   );
 
-  let newRoundNum = await roundNumData.val() + 1;
+  let newRoundNum = (await roundNumData.val()) + 1;
 
   const dataToFirebase = {
     roundCounter: newRoundNum,
@@ -316,8 +316,8 @@ export async function startedGameListener(
   onValue(ref(database, "Rooms/" + roomCode), async (snapshot) => {
     const startedData = await snapshot.val().started;
     if (startedData === true) {
-      callBack()
-      off(ref(database, "Rooms/" + roomCode), 'value', callBack)
+      callBack();
+      off(ref(database, "Rooms/" + roomCode), "value", callBack);
     }
   });
 }
