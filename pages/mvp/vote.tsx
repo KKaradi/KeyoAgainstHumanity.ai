@@ -5,7 +5,7 @@ import styles from "../styles/Home.module.css";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { SetStateAction, useState, useEffect } from "react";
-import { fetchListOfCaptions, getApplerForRound, vote } from "../../utils/firebase-utils/firebase-util";
+import { fetchListOfCaptions, getApplerForRound, vote, voted, setVotedToFalse, fetchVoted } from "../../utils/firebase-utils/firebase-util";
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCastAVoteListener } from "../../utils/firebase-utils/firebase-util";
 
@@ -21,6 +21,8 @@ const Vote: NextPage = () => {
     caption,
     URL
   };
+
+  setVotedToFalse(String(caption), Number(roomID), String(userName))
 
   function navToResults() {
     Router.push({
@@ -54,21 +56,35 @@ const Vote: NextPage = () => {
 
   const [captionList, setCaptionList] = useState([""])
 
-  function displayCaptions() {
+  const [voted, setVoted] = useState(Boolean)
+
+  const displayCaptions = () => {
     fetchListOfCaptions(Number(roomID)).then(
       (captionList) => {
         setCaptionList(captionList)
       }
     )
-    return( 
-      <div>
-        {
-          captionList.map(
-            (caption) => <button key = { caption } onClick = {() => vote(caption, Number(roomID))}>{ caption }</button>
-          )
-        }
-      </div>
+    fetchVoted(String(caption), Number(roomID), String(userName)).then(
+      (voted) => {
+        setVoted(Boolean(voted))
+      }
     )
+    if (voted === false){
+      return(
+        <div>
+          {
+            captionList.map(
+              (caption) => <button key = { caption } onClick = {() => vote(caption, Number(roomID), String(userName))}>{ caption }</button>
+            )
+          }
+        </div>
+      )
+    }
+    else if (voted === true){
+      return(
+      <h3>You Voted</h3>
+      )
+    }
   }
 
   useEffect(() => {

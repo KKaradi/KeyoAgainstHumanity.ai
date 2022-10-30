@@ -208,7 +208,8 @@ export async function fetchListOfCaptions(roomCode: number): Promise<string[]> {
 //Add 1 to Num Votes under a caption. Called every time someone clicks a vote button
 export async function vote(
   caption: string,
-  roomCode: number
+  roomCode: number,
+  yourUsername: string
 ): Promise<void> {
   const applerUsername = await getApplerForRound(roomCode);
   const captionData = await get(
@@ -236,7 +237,7 @@ export async function vote(
   const dataToFirebase = {
     votes: newVotesForCaption,
   };
-
+  voted(caption, roomCode, yourUsername)
   return update(
     ref(
       database,
@@ -286,6 +287,95 @@ export async function fetchTotalVotes(roomCode: number): Promise<number> {
     totalVotes = totalVotes + childSnapshot.val().votes;
   });
   return totalVotes;
+}
+
+// export async function numberOfVotesPerCaption(
+//   roomCode: number,
+//   caption: String,
+//   ): Promise<void> {
+//     const applerUsername = await getApplerForRound(roomCode);
+//     const getVotes = await get(
+//       child(
+//         ref(database),
+//         "Rooms/" +
+//           roomCode +
+//           "/Game/" +
+//           applerUsername +
+//           "/" +
+//           "Captions/" +
+//           caption + "/votes"
+//       )
+//     );
+//     let votesForCaption = await getVotes.val().votes;
+//     const maybe = {
+//       votes: votesForCaption,
+//     };
+//     console.log(maybe)
+//   }
+
+export async function setVotedToFalse(
+  caption: string,
+  roomCode: number,
+  yourUsername: string
+): Promise<void> {
+  const applerUsername = await getApplerForRound(roomCode);
+  const dataToFirebase = {
+    voted: false,
+  }
+  return update(
+    ref(
+      database,
+      "Rooms/" +
+        roomCode +
+        "/Game/" +
+        applerUsername +
+        "/Captions/" +
+        caption +
+        "/votes/" +
+        yourUsername
+    ),
+    dataToFirebase
+  );
+}
+
+export async function fetchVoted(
+  caption: string,
+  roomCode: number,
+  yourUsername: string
+): Promise<Boolean> {
+  const applerUsername = await getApplerForRound(roomCode);
+  const votedData = await get(
+    child(
+      ref(database),
+      "Rooms/" + roomCode + "/Game/" + applerUsername + "/Captions/" + caption + "/votes/" + yourUsername + "/voted"
+    )
+  );
+  return votedData.val()
+}
+
+export async function voted(
+  caption: string,
+  roomCode: number,
+  yourUsername: string,
+): Promise<void> {
+  const applerUsername = await getApplerForRound(roomCode);
+  const dataToFirebase = {
+    voted: true,
+  }
+  return update(
+    ref(
+      database,
+      "Rooms/" +
+        roomCode +
+        "/Game/" +
+        applerUsername +
+        "/Captions/" +
+        caption +
+        "/votes" +
+        yourUsername
+    ),
+    dataToFirebase
+  );
 }
 
 export async function nextRound(roomCode: number): Promise<void> {

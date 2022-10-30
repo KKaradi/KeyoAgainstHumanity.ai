@@ -24,7 +24,7 @@ import {
   vote,
   userListChangedListener,
   everyoneCastAVoteListener,
-  everyoneGeneratedAnImageListener,
+  everyoneGeneratedAnImageListener
 } from "../../utils/firebase-utils/firebase-util";
 
 export async function testCallbackFunc() {
@@ -50,24 +50,23 @@ const Home: NextPage = () => {
     uploadImageURL("123.jpg", "John", 100);
     console.log("url uploaded");
   };
-  const callBack5 = () => {
-    uploadPrompt(100, "John", "banana");
-    console.log("prompt uploaded");
-  };
-  const callBack6 = () => {
-    uploadCaption("long yellow thing(this is also a caption)", "Jimmy", 100);
-  };
-  const callBack7 = () => {
-    vote("John", 100);
-    console.log('John Voted')
-  };
-  const callBack8 = () => {
-    getApplerForRound(100)
-  };
-  const callBack9 = () => {
-    vote("Jimmy", 100)
-    console.log("Jimmy voted")
-  };
+  // const callBack5 = () => {
+  //   joinRoom("purpABL", 100);
+  // };
+  // const callBack6 = () => {
+  //   uploadCaption("long yellow thing(this is also a caption)", "Jimmy", 100);
+  // };
+  // const callBack7 = () => {
+  //   vote("John", 100);
+  //   console.log('John Voted')
+  // };
+  // const callBack8 = () => {
+  //   getApplerForRound(100)
+  // };
+  // const callBack9 = () => {
+  //   vote("Jimmy", 100)
+  //   console.log("Jimmy voted")
+  // };
   const callBack10 = () => {
     everyoneCreatedACaptionListener(100, testCallback);
     console.log("Button 10 has been clicked");
@@ -79,11 +78,11 @@ const Home: NextPage = () => {
       <button onClick={() => callBack2()}>Button 2</button>
       <button onClick={() => callBack3()}>Button 3</button>
       <button onClick={() => callBack4()}>Button 4</button>
-      <button onClick={() => callBack5()}>Button 5</button>
+      {/* <button onClick={() => callBack5()}>Button 5</button>
       <button onClick={() => callBack6()}>Button 6</button>
       <button onClick={() => callBack7()}>Button 7</button>
       <button onClick={() => callBack8()}>Button 8</button>
-      <button onClick={() => callBack9()}>Button 9</button>
+      <button onClick={() => callBack9()}>Button 9</button> */}
       <button onClick={() => callBack10()}>Button 10</button>
     </main>
   );
