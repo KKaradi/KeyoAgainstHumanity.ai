@@ -1,55 +1,48 @@
 import type { NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
+// import { Routes, Route, useNavigate } from "react-router-dom";
 import Router from "next/router";
 import { SetStateAction, useState } from "react";
-import { createRoom } from "../../utils/firebase-utils/firebase-util";
-import { joinRoom } from "../../utils/firebase-utils/firebase-util";
-import {
-  getDatabase,
-  ref,
-  set,
-  get,
-  child,
-  update,
-  onChildAdded,
-} from 'firebase/database'
-const db = getDatabase()
-
 
 const Home: NextPage = () => {
-  const [userName, setUserName] = useState('')
+  const [userName, setUserName] = useState("");
 
   const inputUserName = (event: {
-    target: { value: SetStateAction<string> }
+    target: { value: SetStateAction<string> };
   }) => {
-    setUserName(event.target.value)
-  }
+    setUserName(event.target.value);
+  };
 
-  const [roomID, setRoomID] = useState("");
+  let [roomID, setRoomID] = useState("");
 
   const inputRoomID = (event: {
-    target: { value: SetStateAction<string> }
+    target: { value: SetStateAction<string> };
   }) => {
-    setRoomID(event.target.value)
+    setRoomID(event.target.value);
+  };
+
+  function createRoom() {
+    //make this random
+    let roomCode = 6720;
+    Router.push({
+      pathname: "/mvp/lobby",
+      query: {
+        userName,
+        roomCode,
+      },
+    });
   }
 
   function navToLobby() {
     Router.push({
-      pathname: '/mvp/lobby',
+      pathname: "/mvp/lobby",
       query: {
         userName,
         roomID,
       },
-    })
-  }
-
-  function joinRoomNavToLobby() {
-    joinRoom(userName, Number(roomID));
-    navToLobby();
-  }
-  
-  function createRoomNavToLobby() {
-    createRoom(Number(roomID));
-    joinRoomNavToLobby()
+    });
   }
 
   return (
@@ -76,13 +69,13 @@ const Home: NextPage = () => {
         />
       </div>
       <div>
-        <button onClick={() => joinRoomNavToLobby()}>Join Room</button>
+        <button onClick={() => navToLobby()}>Join Room</button>
       </div>
       <div>
-        <button onClick={() => createRoomNavToLobby()}>Create Room</button>
+        <button onClick={() => createRoom()}>Create Room</button>
       </div>
     </main>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
