@@ -1,0 +1,28 @@
+{
+  "100": {
+    "started": false,
+    "users": ["kai", "ailesh"],
+    "leadboard": {
+      "kai": 310,
+      "ailesh": 0
+    },
+    "game": {
+      "roundCounter": 0,
+      "users": {
+        "kai": {
+          "prompt": "monkey with purple balloon",
+          "imageUrl": "https://www.monkey.png",
+          "captions": {
+            "ailesh": {
+              "caption": "purple monkey",
+              "numVotes": 3
+            },
+            "zander": { "caption": "balloon monkey", "numVotes": 2 }
+          }
+        },
+        "ailesh": {},
+        "zander": {}
+      }
+    }
+  }
+}

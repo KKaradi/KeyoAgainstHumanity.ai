@@ -22,7 +22,7 @@ const Lobby: NextPage = () => {
       query: {
         userName,
         roomID,
-        roomCode
+        roomCode,
       },
     });
   }
@@ -36,7 +36,9 @@ const Lobby: NextPage = () => {
   return (
     <main>
       <h1>Lobby</h1>
-      <h3>Room {roomID} {roomCode}</h3>
+      <h3>
+        Room {roomID} {roomCode}
+      </h3>
       <h4>Users:</h4>
       <ul>
         <li>{userName}</li>

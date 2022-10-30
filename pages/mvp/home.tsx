@@ -7,7 +7,6 @@ import Router from "next/router";
 import { SetStateAction, useState } from "react";
 
 const Home: NextPage = () => {
-
   const [userName, setUserName] = useState("");
 
   const inputUserName = (event: {
@@ -26,7 +25,7 @@ const Home: NextPage = () => {
 
   function createRoom() {
     //make this random
-    let roomCode = 6720
+    let roomCode = 6720;
     Router.push({
       pathname: "/mvp/lobby",
       query: {
