@@ -3,7 +3,7 @@ import Image from "next/image";
 import * as React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { endSessionClicked, everyoneWentListener, getApplerForRound, getUserList, resetRoom, returnUserListAndRoundNum } from "../../utils/firebase-utils/firebase-util";
+import { createRoom, endSessionClicked, everyoneWentListener, getApplerForRound, getUserList, joinRoom, resetRoom, returnUserListAndRoundNum } from "../../utils/firebase-utils/firebase-util";
 import { SetStateAction, useState, useEffect } from "react";
 import { fetchApplerImageURL, fetchCaptionVoteObject, nextRound, nextRoundHasBeenClicked } from "../../utils/firebase-utils/firebase-util";
 
@@ -87,9 +87,16 @@ const Results: NextPage = () => {
       return() => {nav}
   })
 
-  function newGame() {
+  function joinRoomNavToLobby() {
+    joinRoom(String(userName), Number(roomID))
     navToLobby()
-    resetRoom(Number(roomID))
+  }
+
+  function newGame() {
+    navToHome()
+    // resetRoom(Number(roomID))
+    // createRoom(Number(roomID))
+    joinRoomNavToLobby()
   }
 
   function resetOrNo() {
@@ -133,7 +140,6 @@ const Results: NextPage = () => {
         }
       </ul>
       </div>
-      {/* <h3>Winning Caption: { props.caption }</h3> */}
       <div>{resetOrNo()}</div>
     </main>
   );
