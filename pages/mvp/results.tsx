@@ -87,9 +87,19 @@ const Results: NextPage = () => {
       return() => {nav}
   })
 
+  function newGame() {
+    navToLobby()
+    resetRoom(Number(roomID))
+  }
+
   function resetOrNo() {
     if(nav === 'reset'){
-      return(<button onClick={() => endSessionClicked(Number(roomID))}>End Session</button>)
+      return(
+        <div>
+          <button onClick = {() => newGame()}>New Game</button>
+          <button onClick={() => endSessionClicked(Number(roomID))}>End Session</button>
+        </div>
+      )
     }else if(nav === 'no reset'){
       return(<button onClick={() => nextRound(Number(roomID))}>Next Round</button>)
     }
