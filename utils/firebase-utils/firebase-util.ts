@@ -290,7 +290,7 @@ export async function nextRound(roomCode: number): Promise<void> {
     child(ref(database), "Rooms/" + roomCode + "/Game" + "/roundCounter")
   );
 
-  let newRoundNum = (await roundNumData.val()) + 1;
+  const newRoundNum = (await roundNumData.val()) + 1;
 
   const dataToFirebase = {
     roundCounter: newRoundNum,
