@@ -1,4 +1,5 @@
 import React from "react";
+
 import ReactDOM from "react-dom";
 import "../../styles/Home.module.css";
 import type { NextPage } from "next";
@@ -16,6 +17,7 @@ import {
   update,
   onChildAdded,
 } from 'firebase/database'
+
 const db = getDatabase()
 
 const top = "/top.png";
@@ -100,6 +102,7 @@ const Home: NextPage = () => {
             value={roomID}
           />
         </div>
+        <div className="homebuttos"></div>
         <div className="button">
                <button className="joinRoom" onClick={() => joinRoomNavToLobby()}>Join Room</button>
         </div>     

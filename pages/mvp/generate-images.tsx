@@ -88,7 +88,7 @@ const GenerateImages: NextPage = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
       <ul className="flex-container">
         <li className="lobby-flex">
-        <h1>Generate Image</h1>
+        <h1>GENERATE IMAGE</h1>
       <div className="generatedimg">
         <Image src={URL} width={400} height={400} alt="Pretty Picture"></Image>
       </div>
@@ -113,10 +113,9 @@ const GenerateImages: NextPage = () => {
       
       <div className="changebuttons">
       <div>
-        <button className="homebutton" onClick={() =>  generateImageWrapper(prompt)}>Generate</button>
-      </div>
-      <div>
-        <button className="homebutton" onClick={() => uploadURLUploadPrompt()}>Submit</button>
+        <button className="genbtn" onClick={() =>  generateImageWrapper(prompt)}>Generate</button>
+      
+        <button className="genbtn" onClick={() => uploadURLUploadPrompt()}>Submit</button>
       </div>
       </div>
         </li>

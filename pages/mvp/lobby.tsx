@@ -109,13 +109,7 @@ const Lobby: NextPage = () => {
         <li className="lobby-flex">
           <h1>PLAYERS:</h1>
       <ul>
-      <div className="players">
-      {userName}
-      </div>
-      <div>{displayUserList()}</div>
-      <div>
-        <button onClick={() => startGame(Number(roomID))}>Start Round</button>
-      </div>
+      <div className="players">{displayUserList()}</div>
       </ul>
       <div className="button">
             <button className= "homebutton" onClick={() => navToHome()}>Exit Room</button>

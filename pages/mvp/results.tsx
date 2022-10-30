@@ -76,32 +76,43 @@ const Results: NextPage = () => {
   useEffect(() => {
     nextRoundHasBeenClicked(Number(roomID), function(roundNum, UserListLength){navToLobby(roundNum, UserListLength)});
   })
-
+  const waves = "/waveboi.png";
+  const top = "/top.png";
   return (
     <main>
-      <h1>Game Over</h1>
-      <h3>Room {roomCode}</h3>
-      <h3>Appler: {applerUsername}</h3>
-      <div>
-        <Image src={imgURL} width={100} height={100} alt="Pretty Picture"></Image>
-      </div>
-      <h3>Leaderboard:</h3>
-      <div>
+
+<Image src={top}  width={10000} height={600} alt ="shapes top header" className="top"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+      <ul className="flex-container">
+        <li className="lobby-flex">
+        <h1>GAME OVER</h1>
+        <div>
+        <Image src={imgURL} width={400} height={400} alt="Pretty Picture"></Image>
+      </div>      
+        </li>
+        <li className="lobby-flex">
+          <h1>LEADERBOARD:</h1>
+          <div>
         <ul>
         {
           Object.keys(captionVotes).map(
             (caption, index) => {
-              return(<li key = {index}>{caption} got {captionVotes[caption as keyof typeof captionVotes]} votes.</li>)
+              return(<li className="sit" key = {index}>{caption} got {captionVotes[caption as keyof typeof captionVotes]} votes.</li>)
             }
           )
         }
       </ul>
       </div>
       {/* <h3>Winning Caption: { props.caption }</h3> */}
-      <button onClick={() => nextRound(Number(roomID))}>Next Round</button>
-      <div>
-        <button onClick={() => navToHome()}>End Session</button>
-      </div>
+          
+      <button className="genbtn" onClick={() => nextRound(Number(roomID))}>Next Round</button>
+      
+        <button className="genbtn" onClick={() => navToHome()}>End Session</button>
+      
+        </li>
+      </ul>
+      <Image src={waves}  width={2400} height={400} alt ="waves at the bottom of the screen" className="waveslobby"/>
+      
     </main>
   );
 };
