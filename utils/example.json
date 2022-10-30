@@ -2,6 +2,10 @@
   "100": {
     "started": false,
     "users": ["kai", "ailesh"],
+    "leadboard": {
+      "kai": 310,
+      "ailesh": 0
+    },
     "game": {
       "roundCounter": 0,
       "users": {

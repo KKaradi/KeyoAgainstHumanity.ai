@@ -1,4 +1,7 @@
 import type { NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
 import React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
@@ -89,12 +92,14 @@ const Lobby: NextPage = () => {
         Room {roomID} {roomCode}
       </h3>
       <h4>Users:</h4>
-      <div>{displayUserList()}</div>
+      <ul>
+        <li>{userName}</li>
+      </ul>
       <div>
-        <button onClick={() => startGame(Number(roomID))}>Start Round</button>
+        <button onClick={() => navToGenerate()}>Start Game</button>
       </div>
       <div>
-        <button onClick={() => navToHome()}>Exit Room</button>
+        <button onClick={() => navToHome()}>Home</button>
       </div>
     </main>
   );

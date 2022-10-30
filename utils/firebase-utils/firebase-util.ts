@@ -266,7 +266,7 @@ export async function fetchCaptionVoteObject(
       "Rooms/" + roomCode + "/Game/" + applerUsername + "/" + "Captions"
     )
   );
-  let captionVoteObject: { [index: string]: number } = {};
+  const captionVoteObject: { [index: string]: number } = {};
   captionData.forEach((childSnapshot) => {
     let caption: unknown;
     caption = childSnapshot.key;
@@ -300,7 +300,7 @@ export async function nextRound(roomCode: number): Promise<void> {
     child(ref(database), "Rooms/" + roomCode + "/Game" + "/roundCounter")
   );
 
-  let newRoundNum = await roundNumData.val() + 1;
+  const newRoundNum = (await roundNumData.val()) + 1;
 
   const dataToFirebase = {
     roundCounter: newRoundNum,

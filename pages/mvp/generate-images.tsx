@@ -1,10 +1,12 @@
 import type { NextPage } from "next";
+import Head from "next/head";
 import Image from "next/image";
+import styles from "../styles/Home.module.css";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { SetStateAction, useState, useEffect } from "react";
 import { generateImage } from "../../utils/image-utils/image-util";
-import { getApplerForRound, uploadImageURL, uploadPrompt } from "../../utils/firebase-utils/firebase-util";
+import { uploadImageURL, uploadPrompt, getApplerForRound } from "../../utils/firebase-utils/firebase-util";
 import { everyoneGeneratedAnImageListener } from "../../utils/firebase-utils/firebase-util";
 
 const GenerateImages: NextPage = () => {
@@ -114,6 +116,10 @@ const GenerateImages: NextPage = () => {
       <div>
         <button onClick={() => generateImageWrapper(prompt)}>Generate</button>
       </div>
+      {/* <div>
+        <button onClick={() => reroll()}>Reroll</button>
+        <button onClick={() => finalize()}>Finalize</button>
+      </div> */}
       <div>
         <button onClick={uploadURLUploadPrompt}>Submit</button>
       </div>
