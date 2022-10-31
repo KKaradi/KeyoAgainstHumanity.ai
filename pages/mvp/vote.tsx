@@ -5,7 +5,7 @@ import styles from "../styles/Home.module.css";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { SetStateAction, useState, useEffect } from "react";
-import { fetchListOfCaptions, getApplerForRound, vote, hasVoted, setVotedToFalse, fetchVoted } from "../../utils/firebase-utils/firebase-util";
+import { fetchListOfCaptions, getApplerForRound, vote, hasVoted, fetchVoted } from "../../utils/firebase-utils/firebase-util";
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCastAVoteListener } from "../../utils/firebase-utils/firebase-util";
 
@@ -21,8 +21,6 @@ const Vote: NextPage = () => {
     caption,
     URL
   };
-
-  setVotedToFalse(Number(roomID), String(userName))
 
   function navToResults() {
     Router.push({
