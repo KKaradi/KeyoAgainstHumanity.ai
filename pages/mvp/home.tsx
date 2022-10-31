@@ -5,6 +5,18 @@ import styles from "../styles/Home.module.css";
 // import { Routes, Route, useNavigate } from "react-router-dom";
 import Router from "next/router";
 import { SetStateAction, useState } from "react";
+import { createRoom } from "../../utils/firebase-utils/firebase-util";
+import { joinRoom } from "../../utils/firebase-utils/firebase-util";
+import {
+  getDatabase,
+  ref,
+  set,
+  get,
+  child,
+  update,
+  onChildAdded,
+} from 'firebase/database'
+const db = getDatabase()
 
 const Home: NextPage = () => {
   const [userName, setUserName] = useState("");
@@ -23,26 +35,24 @@ const Home: NextPage = () => {
     setRoomID(event.target.value);
   };
 
-  function createRoom() {
-    //make this random
-    let roomCode = 6720;
-    Router.push({
-      pathname: "/mvp/lobby",
-      query: {
-        userName,
-        roomCode,
-      },
-    });
-  }
-
-  function navToLobby() {
-    Router.push({
-      pathname: "/mvp/lobby",
+  async function navToLobby() {
+    await Router.push({
+      pathname: '/mvp/lobby',
       query: {
         userName,
         roomID,
       },
-    });
+    })
+  }
+
+  function joinRoomNavToLobby() {
+    joinRoom(userName, Number(roomID));
+    navToLobby();
+  }
+  
+  function createRoomNavToLobby() {
+    createRoom(Number(roomID));
+    joinRoomNavToLobby();
   }
 
   return (
@@ -69,10 +79,10 @@ const Home: NextPage = () => {
         />
       </div>
       <div>
-        <button onClick={() => navToLobby()}>Join Room</button>
+        <button onClick={() => joinRoomNavToLobby()}>Join Room</button>
       </div>
       <div>
-        <button onClick={() => createRoom()}>Create Room</button>
+        <button onClick={() => createRoomNavToLobby()}>Create Room</button>
       </div>
     </main>
   );
