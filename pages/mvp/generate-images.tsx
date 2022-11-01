@@ -50,9 +50,13 @@ const GenerateImages: NextPage = () => {
   const [applerUsername, setApplerUsername] = useState("")
 
   async function getAppler(){
-    await getApplerForRound(Number(roomID)).then(applerUsername =>
-      setApplerUsername(applerUsername))
-      return() => {applerUsername}
+    const applerName = (await getApplerForRound(Number(roomID)) ?? undefined)
+    if(applerName === undefined){
+      return(undefined)
+    }else{
+      setApplerUsername(applerName)
+      return(applerName)
+    }
     }
 
   useEffect(() => {
@@ -60,7 +64,9 @@ const GenerateImages: NextPage = () => {
   })
 
   async function navToCaptionCreate() {
-    if(applerUsername === userName){
+    const applerUndefined = await getAppler()
+
+    if(applerUsername === userName && applerUndefined != undefined){
     await Router.push({
       pathname: "/mvp/appler-wait",
       query: {
@@ -70,7 +76,7 @@ const GenerateImages: NextPage = () => {
         URL
       },
     });
-  }else if(applerUsername != userName && applerUsername != null){
+  }else if(applerUsername != userName && applerUndefined != undefined){
     await Router.push({
       pathname: "/mvp/caption-creation",
       query: {

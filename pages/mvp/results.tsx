@@ -58,9 +58,12 @@ const Results: NextPage = () => {
   const [applerUsername, setApplerUsername] = useState("")
 
   async function getAppler(){
-    await getApplerForRound(Number(roomID)).then(applerUsername =>
-      setApplerUsername(applerUsername))
+    const applerName = await getApplerForRound(Number(roomID)) ?? undefined
+    if(applerName === undefined){
+    }else{
+      setApplerUsername(applerName)
       return() => {applerUsername}
+    }
     }
 
   useEffect(() => {
