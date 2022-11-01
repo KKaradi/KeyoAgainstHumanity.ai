@@ -1,7 +1,5 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
@@ -13,12 +11,6 @@ const ApplerWait: NextPage = () => {
   const {
     query: { userName, roomID, roomCode, URL },
   } = router;
-  const props = {
-    userName,
-    roomID,
-    roomCode,
-    URL
-  };
 
   async function navToVote() {
     await Router.push({
@@ -27,28 +19,35 @@ const ApplerWait: NextPage = () => {
         userName,
         roomID,
         roomCode,
-        URL
+        URL,
       },
     });
   }
-  const [imgURL, setImgURL] = useState("")
+  const [imgURL, setImgURL] = useState("");
 
   useEffect(() => {
-    fetchApplerImageURL(Number(roomID)).then(imgURL => {
-      setImgURL(imgURL)
-    })
-      return() => {imgURL}
-  })
+    fetchApplerImageURL(Number(roomID)).then((imgURL) => {
+      setImgURL(imgURL);
+    });
+    return () => {
+      imgURL;
+    };
+  });
 
   useEffect(() => {
     everyoneCreatedACaptionListener(Number(roomID), navToVote);
-  })
+  });
 
   return (
     <main>
       <h1>Sit tight while everyone captions your image!</h1>
       <div>
-        <Image src={imgURL} width={100} height={100} alt="Pretty Picture"></Image>
+        <Image
+          src={imgURL}
+          width={100}
+          height={100}
+          alt="Pretty Picture"
+        ></Image>
       </div>
     </main>
   );

@@ -1,7 +1,5 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { SetStateAction, useState, useEffect } from "react";
@@ -15,33 +13,27 @@ const CaptionCreation: NextPage = () => {
   const {
     query: { userName, roomID, roomCode, URL },
   } = router;
-  const props = {
-    userName,
-    roomID,
-    roomCode,
-    URL
-  };
 
-  async function checkIfApplerWentToWait(){
-    const applerName = await getApplerForRound(Number(roomID))
-    
-      if(applerName == userName){
-        await Router.push({
-          pathname: "/mvp/appler-wait",
-          query: {
-            userName,
-            roomID,
-            roomCode,
-            URL
-          },
-        });
-      }
+  async function checkIfApplerWentToWait() {
+    const applerName = await getApplerForRound(Number(roomID));
+
+    if (applerName == userName) {
+      await Router.push({
+        pathname: "/mvp/appler-wait",
+        query: {
+          userName,
+          roomID,
+          roomCode,
+          URL,
+        },
+      });
     }
+  }
 
-useEffect(() => {
-  checkIfApplerWentToWait()
-})
-  
+  useEffect(() => {
+    checkIfApplerWentToWait();
+  });
+
   async function navToVote() {
     await Router.push({
       pathname: "/mvp/vote",
@@ -50,7 +42,7 @@ useEffect(() => {
         roomID,
         roomCode,
         caption,
-        URL
+        URL,
       },
     });
   }
@@ -63,49 +55,58 @@ useEffect(() => {
     setCaption(event.target.value);
   };
 
-  const [imgURL, setImgURL] = useState("")
+  const [imgURL, setImgURL] = useState("");
 
   useEffect(() => {
-    fetchApplerImageURL(Number(roomID)).then(imgURL => {
-      setImgURL(imgURL)
-    })
-      return() => {imgURL}
-  })
+    fetchApplerImageURL(Number(roomID)).then((imgURL) => {
+      setImgURL(imgURL);
+    });
+    return () => {
+      imgURL;
+    };
+  });
 
-  function uploadCaptionNavToVote () {
-    if(caption != null){
-    uploadCaption(caption, String(userName), Number(roomID));
-    navToVote();
+  function uploadCaptionNavToVote() {
+    if (caption != null) {
+      uploadCaption(caption, String(userName), Number(roomID));
+      navToVote();
     }
   }
 
-  const [applerUsername, setApplerUsername] = useState("")
+  const [applerUsername, setApplerUsername] = useState("");
 
-  async function getAppler(){
-    const applerName = await getApplerForRound(Number(roomID)) ?? undefined
-    if(applerName === undefined){
-    }else{
-      setApplerUsername(applerName)
-      return() => {applerUsername}
+  async function getAppler() {
+    const applerName = (await getApplerForRound(Number(roomID))) ?? undefined;
+    if (applerName === undefined) {
+    } else {
+      setApplerUsername(applerName);
+      return () => {
+        applerUsername;
+      };
     }
-    }
+  }
 
   useEffect(() => {
-    getAppler()
-  })
+    getAppler();
+  });
 
   useEffect(() => {
     everyoneCreatedACaptionListener(Number(roomID), navToVote);
-  })
+  });
 
   return (
     <main>
       <h1>Caption the image</h1>
       <h3>Room {roomID}</h3>
-      <h3>Appler: { applerUsername }</h3>
-      <h4>This is the picture { applerUsername } generated</h4>
+      <h3>Appler: {applerUsername}</h3>
+      <h4>This is the picture {applerUsername} generated</h4>
       <div>
-        <Image src={imgURL} width={100} height={100} alt="Pretty Picture"></Image>
+        <Image
+          src={imgURL}
+          width={100}
+          height={100}
+          alt="Pretty Picture"
+        ></Image>
       </div>
       <h4>Caption this picture!</h4>
       <div>

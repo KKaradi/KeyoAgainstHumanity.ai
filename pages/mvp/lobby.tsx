@@ -2,13 +2,12 @@ import type { NextPage } from "next";
 import React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { SetStateAction, useState, useEffect } from "react";
-import { getUserList, resetRoom, returnUserListAndRoundNum } from "../../utils/firebase-utils/firebase-util";
+import { useState, useEffect } from "react";
+import { getUserList } from "../../utils/firebase-utils/firebase-util";
 import { startGame } from "../../utils/firebase-utils/firebase-util";
 import { startedGameListener } from "../../utils/firebase-utils/firebase-util";
 import { userListChangedListener } from "../../utils/firebase-utils/firebase-util";
-import { get, ref, getDatabase, child } from "firebase/database";
-
+import { getDatabase } from "firebase/database";
 import { initializeApp } from "firebase/app";
 
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
@@ -30,9 +29,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-
 const Lobby: NextPage = () => {
-  
   const router = useRouter();
   const {
     query: { userName, roomID, roomCode },
@@ -54,33 +51,33 @@ const Lobby: NextPage = () => {
       query: {
         userName,
         roomID,
-        roomCode
+        roomCode,
       },
     });
   }
 
-  const [userList, setUserList] = useState([""])
+  const [userList, setUserList] = useState([""]);
 
   const displayUserList = () => {
-      getUserList(Number(roomID)).then(
-        (userList) => {
-          setUserList(userList)
-        }
-      )
+    getUserList(Number(roomID)).then((userList) => {
+      setUserList(userList);
+    });
     return (
-      <ul>{ userList.map(
-        (user) => <li key = { user }>{ user }</li>
-      ) }</ul>
-    )
-  }
+      <ul>
+        {userList.map((user) => (
+          <li key={user}>{user}</li>
+        ))}
+      </ul>
+    );
+  };
 
   useEffect(() => {
     userListChangedListener(Number(roomID), displayUserList);
-  })
+  });
 
   useEffect(() => {
     startedGameListener(Number(roomID), navToGenerate);
-  })
+  });
 
   return (
     <main>
