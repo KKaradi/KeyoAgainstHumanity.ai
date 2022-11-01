@@ -501,13 +501,13 @@ export async function endSessionClicked(roomCode: number): Promise<void> {
 
 export async function newGameClickedListener(roomCode: Number, callback: () => void): Promise<void> {
   onValue(ref(database, "Rooms/" + roomCode), async (snapshot) => {
-    const newGameWasClicked = await snapshot.val().newGameClicked;
-    if (newGameWasClicked === true) {
-      callback()
-      const dataToFirebase = {
-        newGameClicked: false
-      };
-      return update(ref(database, "Room/" + roomCode), dataToFirebase);
-    }
+      const newGameWasClicked = await snapshot.val().newGameClicked;
+      if (newGameWasClicked === true) {
+        callback();
+      }
   })
+  const dataToFirebase = {
+    newGameClicked: false
+  };
+  return update(ref(database, "Room/" + roomCode), dataToFirebase);
 }
