@@ -62,7 +62,8 @@ export async function createRoom(roomCode: number): Promise<void> {
   await set(ref(database, "Rooms/" + roomCode), {
     roomCode: roomCode,
     started: false,
-    everyoneWent: false
+    everyoneWent: false,
+    newGameClicked: false
   });
 
   await set(ref(database, "Rooms/" + roomCode + "/Game"), {
@@ -292,52 +293,6 @@ export async function fetchTotalVotes(roomCode: number): Promise<number> {
   return totalVotes;
 }
 
-// export async function numberOfVotesPerCaption(
-//   roomCode: number,
-//   caption: String,
-//   ): Promise<void> {
-//     const applerUsername = await getApplerForRound(roomCode);
-//     const getVotes = await get(
-//       child(
-//         ref(database),
-//         "Rooms/" +
-//           roomCode +
-//           "/Game/" +
-//           applerUsername +
-//           "/" +
-//           "Captions/" +
-//           caption + "/votes"
-//       )
-//     );
-//     let votesForCaption = await getVotes.val().votes;
-//     const maybe = {
-//       votes: votesForCaption,
-//     };
-//     console.log(maybe)
-//   }
-
-// export async function setVotedToFalse(
-//   roomCode: number,
-//   yourUsername: string
-// ): Promise<void> {
-//   const applerUsername = await getApplerForRound(roomCode);
-//   const dataToFirebase = {
-//     voted: false,
-//   }
-//   return update(
-//     ref(
-//       database,
-//       "Rooms/" +
-//         roomCode +
-//         "/Game/" +
-//         applerUsername +
-//         "/voteList/" +
-//         yourUsername
-//     ),
-//     dataToFirebase
-//   );
-// }
-
 export async function fetchVoted(
   roomCode: number,
   yourUsername: string
@@ -449,6 +404,7 @@ export async function resetGame(roomCode: Number): Promise<void> {
   remove(ref(database, "Rooms/" + roomCode + "/Game/"));
   const dataToFirebase = {
     started: false,
+    newGameClicked: true
   };
   return update(ref(database, "Rooms/" + roomCode), dataToFirebase);
 }
@@ -548,6 +504,10 @@ export async function newGameClickedListener(roomCode: Number, callback: () => v
     const newGameWasClicked = await snapshot.val().newGameClicked;
     if (newGameWasClicked === true) {
       callback()
+      const dataToFirebase = {
+        newGameClicked: false
+      };
+      return update(ref(database, "Room/" + roomCode), dataToFirebase);
     }
   })
 }
