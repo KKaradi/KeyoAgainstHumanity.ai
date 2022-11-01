@@ -54,40 +54,21 @@ const Vote: NextPage = () => {
 
   const [captionList, setCaptionList] = useState([""])
 
-  const [voted, setVoted] = useState(Boolean)
-
-  async function voteAndVoted(cap: string, id: number, user: string) {
-    vote(cap, id)
-    hasVoted(id, user)
-  }
-
   const displayCaptions = () => {
     fetchListOfCaptions(Number(roomID)).then(
       (captionList) => {
         setCaptionList(captionList)
       }
     )
-    fetchVoted(Number(roomID), String(userName)).then(
-      (voted) => {
-        setVoted(Boolean(voted))
-      }
+    return(
+      <div>
+        {
+          captionList.map(
+            (caption) => <button key = { caption } onClick = {() => vote(caption, Number(roomID))}>{ caption }</button>
+          )
+        }
+      </div>
     )
-    if (voted === false){
-      return(
-        <div>
-          {
-            captionList.map(
-              (caption) => <button key = { caption } onClick = {() => voteAndVoted(caption, Number(roomID), String(userName))}>{ caption }</button>
-            )
-          }
-        </div>
-      )
-    }
-    else if (voted === true){
-      return(
-      <h3>You Voted</h3>
-      )
-    }
   }
 
   useEffect(() => {

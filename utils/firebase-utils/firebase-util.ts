@@ -437,6 +437,14 @@ export async function resetRoom(roomCode: number): Promise<void> {
   remove(ref(database, "Rooms/" + roomCode));
 }
 
+export async function resetGame(roomCode: Number): Promise<void> {
+  remove(ref(database, "Rooms/" + roomCode + "/Game/"));
+  const dataToFirebase = {
+    started: false,
+  };
+  return update(ref(database, "Rooms/" + roomCode), dataToFirebase);
+}
+
 // Calls a call back function when everyone in the lobby has generated an caption for a specfic appler.
 // Evertime the round object is changed, Checks if the number of people that filled a caption for a given appler = the number of people in the lobby -1
 export async function everyoneCreatedACaptionListener(
@@ -474,7 +482,7 @@ export async function everyoneCastAVoteListener(
 //checks if the next round number was increased by 1
 export async function nextRoundHasBeenClicked(
   roomCode: number,
-  callBack: (roundNum: Number, UserListLength: Number) => void
+  callBack: Function
 ) {
 
   const roundCounterRef = await get(ref(database, "Rooms/" + roomCode + "/Game" + "/roundCounter"))
@@ -484,12 +492,9 @@ export async function nextRoundHasBeenClicked(
     ref(database, "Rooms/" + roomCode + "/Game" + "/roundCounter"),
     async (snapshot) => {
 
-      let Userlist = await getUserList(roomCode);
-      let UserListLength = Userlist.length;
-
       if(snapshot.val() === roundNum + 1 && snapshot.val() != null){
         roundNum = snapshot.val()
-        callBack(roundNum, UserListLength);
+        callBack();
       }
     }
   );
@@ -529,4 +534,13 @@ export async function endSessionClicked(roomCode: number): Promise<void> {
   };
 
   return update(ref(database, "Rooms/" + roomCode), dataToFirebase);
+}
+
+export async function newGameClickedListener(roomCode: Number, callback: () => void): Promise<void> {
+  onValue(ref(database, "Rooms/" + roomCode), async (snapshot) => {
+    const newGameWasClicked = await snapshot.val().newGameClicked;
+    if (newGameWasClicked === true) {
+      callback()
+    }
+  })
 }

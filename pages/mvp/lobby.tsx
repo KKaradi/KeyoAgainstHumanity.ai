@@ -92,9 +92,7 @@ const Lobby: NextPage = () => {
         Room {roomID} {roomCode}
       </h3>
       <h4>Users:</h4>
-      <ul>
-        <li>{userName}</li>
-      </ul>
+      <p>{displayUserList()}</p>
       <div>
         <button onClick={() => startGame(Number(roomID))}>Start Game</button>
       </div>

@@ -3,9 +3,10 @@ import Image from "next/image";
 import * as React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { endSessionClicked, everyoneWentListener, getApplerForRound, getUserList, resetRoom, returnUserListAndRoundNum } from "../../utils/firebase-utils/firebase-util";
+import { endSessionClicked, everyoneWentListener, getApplerForRound, getUserList, newGameClickedListener, resetRoom, returnUserListAndRoundNum } from "../../utils/firebase-utils/firebase-util";
 import { SetStateAction, useState, useEffect } from "react";
 import { fetchApplerImageURL, fetchCaptionVoteObject, nextRound, nextRoundHasBeenClicked } from "../../utils/firebase-utils/firebase-util";
+import { resetGame } from "../../utils/firebase-utils/firebase-util";
 
 const Results: NextPage = () => {
 
@@ -84,9 +85,19 @@ const Results: NextPage = () => {
       return() => {nav}
   })
 
+  function newGame() {
+    resetGame(Number(roomID))
+    navToLobby()
+  }
+
   function resetOrNo() {
     if(nav === 'reset'){
-      return(<button onClick={() => endSessionClicked(Number(roomID))}>End Session</button>)
+      return(
+        <div>
+          <button onClick={() => newGame()}>New Game</button>
+          <button onClick={() => endSessionClicked(Number(roomID))}>End Session</button>
+        </div>
+      )
     }else if(nav === 'no reset'){
       return(<button onClick={() => nextRound(Number(roomID))}>Next Round</button>)
     }
@@ -98,6 +109,10 @@ const Results: NextPage = () => {
 
   useEffect(() => {
     everyoneWentListener(Number(roomID), navToHome)
+  })
+
+  useEffect(() => {
+    newGameClickedListener(Number(roomID), navToLobby)
   })
 
   return (
@@ -120,7 +135,6 @@ const Results: NextPage = () => {
         }
       </ul>
       </div>
-      {/* <h3>Winning Caption: { props.caption }</h3> */}
       <div>{resetOrNo()}</div>
     </main>
   );
