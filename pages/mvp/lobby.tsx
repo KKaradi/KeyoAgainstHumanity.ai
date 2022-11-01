@@ -7,37 +7,12 @@ import { getUserList } from "../../utils/firebase-utils/firebase-util";
 import { startGame } from "../../utils/firebase-utils/firebase-util";
 import { startedGameListener } from "../../utils/firebase-utils/firebase-util";
 import { userListChangedListener } from "../../utils/firebase-utils/firebase-util";
-import { getDatabase } from "firebase/database";
-import { initializeApp } from "firebase/app";
-
-const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-const authDomain = process.env.NEXT_PUBLIC_AUTH_DOMAIN;
-const databaseURL = process.env.NEXT_PUBLIC_DATABASE_URL;
-const projectID = process.env.NEXT_PUBLIC_PROJECT_ID;
-const storagebucket = process.env.NEXT_PUBLIC_STORAGE_BUCKET;
-const messagingSenderId = process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID;
-
-const firebaseConfig = {
-  apiKey: apiKey,
-  authDomain: authDomain,
-  databaseURL: databaseURL,
-  projectId: projectID,
-  storageBucket: storagebucket,
-  messagingSenderId: messagingSenderId,
-};
-
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
 
 const Lobby: NextPage = () => {
   const router = useRouter();
   const {
     query: { userName, roomID, roomCode },
   } = router;
-  const props = {
-    userName,
-    roomID,
-  };
 
   async function navToHome() {
     await Router.push({
