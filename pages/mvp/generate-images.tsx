@@ -115,7 +115,7 @@ const GenerateImages: NextPage = () => {
         <button onClick={() => generateImageWrapper(prompt)}>Generate</button>
       </div>
       <div>
-        <button onClick={uploadURLUploadPrompt}>Submit</button>
+        <button onClick={() => uploadURLUploadPrompt()}>Submit</button>
       </div>
     </main>
   );

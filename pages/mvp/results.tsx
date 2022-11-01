@@ -4,7 +4,6 @@ import * as React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { newGameClickedListener } from "../../utils/firebase-utils/firebase-util";
-
 import { resetGame } from "../../utils/firebase-utils/firebase-util";
 import {
   endSessionClicked,
@@ -96,20 +95,24 @@ const Results: NextPage = () => {
   });
 
   function newGame() {
-    resetGame(Number(roomID))
-    navToLobby()
+    resetGame(Number(roomID));
+    navToLobby();
   }
 
   function resetOrNo() {
-    if(nav === 'reset'){
-      return(
+    if (nav === "reset") {
+      return (
         <div>
           <button onClick={() => newGame()}>New Game</button>
-          <button onClick={() => endSessionClicked(Number(roomID))}>End Session</button>
+          <button onClick={() => endSessionClicked(Number(roomID))}>
+            End Session
+          </button>
         </div>
-      )
-    }else if(nav === 'no reset'){
-      return(<button onClick={() => nextRound(Number(roomID))}>Next Round</button>)
+      );
+    } else if (nav === "no reset") {
+      return (
+        <button onClick={() => nextRound(Number(roomID))}>Next Round</button>
+      );
     }
   }
 
@@ -122,8 +125,8 @@ const Results: NextPage = () => {
   });
 
   useEffect(() => {
-    newGameClickedListener(Number(roomID), navToLobby)
-  })
+    newGameClickedListener(Number(roomID), navToLobby);
+  });
 
   return (
     <main>

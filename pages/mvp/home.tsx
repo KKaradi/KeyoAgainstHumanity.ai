@@ -1,8 +1,4 @@
 import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
-// import { Routes, Route, useNavigate } from "react-router-dom";
 import Router from "next/router";
 import { SetStateAction, useState } from "react";
 import { createRoom } from "../../utils/firebase-utils/firebase-util";
