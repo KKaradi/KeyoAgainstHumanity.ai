@@ -4,7 +4,7 @@ import Router from "next/router";
 import { useRouter } from "next/router";
 import { SetStateAction, useState, useEffect } from "react";
 import { generateImage } from "../../utils/image-utils/image-util";
-import { getApplerForRound, uploadImageURL, uploadPrompt } from "../../utils/firebase-utils/firebase-util";
+import { fetchUserImageURL, getApplerForRound, uploadImageURL, uploadPrompt } from "../../utils/firebase-utils/firebase-util";
 import { everyoneGeneratedAnImageListener } from "../../utils/firebase-utils/firebase-util";
 
 const GenerateImages: NextPage = () => {
@@ -36,12 +36,40 @@ const GenerateImages: NextPage = () => {
     }
   }
 
-  const uploadURLUploadPrompt = () => {
-    if(URL != null && prompt != null){
-    uploadImageURL(URL, String(userName), Number(roomID));
-    uploadPrompt(Number(roomID), String(userName), prompt);
+  const uploadURLUploadPrompt = async () => {
+    if (
+      URL !=
+        "https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921" &&
+      prompt != ""
+    ) {
+      await uploadImageURL(String(URL), String(userName), Number(roomID));
+      await uploadPrompt(Number(roomID), String(userName), String(prompt));
+    } else if (
+      URL ===
+        "https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921" &&
+      prompt === ""
+    ) {
+      const userImageURL =
+        (await fetchUserImageURL(Number(roomID), String(userName))) ??
+        undefined;
+      if (userImageURL === undefined) {
+        await uploadImageURL(
+          "https://www.pngitem.com/pimgs/m/119-1190874_warning-icon-png-png-download-icon-transparent-png.png",
+          String(userName),
+          Number(roomID)
+        );
+        await uploadPrompt(Number(roomID), String(userName), String(userName));
+      }
+    } else if (
+      URL ===
+        "https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921" &&
+      prompt != ""
+    ) {
+      await generateImageWrapper(prompt);
+      await uploadPrompt(Number(roomID), String(userName), String(prompt));
+      await uploadImageURL(String(URL), String(userName), Number(roomID));
     }
-  }
+  };
 
   const [applerUsername, setApplerUsername] = useState("")
 

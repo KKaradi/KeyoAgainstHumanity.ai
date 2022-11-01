@@ -3,7 +3,7 @@ import Image from "next/image";
 import * as React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { endSessionClicked, everyoneWentListener, getApplerForRound, getUserList, resetRoom, returnUserListAndRoundNum } from "../../utils/firebase-utils/firebase-util";
+import { endSessionClicked, everyoneWentListener, fetchCaptionVoteUsernameObject, getApplerForRound, getUserList, resetRoom, returnUserListAndRoundNum } from "../../utils/firebase-utils/firebase-util";
 import { SetStateAction, useState, useEffect } from "react";
 import { fetchApplerImageURL, fetchCaptionVoteObject, nextRound, nextRoundHasBeenClicked } from "../../utils/firebase-utils/firebase-util";
 
@@ -47,7 +47,7 @@ const Results: NextPage = () => {
   const [captionVotes, setCaptionVotes] = useState({})
 
   useEffect(() => {
-    fetchCaptionVoteObject(Number(roomID)).then(
+    fetchCaptionVoteUsernameObject(Number(roomID)).then(
       (captionVotes) => {
         setCaptionVotes(captionVotes)
       }
@@ -116,8 +116,8 @@ const Results: NextPage = () => {
         <ul>
         {
           Object.keys(captionVotes).map(
-            (caption, index) => {
-              return(<li key = {index}>{caption} got {captionVotes[caption as keyof typeof captionVotes]} votes.</li>)
+            (caption, index, username) => {
+              return(<li key = {index}>The caption {caption} by {username} got {captionVotes[caption as keyof typeof captionVotes]} votes.</li>)
             }
           )
         }

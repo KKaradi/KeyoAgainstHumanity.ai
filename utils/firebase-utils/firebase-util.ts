@@ -144,6 +144,16 @@ export async function fetchApplerImageURL(roomCode: number): Promise<string> {
   return imageURL;
 }
 
+export async function fetchUserImageURL(roomCode: number, username: string): Promise<string | undefined> {
+
+  const userData = await get(
+    child(ref(database), "Rooms/" + roomCode + "/Game/" + username)
+  );
+
+  const imageURL = (await userData.val())?.imageUrl ?? undefined
+  return imageURL;
+}
+
 export async function fetchListOfImageURL(roomCode: number): Promise<string[]> {
   const gameData = await get(
     child(ref(database), "Rooms/" + roomCode + "/Game/")
@@ -272,6 +282,27 @@ export async function fetchCaptionVoteObject(
     caption = childSnapshot.key;
     if (typeof caption === "string") {
       captionVoteObject[caption] = childSnapshot.val().votes;
+    }
+  });
+  return captionVoteObject;
+}
+
+export async function fetchCaptionVoteUsernameObject(
+  roomCode: number
+): Promise<{ [index: string]: {[index: string]: number} }> {
+  const applerUsername = await getApplerForRound(roomCode);
+  const captionData = await get(
+    child(
+      ref(database),
+      "Rooms/" + roomCode + "/Game/" + applerUsername + "/" + "Captions"
+    )
+  );
+  let captionVoteObject: { [index: string]: {[index: string]: number} } = {};
+  captionData.forEach((childSnapshot) => {
+    let caption: unknown;
+    caption = childSnapshot.key;
+    if (typeof caption === "string") {
+      captionVoteObject[caption] = {[childSnapshot.val().username]: childSnapshot.val().votes};
     }
   });
   return captionVoteObject;
