@@ -7,16 +7,6 @@ import Router from "next/router";
 import { SetStateAction, useState } from "react";
 import { createRoom } from "../../utils/firebase-utils/firebase-util";
 import { joinRoom } from "../../utils/firebase-utils/firebase-util";
-import {
-  getDatabase,
-  ref,
-  set,
-  get,
-  child,
-  update,
-  onChildAdded,
-} from 'firebase/database'
-const db = getDatabase()
 
 const Home: NextPage = () => {
   const [userName, setUserName] = useState("");
@@ -37,19 +27,19 @@ const Home: NextPage = () => {
 
   async function navToLobby() {
     await Router.push({
-      pathname: '/mvp/lobby',
+      pathname: "/mvp/lobby",
       query: {
         userName,
         roomID,
       },
-    })
+    });
   }
 
   function joinRoomNavToLobby() {
     joinRoom(userName, Number(roomID));
     navToLobby();
   }
-  
+
   function createRoomNavToLobby() {
     createRoom(Number(roomID));
     joinRoomNavToLobby();

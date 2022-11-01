@@ -3,90 +3,97 @@ import Image from "next/image";
 import * as React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { endSessionClicked, everyoneWentListener, getApplerForRound, getUserList, newGameClickedListener, resetRoom, returnUserListAndRoundNum } from "../../utils/firebase-utils/firebase-util";
-import { SetStateAction, useState, useEffect } from "react";
-import { fetchApplerImageURL, fetchCaptionVoteObject, nextRound, nextRoundHasBeenClicked } from "../../utils/firebase-utils/firebase-util";
+import { newGameClickedListener } from "../../utils/firebase-utils/firebase-util";
+
 import { resetGame } from "../../utils/firebase-utils/firebase-util";
+import {
+  endSessionClicked,
+  everyoneWentListener,
+  getApplerForRound,
+  resetRoom,
+  returnUserListAndRoundNum,
+} from "../../utils/firebase-utils/firebase-util";
+import { useState, useEffect } from "react";
+import {
+  fetchApplerImageURL,
+  fetchCaptionVoteObject,
+  nextRound,
+  nextRoundHasBeenClicked,
+} from "../../utils/firebase-utils/firebase-util";
 
 const Results: NextPage = () => {
-
-  const resetRoomConst = () =>{
-    resetRoom(Number(roomID))
-  }
+  const resetRoomConst = () => {
+    resetRoom(Number(roomID));
+  };
 
   async function navToHome() {
     await Router.push({
       pathname: "/mvp/home",
     });
-    setTimeout(resetRoomConst, 10000)
+    setTimeout(resetRoomConst, 10000);
   }
 
   async function navToLobby() {
     await Router.push({
-      pathname: '/mvp/lobby',
+      pathname: "/mvp/lobby",
       query: {
         userName,
         roomID,
       },
-    })
-
+    });
   }
 
   const router = useRouter();
   const {
     query: { userName, roomID, caption, URL, roomCode, votes },
   } = router;
-  const props = {
-    userName,
-    roomID,
-    caption,
-    URL,
-    roomCode,
-    votes
-  };
 
-  const [captionVotes, setCaptionVotes] = useState({})
+  const [captionVotes, setCaptionVotes] = useState({});
 
   useEffect(() => {
-    fetchCaptionVoteObject(Number(roomID)).then(
-      (captionVotes) => {
-        setCaptionVotes(captionVotes)
-      }
-    )
-  })
+    fetchCaptionVoteObject(Number(roomID)).then((captionVotes) => {
+      setCaptionVotes(captionVotes);
+    });
+  });
 
-  const [applerUsername, setApplerUsername] = useState("")
+  const [applerUsername, setApplerUsername] = useState("");
 
-  async function getAppler(){
-    const applerName = await getApplerForRound(Number(roomID)) ?? undefined
-    if(applerName === undefined){
-    }else{
-      setApplerUsername(applerName)
-      return() => {applerUsername}
+  async function getAppler() {
+    const applerName = (await getApplerForRound(Number(roomID))) ?? undefined;
+    if (applerName === undefined) {
+    } else {
+      setApplerUsername(applerName);
+      return () => {
+        applerUsername;
+      };
     }
-    }
+  }
 
   useEffect(() => {
-    getAppler()
-  })
+    getAppler();
+  });
 
-  const [imgURL, setImgURL] = useState("")
+  const [imgURL, setImgURL] = useState("");
 
   useEffect(() => {
-    fetchApplerImageURL(Number(roomID)).then(imgURL => {
-      setImgURL(imgURL)
-    })
-      return() => {imgURL}
-  })
+    fetchApplerImageURL(Number(roomID)).then((imgURL) => {
+      setImgURL(imgURL);
+    });
+    return () => {
+      imgURL;
+    };
+  });
 
-  const [nav, setNav] = useState(String)
-  
+  const [nav, setNav] = useState(String);
+
   useEffect(() => {
-    returnUserListAndRoundNum(Number(roomID)).then(nav => {
-      setNav(nav)
-    })
-      return() => {nav}
-  })
+    returnUserListAndRoundNum(Number(roomID)).then((nav) => {
+      setNav(nav);
+    });
+    return () => {
+      nav;
+    };
+  });
 
   function newGame() {
     resetGame(Number(roomID))
@@ -108,11 +115,11 @@ const Results: NextPage = () => {
 
   useEffect(() => {
     nextRoundHasBeenClicked(Number(roomID), navToLobby);
-  })
+  });
 
   useEffect(() => {
-    everyoneWentListener(Number(roomID), navToHome)
-  })
+    everyoneWentListener(Number(roomID), navToHome);
+  });
 
   useEffect(() => {
     newGameClickedListener(Number(roomID), navToLobby)
@@ -124,19 +131,25 @@ const Results: NextPage = () => {
       <h3>Room {roomCode}</h3>
       <h3>Appler: {applerUsername}</h3>
       <div>
-        <Image src={imgURL} width={100} height={100} alt="Pretty Picture"></Image>
+        <Image
+          src={imgURL}
+          width={100}
+          height={100}
+          alt="Pretty Picture"
+        ></Image>
       </div>
       <h3>Leaderboard:</h3>
       <div>
         <ul>
-        {
-          Object.keys(captionVotes).map(
-            (caption, index) => {
-              return(<li key = {index}>{caption} got {captionVotes[caption as keyof typeof captionVotes]} votes.</li>)
-            }
-          )
-        }
-      </ul>
+          {Object.keys(captionVotes).map((caption, index) => {
+            return (
+              <li key={index}>
+                {caption} got{" "}
+                {captionVotes[caption as keyof typeof captionVotes]} votes.
+              </li>
+            );
+          })}
+        </ul>
       </div>
       <div>{resetOrNo()}</div>
     </main>
