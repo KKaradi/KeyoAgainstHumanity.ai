@@ -7,7 +7,7 @@ import { getUserList, resetRoom, returnUserListAndRoundNum } from "../../utils/f
 import { startGame } from "../../utils/firebase-utils/firebase-util";
 import { startedGameListener } from "../../utils/firebase-utils/firebase-util";
 import { userListChangedListener } from "../../utils/firebase-utils/firebase-util";
-import { get, ref, getDatabase, child } from "firebase/database";
+import { get, ref, getDatabase, child, off } from "firebase/database";
 
 import { initializeApp } from "firebase/app";
 
@@ -30,9 +30,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
+let x = 0
 
 const Lobby: NextPage = () => {
-  
+  x = x + 1;
   const router = useRouter();
   const {
     query: { userName, roomID, roomCode },
@@ -43,12 +44,16 @@ const Lobby: NextPage = () => {
   };
 
   async function navToHome() {
+    console.log('navToHome')
+    x = 0
     await Router.push({
       pathname: "/mvp/home",
     });
   }
 
   async function navToGenerate() {
+    x = 0
+    console.log('navToGenerate')
     await Router.push({
       pathname: "/mvp/generate-images",
       query: {
@@ -74,13 +79,12 @@ const Lobby: NextPage = () => {
     )
   }
 
-  useEffect(() => {
+  if(x === 0 || x === 1){
     userListChangedListener(Number(roomID), displayUserList);
-  })
-
-  useEffect(() => {
+  }
+  if(x === 0 || x === 1){
     startedGameListener(Number(roomID), navToGenerate);
-  })
+  }
 
   return (
     <main>

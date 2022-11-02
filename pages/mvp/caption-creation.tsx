@@ -10,7 +10,34 @@ import { uploadCaption } from "../../utils/firebase-utils/firebase-util";
 import { getApplerForRound } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCreatedACaptionListener } from "../../utils/firebase-utils/firebase-util";
 
+import { get, ref, getDatabase, child, off } from "firebase/database";
+
+import { initializeApp } from "firebase/app";
+
+const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+const authDomain = process.env.NEXT_PUBLIC_AUTH_DOMAIN;
+const databaseURL = process.env.NEXT_PUBLIC_DATABASE_URL;
+const projectID = process.env.NEXT_PUBLIC_PROJECT_ID;
+const storagebucket = process.env.NEXT_PUBLIC_STORAGE_BUCKET;
+const messagingSenderId = process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID;
+
+const firebaseConfig = {
+  apiKey: apiKey,
+  authDomain: authDomain,
+  databaseURL: databaseURL,
+  projectId: projectID,
+  storageBucket: storagebucket,
+  messagingSenderId: messagingSenderId,
+};
+
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+
+let x = 0
+let timerToNextPage: NodeJS.Timeout | number
+
 const CaptionCreation: NextPage = () => {
+  x = x + 1;
   const router = useRouter();
   const {
     query: { userName, roomID, roomCode, URL },
@@ -21,28 +48,11 @@ const CaptionCreation: NextPage = () => {
     roomCode,
     URL
   };
-
-  async function checkIfApplerWentToWait(){
-    const applerName = await getApplerForRound(Number(roomID))
-    
-      if(applerName == userName){
-        await Router.push({
-          pathname: "/mvp/appler-wait",
-          query: {
-            userName,
-            roomID,
-            roomCode,
-            URL
-          },
-        });
-      }
-    }
-
-useEffect(() => {
-  checkIfApplerWentToWait()
-})
   
   async function navToVote() {
+    x = 0
+    console.log('navToVote')
+    clearTimeout(timerToNextPage)
     await Router.push({
       pathname: "/mvp/vote",
       query: {
@@ -72,11 +82,10 @@ useEffect(() => {
       return() => {imgURL}
   })
 
-  function uploadCaptionNavToVote () {
-    if(caption != null){
-    uploadCaption(caption, String(userName), Number(roomID));
-    navToVote();
-    }
+  async function uploadCaptionFunc() {
+    clearTimeout(timerToNextPage)
+    everyoneCreatedACaptionListener(Number(roomID), navToVote)
+    await uploadCaption(String(caption), String(userName), Number(roomID))
   }
 
   const [applerUsername, setApplerUsername] = useState("")
@@ -94,9 +103,13 @@ useEffect(() => {
     getAppler()
   })
 
-  useEffect(() => {
+  if(x === 0 || x === 1){
     everyoneCreatedACaptionListener(Number(roomID), navToVote);
-  })
+  }
+
+  if(x === 0 || x === 1){
+    timerToNextPage = setTimeout(uploadCaptionFunc, 30000);
+  }
 
   return (
     <main>
@@ -118,7 +131,7 @@ useEffect(() => {
         />
       </div>
       <div>
-        <button onClick={() => uploadCaptionNavToVote()}>submit</button>
+        <button onClick={() => uploadCaptionFunc()}>submit</button>
       </div>
     </main>
   );

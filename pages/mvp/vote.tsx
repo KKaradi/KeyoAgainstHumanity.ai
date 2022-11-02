@@ -7,9 +7,35 @@ import { useRouter } from "next/router";
 import { SetStateAction, useState, useEffect } from "react";
 import { fetchListOfCaptions, getApplerForRound, vote } from "../../utils/firebase-utils/firebase-util";
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
-import { everyoneCastAVoteListener } from "../../utils/firebase-utils/firebase-util";
+import { everyoneCastAVoteListener, updateLeaderboard } from "../../utils/firebase-utils/firebase-util";
+
+import { get, ref, getDatabase, child, off } from "firebase/database";
+
+import { initializeApp } from "firebase/app";
+
+const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+const authDomain = process.env.NEXT_PUBLIC_AUTH_DOMAIN;
+const databaseURL = process.env.NEXT_PUBLIC_DATABASE_URL;
+const projectID = process.env.NEXT_PUBLIC_PROJECT_ID;
+const storagebucket = process.env.NEXT_PUBLIC_STORAGE_BUCKET;
+const messagingSenderId = process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID;
+
+const firebaseConfig = {
+  apiKey: apiKey,
+  authDomain: authDomain,
+  databaseURL: databaseURL,
+  projectId: projectID,
+  storageBucket: storagebucket,
+  messagingSenderId: messagingSenderId,
+};
+
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+
+let x = 0;
 
 const Vote: NextPage = () => {
+  x = x + 1;
   const router = useRouter();
   const {
     query: { userName, roomID, roomCode, caption, URL },
@@ -22,8 +48,10 @@ const Vote: NextPage = () => {
     URL
   };
 
-  function navToResults() {
-    Router.push({
+  async function navToResults() {
+    x = 0
+    console.log('navToResults')
+    await Router.push({
       pathname: "/mvp/results",
       query: {
         userName,
@@ -67,20 +95,26 @@ const Vote: NextPage = () => {
         setCaptionList(captionList)
       }
     )
+
+  const voteAndUpdateLeaderboard = async (caption: string) => {
+    await vote(caption, Number(roomID))
+    await updateLeaderboard(Number(roomID), String(caption))
+  }
+
     return( 
       <div>
         {
           captionList.map(
-            (caption) => <button key = { caption } onClick = {() => vote(caption, Number(roomID))}>{ caption }</button>
+            (caption) => <button key = { caption } onClick = {() => voteAndUpdateLeaderboard(caption)}>{ caption }</button>
           )
         }
       </div>
     )
   }
 
-  useEffect(() => {
+  if(x === 0 || x === 1){
     everyoneCastAVoteListener(Number(roomID), navToResults);
-  })
+  }
 
   return (
     <main>

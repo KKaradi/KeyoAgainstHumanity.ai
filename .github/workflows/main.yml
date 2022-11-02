@@ -1,0 +1,37 @@
+name: Linter
+
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  run-linters:
+    name: Run linters
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+
+      # ESLint and Prettier must be in `package.json`
+      # --frozen-lockfile ensures lockfile will not be updated
+      - name: Install dependencies with yarn
+        run: yarn install --frozen-lockfile
+      
+      - name: Install ESLint & Typescript plugin with yarn
+        run: yarn add -D eslint && yarn add -D typescript @typescript-eslint/parser && yarn add -D @typescript-eslint/eslint-plugin
+
+      - name: Run linters
+        uses: wearerequired/lint-action@v1
+        with:
+          eslint: true
+          prettier: true
+          eslint_extensions: js,ts

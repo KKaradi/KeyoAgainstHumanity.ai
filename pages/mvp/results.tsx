@@ -3,17 +3,17 @@ import Image from "next/image";
 import * as React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { endSessionClicked, everyoneWentListener, fetchCaptionVoteUsernameObject, getApplerForRound, getUserList, resetRoom, returnUserListAndRoundNum } from "../../utils/firebase-utils/firebase-util";
+import { endSessionClicked, everyoneWentListener, fetchCaptionVoteUsernameObject, fetchLeaderboard, getApplerForRound, getUserList, resetRoom, returnUserListAndRoundNum, updateLeaderboard } from "../../utils/firebase-utils/firebase-util";
 import { SetStateAction, useState, useEffect } from "react";
 import { fetchApplerImageURL, fetchCaptionVoteObject, nextRound, nextRoundHasBeenClicked } from "../../utils/firebase-utils/firebase-util";
 
 const Results: NextPage = () => {
-
   const resetRoomConst = () =>{
     resetRoom(Number(roomID))
   }
 
   async function navToHome() {
+    console.log('navToHome')
     await Router.push({
       pathname: "/mvp/home",
     });
@@ -21,6 +21,7 @@ const Results: NextPage = () => {
   }
 
   async function navToLobby() {
+    console.log('navToLobby')
     await Router.push({
       pathname: '/mvp/lobby',
       query: {
@@ -44,10 +45,20 @@ const Results: NextPage = () => {
     votes
   };
 
+  const [leaderboard, setLeaderboard] = useState({})
+
+  useEffect(() => {
+    fetchLeaderboard(Number(roomID)).then(
+      (leaderboard) => {
+        setLeaderboard(leaderboard)
+      }
+    )
+  })
+
   const [captionVotes, setCaptionVotes] = useState({})
 
   useEffect(() => {
-    fetchCaptionVoteUsernameObject(Number(roomID)).then(
+    fetchCaptionVoteObject(Number(roomID)).then(
       (captionVotes) => {
         setCaptionVotes(captionVotes)
       }
@@ -116,8 +127,19 @@ const Results: NextPage = () => {
         <ul>
         {
           Object.keys(captionVotes).map(
-            (caption, index, username) => {
-              return(<li key = {index}>The caption {caption} by {username} got {captionVotes[caption as keyof typeof captionVotes]} votes.</li>)
+            (caption, index) => {
+              return(<li key = {index}>{caption} got {captionVotes[caption as keyof typeof captionVotes]} votes.</li>)
+            }
+          )
+        }
+      </ul>
+      </div>
+      <div>
+        <ul>
+        {
+          Object.keys(leaderboard).map(
+            (username, index) => {
+              return(<li key = {index}>{username} has {leaderboard[username as keyof typeof captionVotes]} points.</li>)
             }
           )
         }
