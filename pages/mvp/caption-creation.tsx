@@ -72,10 +72,9 @@ useEffect(() => {
       return() => {imgURL}
   })
 
-  function uploadCaptionNavToVote () {
+  function uploadCaptionFunc () {
     if(caption != null){
     uploadCaption(caption, String(userName), Number(roomID));
-    navToVote();
     }
   }
 
@@ -118,7 +117,7 @@ useEffect(() => {
         />
       </div>
       <div>
-        <button onClick={() => uploadCaptionNavToVote()}>submit</button>
+        <button onClick={() => uploadCaptionFunc()}>submit</button>
       </div>
     </main>
   );

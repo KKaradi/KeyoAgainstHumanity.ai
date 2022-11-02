@@ -5,7 +5,7 @@ import styles from "../styles/Home.module.css";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { SetStateAction, useState, useEffect } from "react";
-import { fetchListOfCaptions, getApplerForRound, vote } from "../../utils/firebase-utils/firebase-util";
+import { fetchListOfCaptions, getApplerForRound, vote, updateLeaderboard } from "../../utils/firebase-utils/firebase-util";
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCastAVoteListener } from "../../utils/firebase-utils/firebase-util";
 
@@ -67,35 +67,40 @@ const Vote: NextPage = () => {
         setCaptionList(captionList)
       }
     )
-    return( 
-      <div>
-        {
-          captionList.map(
-            (caption) => <button key = { caption } onClick = {() => vote(caption, Number(roomID))}>{ caption }</button>
-          )
-        }
-      </div>
-    )
-  }
+      const voteAndUpdateLeaderboard = async (caption: string) => {
+        await vote(caption, Number(roomID))
+        await updateLeaderboard(Number(roomID), String(caption))
+      }
+    
+        return( 
+          <div>
+            {
+              captionList.map(
+                (caption) => <button key = { caption } onClick = {() => voteAndUpdateLeaderboard(caption)}>{ caption }</button>
+              )
+            }
+          </div>
+        )
+      }
 
-  useEffect(() => {
-    everyoneCastAVoteListener(Number(roomID), navToResults);
-  })
-
-  return (
-    <main>
-      <h1>Voting</h1>
-      <h3>Room {roomID}</h3>
-      <h3>Appler: {applerUsername}</h3>
-      <h4>This is the picture {applerUsername} generated</h4>
-      <Image src={imgURL} width={100} height={100} alt="Pretty Picture" />
-      <h4>These are the captions the players came up with</h4>
-      <h4>Vote for your favorite caption!</h4>
-      <div>
-        { displayCaptions() }
-      </div>
-    </main>
-  );
-};
-
-export default Vote;
+      useEffect(() => {
+        everyoneCastAVoteListener(Number(roomID), navToResults);
+      })
+    
+      return (
+        <main>
+          <h1>Voting</h1>
+          <h3>Room {roomID}</h3>
+          <h3>Appler: {applerUsername}</h3>
+          <h4>This is the picture {applerUsername} generated</h4>
+          <Image src={imgURL} width={100} height={100} alt="Pretty Picture" />
+          <h4>These are the captions the players came up with</h4>
+          <h4>Vote for your favorite caption!</h4>
+          <div>
+            { displayCaptions() }
+          </div>
+        </main>
+      );
+    };
+    
+    export default Vote;

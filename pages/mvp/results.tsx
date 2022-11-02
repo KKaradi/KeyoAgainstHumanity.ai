@@ -3,7 +3,7 @@ import Image from "next/image";
 import * as React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { endSessionClicked, everyoneWentListener, getApplerForRound, getUserList, resetRoom, returnUserListAndRoundNum } from "../../utils/firebase-utils/firebase-util";
+import { endSessionClicked, everyoneWentListener, getApplerForRound, getUserList, resetRoom, returnUserListAndRoundNum, fetchLeaderboard } from "../../utils/firebase-utils/firebase-util";
 import { SetStateAction, useState, useEffect } from "react";
 import { fetchApplerImageURL, fetchCaptionVoteObject, nextRound, nextRoundHasBeenClicked } from "../../utils/firebase-utils/firebase-util";
 
@@ -69,6 +69,16 @@ const Results: NextPage = () => {
     getAppler()
   })
 
+  const [leaderboard, setLeaderboard] = useState({})
+
+  useEffect(() => {
+    fetchLeaderboard(Number(roomID)).then(
+      (leaderboard) => {
+        setLeaderboard(leaderboard)
+      }
+    )
+  })
+
   const [imgURL, setImgURL] = useState("")
 
   useEffect(() => {
@@ -118,6 +128,17 @@ const Results: NextPage = () => {
           Object.keys(captionVotes).map(
             (caption, index) => {
               return(<li key = {index}>{caption} got {captionVotes[caption as keyof typeof captionVotes]} votes.</li>)
+            }
+          )
+        }
+      </ul>
+      </div>
+      <div>
+        <ul>
+        {
+          Object.keys(leaderboard).map(
+            (username, index) => {
+              return(<li key = {index}>{username} has {leaderboard[username as keyof typeof captionVotes]} points.</li>)
             }
           )
         }

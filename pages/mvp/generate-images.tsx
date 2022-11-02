@@ -61,7 +61,6 @@ const GenerateImages: NextPage = () => {
 
   async function navToCaptionCreate() {
     const applerUndefined = await getAppler()
-
     if(applerUsername === userName && applerUndefined != undefined){
     await Router.push({
       pathname: "/mvp/appler-wait",
@@ -82,12 +81,8 @@ const GenerateImages: NextPage = () => {
         URL
       },
     });
-  }else{
-    await Router.push({
-      pathname: "/mvp/home",
-    });
   }
-  }
+}
 
   useEffect(() => {
     everyoneGeneratedAnImageListener(Number(roomID), navToCaptionCreate);
