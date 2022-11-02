@@ -31,10 +31,10 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 let x = 0;
-let timerToNextPage: NodeJS.Timeout
+let timer: NodeJS.Timeout;
+let clearTimer = false;
 
 const GenerateImages: NextPage = () => {
-  x = x + 1;
   const router = useRouter();
   const {
     query: { userName, roomID, roomCode },
@@ -64,33 +64,15 @@ const GenerateImages: NextPage = () => {
   }
 
   const uploadURLUploadPrompt = async () => {
-    clearTimeout(timerToNextPage)
+    clearTimeout(timer)
+    clearTimer = true;
     await uploadImageURL(String(URL), String(userName), Number(roomID));
     await uploadPrompt(Number(roomID), String(userName), String(prompt));
   };
 
-  const [applerUsername, setApplerUsername] = useState("")
-
-  async function getAppler(){
-    const applerName = (await getApplerForRound(Number(roomID)) ?? undefined)
-    if(applerName === undefined){
-      return(undefined)
-    }else{
-      setApplerUsername(applerName)
-      return(applerName)
-    }
-    }
-
-  useEffect(() => {
-    getAppler()
-  })
-
   async function navToCaptionCreate() {
-    x = 0
-    clearTimeout(timerToNextPage)
-    const applerUndefined = await getAppler()
-
-    if(applerUsername === userName && applerUndefined != undefined){
+    const applerUsername = await getApplerForRound(Number(roomID))
+    if(applerUsername === userName){
     console.log('navToApplerWait')
     await Router.push({
       pathname: "/mvp/appler-wait",
@@ -101,7 +83,7 @@ const GenerateImages: NextPage = () => {
         URL
       },
     });
-  }else if(applerUsername != userName && applerUndefined != undefined){
+  }else if(applerUsername != userName){
     console.log('navToCaptionCreate')
     await Router.push({
       pathname: "/mvp/caption-creation",
@@ -111,21 +93,28 @@ const GenerateImages: NextPage = () => {
         roomCode,
         URL
       },
-    });
-  }else{
-    await Router.push({
-      pathname: "/mvp/home",
-    });
+  })
   }
-  }
+}
 
   if(x === 0 || x === 1){
-    everyoneGeneratedAnImageListener(Number(roomID), navToCaptionCreate);
+    everyoneGeneratedAnImageListener(Number(roomID), stopTimerAndNextPage);
+    timer = setTimeout(timerFunc, 30000)
   }
 
-  if(x === 0 || x === 1){
-    timerToNextPage = setTimeout(uploadURLUploadPrompt, 30000);
+  async function stopTimerAndNextPage(){
+    await navToCaptionCreate()
+    clearTimer = true;
+    clearTimeout(timer)
   }
+
+  async function timerFunc(){
+    if(clearTimer === false){
+    await uploadURLUploadPrompt()
+    }
+  }
+
+  x = x + 1;
 
   return (
     <main>

@@ -3,17 +3,21 @@ import Image from "next/image";
 import * as React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { endSessionClicked, everyoneWentListener, fetchCaptionVoteUsernameObject, fetchLeaderboard, getApplerForRound, getUserList, resetRoom, returnUserListAndRoundNum, updateLeaderboard } from "../../utils/firebase-utils/firebase-util";
+import { endSessionClicked, everyoneWentListener, getApplerForRound, getUserList, resetRoom, returnUserListAndRoundNum, fetchLeaderboard } from "../../utils/firebase-utils/firebase-util";
 import { SetStateAction, useState, useEffect } from "react";
 import { fetchApplerImageURL, fetchCaptionVoteObject, nextRound, nextRoundHasBeenClicked } from "../../utils/firebase-utils/firebase-util";
 
+let x = 0;
+x = 0
+
 const Results: NextPage = () => {
+  console.log(x)
   const resetRoomConst = () =>{
     resetRoom(Number(roomID))
   }
 
   async function navToHome() {
-    console.log('navToHome')
+    x = 0
     await Router.push({
       pathname: "/mvp/home",
     });
@@ -21,7 +25,7 @@ const Results: NextPage = () => {
   }
 
   async function navToLobby() {
-    console.log('navToLobby')
+    x = 0
     await Router.push({
       pathname: '/mvp/lobby',
       query: {
@@ -45,15 +49,14 @@ const Results: NextPage = () => {
     votes
   };
 
-  const [leaderboard, setLeaderboard] = useState({})
+  if(x <= 5){
+    nextRoundHasBeenClicked(Number(roomID), navToLobby);
+  }
 
-  useEffect(() => {
-    fetchLeaderboard(Number(roomID)).then(
-      (leaderboard) => {
-        setLeaderboard(leaderboard)
-      }
-    )
-  })
+  if(x <= 5){
+    console.log('everoneWentListener')
+    everyoneWentListener(Number(roomID), navToHome);
+  }
 
   const [captionVotes, setCaptionVotes] = useState({})
 
@@ -67,17 +70,22 @@ const Results: NextPage = () => {
 
   const [applerUsername, setApplerUsername] = useState("")
 
-  async function getAppler(){
-    const applerName = await getApplerForRound(Number(roomID)) ?? undefined
-    if(applerName === undefined){
-    }else{
-      setApplerUsername(applerName)
-      return() => {applerUsername}
-    }
-    }
+  useEffect(() => {
+    getApplerForRound(Number(roomID)).then(
+      (applerUsername) => {
+        setApplerUsername(applerUsername)
+      }
+    )
+  })
+
+  const [leaderboard, setLeaderboard] = useState({})
 
   useEffect(() => {
-    getAppler()
+    fetchLeaderboard(Number(roomID)).then(
+      (leaderboard) => {
+        setLeaderboard(leaderboard)
+      }
+    )
   })
 
   const [imgURL, setImgURL] = useState("")
@@ -106,13 +114,7 @@ const Results: NextPage = () => {
     }
   }
 
-  useEffect(() => {
-    nextRoundHasBeenClicked(Number(roomID), navToLobby);
-  })
-
-  useEffect(() => {
-    everyoneWentListener(Number(roomID), navToHome)
-  })
+  x = x + 1;
 
   return (
     <main>
@@ -122,7 +124,7 @@ const Results: NextPage = () => {
       <div>
         <Image src={imgURL} width={100} height={100} alt="Pretty Picture"></Image>
       </div>
-      <h3>Leaderboard:</h3>
+      <h3>Results:</h3>
       <div>
         <ul>
         {
@@ -133,6 +135,9 @@ const Results: NextPage = () => {
           )
         }
       </ul>
+      </div>
+      <div>
+      <h3>Leaderboard:</h3>
       </div>
       <div>
         <ul>

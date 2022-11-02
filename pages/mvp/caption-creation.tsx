@@ -34,7 +34,6 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 let x = 0
-let timerToNextPage: NodeJS.Timeout | number
 
 const CaptionCreation: NextPage = () => {
   x = x + 1;
@@ -52,7 +51,6 @@ const CaptionCreation: NextPage = () => {
   async function navToVote() {
     x = 0
     console.log('navToVote')
-    clearTimeout(timerToNextPage)
     await Router.push({
       pathname: "/mvp/vote",
       query: {
@@ -83,7 +81,6 @@ const CaptionCreation: NextPage = () => {
   })
 
   async function uploadCaptionFunc() {
-    clearTimeout(timerToNextPage)
     everyoneCreatedACaptionListener(Number(roomID), navToVote)
     await uploadCaption(String(caption), String(userName), Number(roomID))
   }
@@ -105,10 +102,6 @@ const CaptionCreation: NextPage = () => {
 
   if(x === 0 || x === 1){
     everyoneCreatedACaptionListener(Number(roomID), navToVote);
-  }
-
-  if(x === 0 || x === 1){
-    timerToNextPage = setTimeout(uploadCaptionFunc, 30000);
   }
 
   return (

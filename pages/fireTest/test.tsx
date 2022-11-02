@@ -68,8 +68,9 @@ const Home: NextPage = () => {
     vote("Jimmy", 100)
     console.log("Jimmy voted")
   };
-  const callBack10 = () => {
-    getApplerForRound(100)
+  const callBack10 = async () => {
+    let x = await getApplerForRound(100)
+    console.log(x)
     console.log("Button 10 has been clicked");
   };
 

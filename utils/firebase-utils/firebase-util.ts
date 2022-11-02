@@ -32,21 +32,18 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-export async function getApplerForRound(roomCode: number): Promise<string | undefined> {
+export async function getApplerForRound(roomCode: number): Promise<string> {
   const gameData = await get(
     child(ref(database), "Rooms/" + roomCode + "/Game/")
   );
-  const roundNumData = (await gameData.val())?.roundCounter ?? undefined;
-    if(roundNumData === undefined){
-      return(undefined)
-    }
+  const roundNumData: number = (await gameData.val()).roundCounter;
 
   const userListData = await get(
     child(ref(database), "Rooms/" + roomCode + "/Userlist/")
   );
 
   const applerList: string[] = [];
-  let applerName;
+  let applerName: string;
 
   userListData.forEach((childSnapshot) => {
     if (childSnapshot.val() != null) {
@@ -517,10 +514,10 @@ export async function everyoneWentListener(
   callBack: () => void
 ): Promise<void> {
   onValue(ref(database, "Rooms/" + roomCode), async (snapshot) => {
-    const everyoneWentData = (await snapshot.val())?.everyoneWent ?? undefined;
-    if (everyoneWentData === true && everyoneWentData != undefined) {
+    const everyoneWentData:boolean = (await snapshot.val()).everyoneWent;
+    console.log(everyoneWentData)
+    if (everyoneWentData === true) {
       callBack()
-      off(ref(database, "Rooms/" + roomCode), "value", undefined)
     }
   });
 }
