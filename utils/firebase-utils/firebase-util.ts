@@ -285,52 +285,6 @@ export async function fetchTotalVotes(roomCode: number): Promise<number> {
   return totalVotes;
 }
 
-// export async function numberOfVotesPerCaption(
-//   roomCode: number,
-//   caption: String,
-//   ): Promise<void> {
-//     const applerUsername = await getApplerForRound(roomCode);
-//     const getVotes = await get(
-//       child(
-//         ref(database),
-//         "Rooms/" +
-//           roomCode +
-//           "/Game/" +
-//           applerUsername +
-//           "/" +
-//           "Captions/" +
-//           caption + "/votes"
-//       )
-//     );
-//     let votesForCaption = await getVotes.val().votes;
-//     const maybe = {
-//       votes: votesForCaption,
-//     };
-//     console.log(maybe)
-//   }
-
-// export async function setVotedToFalse(
-//   roomCode: number,
-//   yourUsername: string
-// ): Promise<void> {
-//   const applerUsername = await getApplerForRound(roomCode);
-//   const dataToFirebase = {
-//     voted: false,
-//   }
-//   return update(
-//     ref(
-//       database,
-//       "Rooms/" +
-//         roomCode +
-//         "/Game/" +
-//         applerUsername +
-//         "/voteList/" +
-//         yourUsername
-//     ),
-//     dataToFirebase
-//   );
-// }
-
 export async function fetchVoted(
   roomCode: number,
   yourUsername: string
