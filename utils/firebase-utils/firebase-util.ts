@@ -518,6 +518,7 @@ export async function everyoneWentListener(
     console.log(everyoneWentData)
     if (everyoneWentData === true) {
       callBack()
+      off(ref(database, "Rooms/" + roomCode), "value", undefined)
     }
   });
 }

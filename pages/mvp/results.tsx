@@ -8,10 +8,8 @@ import { SetStateAction, useState, useEffect } from "react";
 import { fetchApplerImageURL, fetchCaptionVoteObject, nextRound, nextRoundHasBeenClicked } from "../../utils/firebase-utils/firebase-util";
 
 let x = 0;
-x = 0
 
 const Results: NextPage = () => {
-  console.log(x)
   const resetRoomConst = () =>{
     resetRoom(Number(roomID))
   }
@@ -49,14 +47,14 @@ const Results: NextPage = () => {
     votes
   };
 
-  if(x <= 5){
+  if(x === 0 || x === 1){
     nextRoundHasBeenClicked(Number(roomID), navToLobby);
   }
 
-  if(x <= 5){
+  useEffect(() => {
     console.log('everoneWentListener')
     everyoneWentListener(Number(roomID), navToHome);
-  }
+  })
 
   const [captionVotes, setCaptionVotes] = useState({})
 

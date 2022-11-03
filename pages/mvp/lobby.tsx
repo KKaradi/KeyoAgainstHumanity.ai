@@ -82,6 +82,7 @@ const Lobby: NextPage = () => {
   if(x === 0 || x === 1){
     userListChangedListener(Number(roomID), displayUserList);
   }
+  
   if(x === 0 || x === 1){
     startedGameListener(Number(roomID), navToGenerate);
   }
