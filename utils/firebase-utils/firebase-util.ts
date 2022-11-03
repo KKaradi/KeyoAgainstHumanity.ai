@@ -35,14 +35,11 @@ const database = getDatabase(app);
 
 export async function getApplerForRound(
   roomCode: number
-): Promise<string | undefined> {
+): Promise<string> {
   const gameData = await get(
     child(ref(database), "Rooms/" + roomCode + "/Game/")
   );
-  const roundNumData = (await gameData.val())?.roundCounter ?? undefined;
-  if (roundNumData === undefined) {
-    return undefined;
-  }
+  const roundNumData = (await gameData.val()).roundCounter;
 
   const userListData = await get(
     child(ref(database), "Rooms/" + roomCode + "/Userlist/")
