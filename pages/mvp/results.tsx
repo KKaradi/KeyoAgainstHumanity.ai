@@ -18,31 +18,28 @@ import {
   nextRoundHasBeenClicked,
 } from "../../utils/firebase-utils/firebase-util";
 
+async function navToHome(roomID: number) {
+  await Router.push({
+    pathname: "/mvp/home",
+  });
+  setTimeout(() => resetRoom(Number(roomID)), 10000);
+}
+
+async function navToLobby(userName: string, roomID: number) {
+  await Router.push({
+    pathname: "/mvp/lobby",
+    query: {
+      userName,
+      roomID,
+    },
+  });
+}
+
 const Results: NextPage = () => {
-  const resetRoomConst = () => {
-    resetRoom(Number(roomID));
-  };
-
-  async function navToHome() {
-    await Router.push({
-      pathname: "/mvp/home",
-    });
-    setTimeout(resetRoomConst, 10000);
-  }
-
-  async function navToLobby() {
-    await Router.push({
-      pathname: "/mvp/lobby",
-      query: {
-        userName,
-        roomID,
-      },
-    });
-  }
 
   const router = useRouter();
   const {
-    query: { userName, roomID, caption, URL, roomCode, votes },
+    query: { userName, roomID, caption, URL, votes },
   } = router;
 
   const [captionVotes, setCaptionVotes] = useState({});
@@ -55,20 +52,11 @@ const Results: NextPage = () => {
 
   const [applerUsername, setApplerUsername] = useState("");
 
-  async function getAppler() {
-    const applerName = (await getApplerForRound(Number(roomID))) ?? undefined;
-    if (applerName === undefined) {
-    } else {
-      setApplerUsername(applerName);
-      return () => {
-        applerUsername;
-      };
-    }
-  }
-
   useEffect(() => {
-    getAppler();
-  });
+    getApplerForRound(Number(roomID)).then((applerUsername) => {
+      setApplerUsername(applerUsername)
+    });
+  })
 
   const [imgURL, setImgURL] = useState("");
 
@@ -107,17 +95,17 @@ const Results: NextPage = () => {
   }
 
   useEffect(() => {
-    nextRoundHasBeenClicked(Number(roomID), navToLobby);
-  });
+    nextRoundHasBeenClicked(Number(roomID), () => navToLobby(String(userName), Number(roomID)));
+  }, [roomID, userName]);
 
   useEffect(() => {
-    everyoneWentListener(Number(roomID), navToHome);
-  });
+    everyoneWentListener(Number(roomID), () => navToHome);
+  }, [roomID]);
 
   return (
     <main>
       <h1>Game Over</h1>
-      <h3>Room {roomCode}</h3>
+      <h3>Room {roomID}</h3>
       <h3>Appler: {applerUsername}</h3>
       <div>
         <Image

@@ -11,41 +11,31 @@ import {
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCastAVoteListener } from "../../utils/firebase-utils/firebase-util";
 
+function navToResults(URL: string, userName: string, roomID: number, caption: string) {
+  Router.push({
+    pathname: "/mvp/results",
+    query: {
+      userName,
+      roomID,
+      URL,
+      caption,
+    },
+  });
+}
+
 const Vote: NextPage = () => {
   const router = useRouter();
   const {
-    query: { userName, roomID, roomCode, caption, URL },
+    query: { userName, roomID, caption, URL },
   } = router;
-
-  function navToResults() {
-    Router.push({
-      pathname: "/mvp/results",
-      query: {
-        userName,
-        roomID,
-        roomCode,
-        URL,
-        caption,
-      },
-    });
-  }
 
   const [applerUsername, setApplerUsername] = useState("");
 
-  async function getAppler() {
-    const applerName = (await getApplerForRound(Number(roomID))) ?? undefined;
-    if (applerName === undefined) {
-    } else {
-      setApplerUsername(applerName);
-      return () => {
-        applerUsername;
-      };
-    }
-  }
-
   useEffect(() => {
-    getAppler();
-  });
+    getApplerForRound(Number(roomID)).then((applerUsername) => {
+      setApplerUsername(applerUsername)
+    });
+  })
 
   const [imgURL, setImgURL] = useState("");
 
@@ -60,24 +50,15 @@ const Vote: NextPage = () => {
 
   const [captionList, setCaptionList] = useState([""]);
 
-  function displayCaptions() {
+  useEffect(() => {
     fetchListOfCaptions(Number(roomID)).then((captionList) => {
       setCaptionList(captionList);
     });
-    return (
-      <div>
-        {captionList.map((caption) => (
-          <button key={caption} onClick={() => vote(caption, Number(roomID))}>
-            {caption}
-          </button>
-        ))}
-      </div>
-    );
-  }
+  })
 
   useEffect(() => {
-    everyoneCastAVoteListener(Number(roomID), navToResults);
-  });
+    everyoneCastAVoteListener(Number(roomID), () => navToResults(String(URL), String(userName), Number(roomID), String(caption)));
+  }, [URL, caption, roomID, userName]);
 
   return (
     <main>
@@ -88,7 +69,13 @@ const Vote: NextPage = () => {
       <Image src={imgURL} width={100} height={100} alt="Pretty Picture" />
       <h4>These are the captions the players came up with</h4>
       <h4>Vote for your favorite caption!</h4>
-      <div>{displayCaptions()}</div>
+      <div><div>
+        {captionList.map((caption) => (
+          <button key={caption} onClick={() => vote(caption, Number(roomID))}>
+            {caption}
+          </button>
+        ))}
+      </div></div>
     </main>
   );
 };

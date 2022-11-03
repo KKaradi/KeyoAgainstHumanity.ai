@@ -38,10 +38,6 @@ async function navToCaptionCreate(applerUsername: string, userName: string, room
         URL,
       },
     });
-  } else {
-    await Router.push({
-      pathname: "/mvp/home",
-    });
   }
 }
 
@@ -79,7 +75,7 @@ const GenerateImages: NextPage = () => {
   })
 
   useEffect(() => {
-    everyoneGeneratedAnImageListener(Number(roomID), () => navToCaptionCreate(applerUsername, String(userName), Number(roomID), URL));
+    everyoneGeneratedAnImageListener(Number(roomID), () => navToCaptionCreate(String(applerUsername), String(userName), Number(roomID), String(URL)));
   }, [URL, applerUsername, roomID, userName]);
 
   return (
@@ -106,7 +102,7 @@ const GenerateImages: NextPage = () => {
         <button onClick={() => generateImageWrapper(prompt)}>Generate</button>
       </div>
       <div>
-        <button onClick={() => uploadURLUploadPrompt(URL, userName, roomID, prompt)}>Submit</button>
+        <button onClick={() => uploadURLUploadPrompt(String(URL), String(userName), Number(roomID), String(prompt))}>Submit</button>
       </div>
     </main>
   );
