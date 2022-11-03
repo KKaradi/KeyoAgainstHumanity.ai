@@ -106,24 +106,32 @@ const Results: NextPage = () => {
 
   function resetOrNo() {
     if(nav === 'reset'){
-      return(<button onClick={() => endSessionClicked(Number(roomID))}>End Session</button>)
+      return(<button className="genbtn" onClick={() => endSessionClicked(Number(roomID))}>End Session</button>)
     }else if(nav === 'no reset'){
-      return(<button onClick={() => nextRound(Number(roomID))}>Next Round</button>)
+      return(<button className="genbtn" onClick={() => nextRound(Number(roomID))}>Next Round</button>)
     }
   }
 
   x = x + 1;
+  
+  const waves = "/waveboi.png";
+  const top = "/top.png";
 
   return (
     <main>
-      <h1>Game Over</h1>
-      <h3>Room {roomCode}</h3>
-      <h3>Appler: {applerUsername}</h3>
-      <div>
-        <Image src={imgURL} width={100} height={100} alt="Pretty Picture"></Image>
-      </div>
-      <h3>Results:</h3>
-      <div>
+
+<Image src={top}  width={10000} height={600} alt ="shapes top header" className="top"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+      <ul className="flex-container">
+        <li className="lobby-flex">
+        <h1>GAME OVER</h1>
+        <div>
+        <Image src={imgURL} width={400} height={400} alt="Pretty Picture"></Image>
+      </div>      
+        </li>
+        <li className="lobby-flex">
+          <h1>LEADERBOARD:</h1>
+          <div>
         <ul>
         {
           Object.keys(captionVotes).map(
@@ -150,6 +158,10 @@ const Results: NextPage = () => {
       </div>
       {/* <h3>Winning Caption: { props.caption }</h3> */}
       <div>{resetOrNo()}</div>
+        </li>
+      </ul>
+      <Image src={waves}  width={2400} height={400} alt ="waves at the bottom of the screen" className="waveslobby"/>
+      
     </main>
   );
 };

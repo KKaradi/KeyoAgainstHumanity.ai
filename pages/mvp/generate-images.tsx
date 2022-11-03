@@ -31,8 +31,8 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 let x = 0;
-let timer: NodeJS.Timeout;
-let clearTimer = false;
+// let timer: NodeJS.Timeout;
+// let clearTimer = false;
 
 const GenerateImages: NextPage = () => {
   const router = useRouter();
@@ -43,6 +43,9 @@ const GenerateImages: NextPage = () => {
     userName,
     roomID,
   };
+
+  const top = "/top.png";
+  const waves = "/waveboi.png";
 
   const [prompt, setPrompt] = useState("");
 
@@ -64,8 +67,8 @@ const GenerateImages: NextPage = () => {
   }
 
   const uploadURLUploadPrompt = async () => {
-    clearTimeout(timer)
-    clearTimer = true;
+    // clearTimeout(timer)
+    // clearTimer = true;
     await uploadImageURL(String(URL), String(userName), Number(roomID));
     await uploadPrompt(Number(roomID), String(userName), String(prompt));
   };
@@ -99,34 +102,45 @@ const GenerateImages: NextPage = () => {
 
   if(x === 0 || x === 1){
     everyoneGeneratedAnImageListener(Number(roomID), stopTimerAndNextPage);
-    timer = setTimeout(timerFunc, 30000)
+    // timer = setTimeout(timerFunc, 30000)
   }
 
   async function stopTimerAndNextPage(){
     await navToCaptionCreate()
-    clearTimer = true;
-    clearTimeout(timer)
+    // clearTimer = true;
+    // clearTimeout(timer)
   }
 
-  async function timerFunc(){
-    if(clearTimer === false){
-    await uploadURLUploadPrompt()
-    }
-  }
+  // async function timerFunc(){
+  //   if(clearTimer === false){
+  //   await uploadURLUploadPrompt()
+  //   }
+  // }
 
   x = x + 1;
 
   return (
+    
     <main>
-      <h1>Generate Image</h1>
-      <h3>Room {roomID} {roomCode}</h3>
-      <h4>Generate your image</h4>
-      <div>
-        <Image src={URL} width={100} height={100} alt="Pretty Picture"></Image>
+      <Image src={top}  width={10000} height={600} alt ="shapes top header" className="top"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+      <ul className="flex-container">
+        <li className="lobby-flex">
+        <h1>GENERATE IMAGE</h1>
+      <div className="generatedimg">
+        <Image src={URL} width={400} height={400} alt="Pretty Picture"></Image>
       </div>
+          
+                    
+        </li>
+        <li className="lobby-flex">
+          <h1>INSERT PROMPT HERE:</h1>
+      <ul>
+      
+        
+      </ul>
       <div>
-        <p>Input prompt</p>
-        <input
+        <input className="textbox"
           type="text"
           id="message"
           name="message"
@@ -134,13 +148,24 @@ const GenerateImages: NextPage = () => {
           value={prompt}
         />
       </div>
+      
+      <div className="changebuttons">
       <div>
-        <button onClick={() => generateImageWrapper(prompt)}>Generate</button>
+        <button className="genbtn" onClick={() =>  generateImageWrapper(prompt)}>Generate</button>
+      
+        <button className="genbtn" onClick={() => uploadURLUploadPrompt()}>Submit</button>
       </div>
-      <div>
-        <button onClick={uploadURLUploadPrompt}>Submit</button>
       </div>
+        </li>
+      </ul>
+      <Image src={waves}  width={2400} height={400} alt ="waves at the bottom of the screen" className="waveslobby"/>
+
+
     </main>
+
+
+
+
   );
 };
 

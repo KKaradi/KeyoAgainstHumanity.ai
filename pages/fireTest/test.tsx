@@ -62,7 +62,7 @@ const Home: NextPage = () => {
     console.log('John Voted')
   };
   const callBack8 = () => {
-    getApplerForRound(100)
+    nextRound(100)
   };
   const callBack9 = () => {
     vote("Jimmy", 100)
