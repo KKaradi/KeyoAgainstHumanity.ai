@@ -485,7 +485,8 @@ export async function everyoneWentListener(
 ): Promise<void> {
   const onValueCallback = async (snapshot: DataSnapshot) => {
     const everyoneWentData = (await snapshot.val())?.everyoneWent ?? undefined;
-    if (everyoneWentData === true && everyoneWentData != undefined) {
+    console.log(everyoneWentData)
+    if (everyoneWentData === true) {
       callBack();
       off(ref(database, "Rooms/" + roomCode), "value", onValueCallback);
     }
