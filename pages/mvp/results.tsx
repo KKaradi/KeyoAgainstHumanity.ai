@@ -81,7 +81,7 @@ const Results: NextPage = () => {
   }, [roomID, userName]);
 
   useEffect(() => {
-    everyoneWentListener(Number(roomID), () => navToHome);
+    everyoneWentListener(Number(roomID), () => navToHome(Number(roomID)));
   }, [roomID]);
 
   return (
