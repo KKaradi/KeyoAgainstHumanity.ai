@@ -72,7 +72,7 @@ const GenerateImages: NextPage = () => {
     getApplerForRound(Number(roomID)).then((applerUsername) => {
       setApplerUsername(applerUsername);
     });
-  })
+  }, [roomID])
 
   useEffect(() => {
     everyoneGeneratedAnImageListener(Number(roomID), () => navToCaptionCreate(String(applerUsername), String(userName), Number(roomID), String(URL)));

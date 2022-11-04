@@ -29,10 +29,7 @@ const ApplerWait: NextPage = () => {
     fetchApplerImageURL(Number(roomID)).then((imgURL) => {
       setImgURL(imgURL);
     });
-    return () => {
-      imgURL;
-    };
-  });
+  }, [roomID]);
 
   useEffect(() => {
     everyoneCreatedACaptionListener(Number(roomID), () => navToVote(String(userName), Number(roomID), String(URL)));

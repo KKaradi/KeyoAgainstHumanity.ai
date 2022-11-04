@@ -35,7 +35,7 @@ const Vote: NextPage = () => {
     getApplerForRound(Number(roomID)).then((applerUsername) => {
       setApplerUsername(applerUsername)
     });
-  })
+  }, [roomID])
 
   const [imgURL, setImgURL] = useState("");
 
@@ -43,10 +43,7 @@ const Vote: NextPage = () => {
     fetchApplerImageURL(Number(roomID)).then((imgURL) => {
       setImgURL(imgURL);
     });
-    return () => {
-      imgURL;
-    };
-  });
+  }, [roomID]);
 
   const [captionList, setCaptionList] = useState([""]);
 
@@ -54,7 +51,7 @@ const Vote: NextPage = () => {
     fetchListOfCaptions(Number(roomID)).then((captionList) => {
       setCaptionList(captionList);
     });
-  })
+  }, [roomID])
 
   useEffect(() => {
     everyoneCastAVoteListener(Number(roomID), () => navToResults(String(URL), String(userName), Number(roomID), String(caption)));

@@ -40,10 +40,7 @@ const CaptionCreation: NextPage = () => {
     fetchApplerImageURL(Number(roomID)).then((imgURL) => {
       setImgURL(imgURL);
     });
-    return () => {
-      imgURL;
-    };
-  });
+  }, [roomID]);
 
   const [applerUsername, setApplerUsername] = useState("");
 
@@ -51,7 +48,7 @@ const CaptionCreation: NextPage = () => {
     getApplerForRound(Number(roomID)).then((applerUsername) => {
       setApplerUsername(applerUsername)
     });
-  })
+  }, [roomID])
 
   useEffect(() => {
     everyoneCreatedACaptionListener(Number(roomID), () => navToVote(String(userName), Number(roomID), String(caption), String(URL)));
