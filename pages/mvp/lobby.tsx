@@ -4,6 +4,7 @@ import Router from "next/router";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import {
+  detachUserListListener,
   getUserList,
   userListChangedListener2,
 } from "../../utils/firebase-utils/firebase-util";
@@ -11,6 +12,7 @@ import { startGame } from "../../utils/firebase-utils/firebase-util";
 import { startedGameListener } from "../../utils/firebase-utils/firebase-util";
 
 async function navToGenerate(userName: string, roomID: string) {
+  detachUserListListener(roomID)
   await Router.push({
     pathname: "/mvp/generate-images",
     query: {

@@ -346,6 +346,12 @@ export async function userListChangedListener2(
   });
 }
 
+export async function detachUserListListener(
+  roomCode: number
+): Promise<void> {
+  off(ref(database, "Rooms/" + roomCode + "/Userlist"), "value", undefined)
+}
+
 // Calls a call back function when everyone in the lobby has generated an image
 // Evertime the round object is changed, checks if the number of people who gnerated an image = the number of people in the lobby
 export async function everyoneGeneratedAnImageListener(
