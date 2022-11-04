@@ -33,9 +33,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-export async function getApplerForRound(
-  roomCode: number
-): Promise<string> {
+export async function getApplerForRound(roomCode: number): Promise<string> {
   const gameData = await get(
     child(ref(database), "Rooms/" + roomCode + "/Game/")
   );
@@ -326,13 +324,12 @@ export async function startedGameListener(
       callBack();
       off(ref(database, "Rooms/" + roomCode), "value", onValueCallback);
     }
-  }
+  };
   onValue(ref(database, "Rooms/" + roomCode), onValueCallback);
 }
 
 // Calls a call back with a list of users everytime a new user enters the lobby
 // Checks if the userlist changes
-
 
 export async function userListChangedListener2(
   roomCode: number,
@@ -362,12 +359,18 @@ export async function everyoneGeneratedAnImageListener(
       (await fetchListOfImageURL(roomCode))?.length ?? undefined;
 
     if (
-      userListLength === imageUrlListLength && userListLength != undefined && imageUrlListLength != undefined
+      userListLength === imageUrlListLength &&
+      userListLength != undefined &&
+      imageUrlListLength != undefined
     ) {
       callBack();
-      off(ref(database, "Rooms/" + roomCode + "/Game/"), "value", onValueCallback);
+      off(
+        ref(database, "Rooms/" + roomCode + "/Game/"),
+        "value",
+        onValueCallback
+      );
     }
-  }
+  };
 
   onValue(ref(database, "Rooms/" + roomCode + "/Game/"), onValueCallback);
 }
@@ -396,9 +399,13 @@ export async function everyoneCreatedACaptionListener(
     ) {
       // -1 because the appler doesn't caption
       callBack();
-      off(ref(database, "Rooms/" + roomCode + "/Game/"), "value", onValueCallback)
+      off(
+        ref(database, "Rooms/" + roomCode + "/Game/"),
+        "value",
+        onValueCallback
+      );
     }
-  }
+  };
   onValue(ref(database, "Rooms/" + roomCode + "/Game/"), onValueCallback);
 }
 
@@ -413,9 +420,13 @@ export async function everyoneCastAVoteListener(
     let totalVotes = await fetchTotalVotes(roomCode);
     if (userListLength === totalVotes && userListLength != undefined) {
       callBack();
-      off(ref(database, "Rooms/" + roomCode + "/Game/"), "value", onValueCallback)
+      off(
+        ref(database, "Rooms/" + roomCode + "/Game/"),
+        "value",
+        onValueCallback
+      );
     }
-  }
+  };
   onValue(ref(database, "Rooms/" + roomCode + "/Game/"), onValueCallback);
 }
 
@@ -439,17 +450,21 @@ export async function nextRoundHasBeenClicked(
     ) {
       roundNum = snapshot.val();
       callBack(roundNum, userListLength);
-      off(ref(database, "Rooms/" + roomCode + "/Game" + "/roundCounter"), "value", onValueCallback);
+      off(
+        ref(database, "Rooms/" + roomCode + "/Game" + "/roundCounter"),
+        "value",
+        onValueCallback
+      );
     }
-  }
+  };
 
   onValue(
-    ref(database, "Rooms/" + roomCode + "/Game" + "/roundCounter"), onValueCallback);
+    ref(database, "Rooms/" + roomCode + "/Game" + "/roundCounter"),
+    onValueCallback
+  );
 }
 
-export async function gameResets(
-  roomCode: number
-): Promise<Boolean> {
+export async function gameResets(roomCode: number): Promise<boolean> {
   const roundCounterRef = await get(
     ref(database, "Rooms/" + roomCode + "/Game" + "/roundCounter")
   );
@@ -461,7 +476,7 @@ export async function gameResets(
     roundNum + 1 >= userListLength &&
     roundNum != undefined &&
     userListLength != undefined
-  )
+  );
 }
 
 export async function everyoneWentListener(
@@ -472,9 +487,9 @@ export async function everyoneWentListener(
     const everyoneWentData = (await snapshot.val())?.everyoneWent ?? undefined;
     if (everyoneWentData === true && everyoneWentData != undefined) {
       callBack();
-      off(ref(database, "Rooms/" + roomCode), "value", onValueCallback)
+      off(ref(database, "Rooms/" + roomCode), "value", onValueCallback);
     }
-  }
+  };
   onValue(ref(database, "Rooms/" + roomCode), onValueCallback);
 }
 

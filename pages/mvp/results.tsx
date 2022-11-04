@@ -66,12 +66,12 @@ const Results: NextPage = () => {
   }, [roomID]);
 
   const [newGame, setNewGame] = useState(false);
-
   useEffect(() => {
-    gameResets(Number(roomID)).then(() => {
-      console.log('updated')
-      setNewGame(true);
-    });
+    const fetch = async () => {
+      const result = await gameResets(Number(roomID));
+      setNewGame(result);
+    };
+    fetch();
   }, [roomID]);
 
   useEffect(() => {
@@ -113,10 +113,10 @@ const Results: NextPage = () => {
       <div>
         {newGame ? (
           <button onClick={() => endSessionClicked(Number(roomID))}>
-          End Session
-        </button>
+            End Session
+          </button>
         ) : (
-            <button onClick={() => nextRound(Number(roomID))}>Next Round</button>
+          <button onClick={() => nextRound(Number(roomID))}>Next Round</button>
         )}
       </div>
     </main>
