@@ -22,7 +22,6 @@ import {
   uploadImageURL,
   uploadPrompt,
   vote,
-  userListChangedListener,
   everyoneCastAVoteListener,
   everyoneGeneratedAnImageListener,
 } from "../../utils/firebase-utils/firebase-util";

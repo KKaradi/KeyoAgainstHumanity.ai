@@ -19,7 +19,7 @@ const uploadURLUploadPrompt = (URL: string, userName: string, roomID: number, pr
 };
 
 async function navToCaptionCreate(applerUsername: string, userName: string, roomID: number, URL: string) {
-
+  console.log(applerUsername)
   if (applerUsername === userName && applerUsername != undefined) {
     await Router.push({
       pathname: "/mvp/appler-wait",

@@ -9,7 +9,6 @@ import {
 } from "../../utils/firebase-utils/firebase-util";
 import { startGame } from "../../utils/firebase-utils/firebase-util";
 import { startedGameListener } from "../../utils/firebase-utils/firebase-util";
-import { userListChangedListener } from "../../utils/firebase-utils/firebase-util";
 
 async function navToGenerate(userName: string, roomID: string) {
   await Router.push({
