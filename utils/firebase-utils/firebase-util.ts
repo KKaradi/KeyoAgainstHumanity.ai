@@ -456,9 +456,9 @@ export async function nextRoundHasBeenClicked(
   );
 }
 
-export async function returnUserListAndRoundNum(
+export async function gameResets(
   roomCode: number
-): Promise<string> {
+): Promise<Boolean> {
   const roundCounterRef = await get(
     ref(database, "Rooms/" + roomCode + "/Game" + "/roundCounter")
   );
@@ -466,15 +466,11 @@ export async function returnUserListAndRoundNum(
 
   let userListLength = (await getUserList(roomCode))?.length ?? undefined;
 
-  if (
+  return (
     roundNum + 1 >= userListLength &&
     roundNum != undefined &&
     userListLength != undefined
-  ) {
-    return "reset";
-  } else {
-    return "no reset";
-  }
+  )
 }
 
 export async function everyoneWentListener(

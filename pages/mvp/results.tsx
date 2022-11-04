@@ -8,7 +8,7 @@ import {
   everyoneWentListener,
   getApplerForRound,
   resetRoom,
-  returnUserListAndRoundNum,
+  gameResets,
 } from "../../utils/firebase-utils/firebase-util";
 import { useState, useEffect } from "react";
 import {
@@ -36,7 +36,6 @@ async function navToLobby(userName: string, roomID: number) {
 }
 
 const Results: NextPage = () => {
-
   const router = useRouter();
   const {
     query: { userName, roomID, caption, URL, votes },
@@ -48,15 +47,15 @@ const Results: NextPage = () => {
     fetchCaptionVoteObject(Number(roomID)).then((captionVotes) => {
       setCaptionVotes(captionVotes);
     });
-  });
+  }, [roomID]);
 
   const [applerUsername, setApplerUsername] = useState("");
 
   useEffect(() => {
     getApplerForRound(Number(roomID)).then((applerUsername) => {
-      setApplerUsername(applerUsername)
+      setApplerUsername(applerUsername);
     });
-  })
+  }, [roomID]);
 
   const [imgURL, setImgURL] = useState("");
 
@@ -64,38 +63,21 @@ const Results: NextPage = () => {
     fetchApplerImageURL(Number(roomID)).then((imgURL) => {
       setImgURL(imgURL);
     });
-    return () => {
-      imgURL;
-    };
-  });
+  }, [roomID]);
 
-  const [nav, setNav] = useState(String);
+  const [newGame, setNewGame] = useState(false);
 
   useEffect(() => {
-    returnUserListAndRoundNum(Number(roomID)).then((nav) => {
-      setNav(nav);
+    gameResets(Number(roomID)).then(() => {
+      console.log('updated')
+      setNewGame(true);
     });
-    return () => {
-      nav;
-    };
-  });
-
-  function resetOrNo() {
-    if (nav === "reset") {
-      return (
-        <button onClick={() => endSessionClicked(Number(roomID))}>
-          End Session
-        </button>
-      );
-    } else if (nav === "no reset") {
-      return (
-        <button onClick={() => nextRound(Number(roomID))}>Next Round</button>
-      );
-    }
-  }
+  }, [roomID]);
 
   useEffect(() => {
-    nextRoundHasBeenClicked(Number(roomID), () => navToLobby(String(userName), Number(roomID)));
+    nextRoundHasBeenClicked(Number(roomID), () =>
+      navToLobby(String(userName), Number(roomID))
+    );
   }, [roomID, userName]);
 
   useEffect(() => {
@@ -128,7 +110,15 @@ const Results: NextPage = () => {
           })}
         </ul>
       </div>
-      <div>{resetOrNo()}</div>
+      <div>
+        {newGame ? (
+          <button onClick={() => endSessionClicked(Number(roomID))}>
+          End Session
+        </button>
+        ) : (
+            <button onClick={() => nextRound(Number(roomID))}>Next Round</button>
+        )}
+      </div>
     </main>
   );
 };
