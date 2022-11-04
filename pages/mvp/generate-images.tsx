@@ -11,15 +11,25 @@ import {
 } from "../../utils/firebase-utils/firebase-util";
 import { everyoneGeneratedAnImageListener } from "../../utils/firebase-utils/firebase-util";
 
-const uploadURLUploadPrompt = (URL: string, userName: string, roomID: number, prompt: string) => {
+const uploadURLUploadPrompt = (
+  URL: string,
+  userName: string,
+  roomID: number,
+  prompt: string
+) => {
   if (URL != null && prompt != null) {
     uploadImageURL(URL, String(userName), Number(roomID));
     uploadPrompt(Number(roomID), String(userName), prompt);
   }
 };
 
-async function navToCaptionCreate(applerUsername: string, userName: string, roomID: number, URL: string) {
-  console.log(applerUsername)
+async function navToCaptionCreate(
+  applerUsername: string,
+  userName: string,
+  roomID: number,
+  URL: string
+) {
+  console.log(applerUsername);
   if (applerUsername === userName && applerUsername != undefined) {
     await Router.push({
       pathname: "/mvp/appler-wait",
@@ -66,17 +76,20 @@ const GenerateImages: NextPage = () => {
     }
   };
 
-  const [applerUsername, setApplerUsername] = useState("");
-
   useEffect(() => {
-    getApplerForRound(Number(roomID)).then((applerUsername) => {
-      setApplerUsername(applerUsername);
-    });
-  }, [roomID])
-
-  useEffect(() => {
-    everyoneGeneratedAnImageListener(Number(roomID), () => navToCaptionCreate(String(applerUsername), String(userName), Number(roomID), String(URL)));
-  }, [URL, applerUsername, roomID, userName]);
+    const attachListener = async () => {
+      const appler = await getApplerForRound(Number(roomID));
+      await everyoneGeneratedAnImageListener(Number(roomID), () =>
+        navToCaptionCreate(
+          String(appler),
+          String(userName),
+          Number(roomID),
+          String(URL)
+        )
+      );
+    };
+    attachListener();
+  }, [URL, roomID, userName]);
 
   return (
     <main>
@@ -102,7 +115,18 @@ const GenerateImages: NextPage = () => {
         <button onClick={() => generateImageWrapper(prompt)}>Generate</button>
       </div>
       <div>
-        <button onClick={() => uploadURLUploadPrompt(String(URL), String(userName), Number(roomID), String(prompt))}>Submit</button>
+        <button
+          onClick={() =>
+            uploadURLUploadPrompt(
+              String(URL),
+              String(userName),
+              Number(roomID),
+              String(prompt)
+            )
+          }
+        >
+          Submit
+        </button>
       </div>
     </main>
   );
