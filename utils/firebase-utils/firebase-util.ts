@@ -331,7 +331,7 @@ export async function startedGameListener(
 // Calls a call back with a list of users everytime a new user enters the lobby
 // Checks if the userlist changes
 
-export async function userListChangedListener2(
+export async function userListChangedListener(
   roomCode: number,
   callBack: (userList: string[]) => void
 ): Promise<void> {
@@ -346,10 +346,8 @@ export async function userListChangedListener2(
   });
 }
 
-export async function detachUserListListener(
-  roomCode: number
-): Promise<void> {
-  off(ref(database, "Rooms/" + roomCode + "/Userlist"), "value", undefined)
+export async function detachUserListListener(roomCode: number): Promise<void> {
+  off(ref(database, "Rooms/" + roomCode + "/Userlist"), "value", undefined);
 }
 
 // Calls a call back function when everyone in the lobby has generated an image

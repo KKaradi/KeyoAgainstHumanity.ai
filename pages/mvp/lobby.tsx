@@ -6,13 +6,13 @@ import { useState, useEffect } from "react";
 import {
   detachUserListListener,
   getUserList,
-  userListChangedListener2,
+  userListChangedListener,
 } from "../../utils/firebase-utils/firebase-util";
 import { startGame } from "../../utils/firebase-utils/firebase-util";
 import { startedGameListener } from "../../utils/firebase-utils/firebase-util";
 
 async function navToGenerate(userName: string, roomID: string) {
-  detachUserListListener(Number(roomID))
+  detachUserListListener(Number(roomID));
   await Router.push({
     pathname: "/mvp/generate-images",
     query: {
@@ -37,7 +37,7 @@ const Lobby: NextPage = () => {
   const [userList, setUserList] = useState([""]);
 
   useEffect(() => {
-    userListChangedListener2(Number(roomID), (userList: string[]) => {
+    userListChangedListener(Number(roomID), (userList: string[]) => {
       setUserList(userList);
     });
   }, [roomID]);
