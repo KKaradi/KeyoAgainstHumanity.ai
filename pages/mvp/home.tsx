@@ -1,6 +1,4 @@
 import React from "react";
-
-import ReactDOM from "react-dom";
 import "../../styles/Home.module.css";
 import type { NextPage } from "next";
 import Image from "next/image";
@@ -8,21 +6,6 @@ import Router from "next/router";
 import { SetStateAction, useState } from "react";
 import { createRoom } from "../../utils/firebase-utils/firebase-util";
 import { joinRoom } from "../../utils/firebase-utils/firebase-util";
-import {
-  getDatabase,
-  ref,
-  set,
-  get,
-  child,
-  update,
-  onChildAdded,
-} from "firebase/database";
-
-const db = getDatabase();
-
-const top = "/top.png";
-const shapes = "/logo top boi.png";
-const waves = "/waveboi.png";
 
 async function navToLobby(userName: string, roomID: number) {
   await Router.push({
