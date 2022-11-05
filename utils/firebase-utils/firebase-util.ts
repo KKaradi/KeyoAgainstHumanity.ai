@@ -69,7 +69,8 @@ export async function createRoom(roomCode: number): Promise<void> {
 }
 export async function joinRoom(
   yourUserName: string,
-  roomCode: number
+  roomCode: number,
+  
 ): Promise<void> {
   const userListRef = push(ref(database, "Rooms/" + roomCode + "/Userlist/"));
   await set(userListRef, {
@@ -503,4 +504,52 @@ export async function endSessionClicked(roomCode: number): Promise<void> {
   };
 
   return update(ref(database, "Rooms/" + roomCode), dataToFirebase);
+}
+
+export async function updateLeaderboard(
+  roomCode: number,
+  caption: string
+): Promise<void> {
+  const username = await fetchUsernameFromCaption(roomCode, caption)
+  const captionVoteObject = await fetchCaptionVoteObject(roomCode)
+  const totalVoteUsernameObj = await fetchLeaderboard(roomCode)
+  const roundVotes = captionVoteObject.caption ?? 0
+  const leaderboardVotes = totalVoteUsernameObj.username ?? 0
+  const userVotes = roundVotes + leaderboardVotes
+
+  const dataToFirebase = {
+    points: userVotes
+  };
+
+if(typeof userVotes === "number"){
+  return update(ref(database, "Rooms/" + roomCode + "/Leaderboard/" + username), dataToFirebase);
+}
+}
+
+export async function fetchLeaderboard(roomCode: number): Promise<{ [index: string]: number }> {
+  const leaderboardData = await get(
+    child(
+      ref(database),
+      "Rooms/" + roomCode + "/Leaderboard/"
+    )
+  );
+  let leaderboardObj: { [index: string]: number } = {};
+
+  leaderboardData.forEach((childSnapshot) => {
+    let username: unknown;
+    username = childSnapshot.key;
+    if (typeof username === "string") {
+    leaderboardObj[username] = childSnapshot.val().points
+    }
+  });
+
+  return leaderboardObj
+}
+
+export async function fetchUsernameFromCaption(roomCode: number, caption: string): Promise<string> {
+  const applerUsername = await getApplerForRound(roomCode);
+  const captionData = await get(ref(database, "Rooms/" + roomCode + "/Game/" + applerUsername + "/Captions/" + caption))
+  const username = (await captionData.val())?.username ?? undefined
+
+  return (username);
 }
