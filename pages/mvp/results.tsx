@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import Image from "next/image";
-import * as React from "react";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import {
