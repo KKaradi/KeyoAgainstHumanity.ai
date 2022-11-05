@@ -8,44 +8,23 @@ import { uploadCaption } from "../../utils/firebase-utils/firebase-util";
 import { getApplerForRound } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCreatedACaptionListener } from "../../utils/firebase-utils/firebase-util";
 
+async function navToVote(userName: string, roomID: number, caption: string, URL: string) {
+  await Router.push({
+    pathname: "/mvp/vote",
+    query: {
+      userName,
+      roomID,
+      caption,
+      URL,
+    },
+  });
+}
+
 const CaptionCreation: NextPage = () => {
   const router = useRouter();
   const {
     query: { userName, roomID, roomCode, URL },
   } = router;
-
-  async function checkIfApplerWentToWait() {
-    const applerName = await getApplerForRound(Number(roomID));
-
-    if (applerName == userName) {
-      await Router.push({
-        pathname: "/mvp/appler-wait",
-        query: {
-          userName,
-          roomID,
-          roomCode,
-          URL,
-        },
-      });
-    }
-  }
-
-  useEffect(() => {
-    checkIfApplerWentToWait();
-  });
-
-  async function navToVote() {
-    await Router.push({
-      pathname: "/mvp/vote",
-      query: {
-        userName,
-        roomID,
-        roomCode,
-        caption,
-        URL,
-      },
-    });
-  }
 
   const [caption, setCaption] = useState("");
 
@@ -61,38 +40,19 @@ const CaptionCreation: NextPage = () => {
     fetchApplerImageURL(Number(roomID)).then((imgURL) => {
       setImgURL(imgURL);
     });
-    return () => {
-      imgURL;
-    };
-  });
-
-  function uploadCaptionNavToVote() {
-    if (caption != null) {
-      uploadCaption(caption, String(userName), Number(roomID));
-      navToVote();
-    }
-  }
+  }, [roomID]);
 
   const [applerUsername, setApplerUsername] = useState("");
 
-  async function getAppler() {
-    const applerName = (await getApplerForRound(Number(roomID))) ?? undefined;
-    if (applerName === undefined) {
-    } else {
-      setApplerUsername(applerName);
-      return () => {
-        applerUsername;
-      };
-    }
-  }
+  useEffect(() => {
+    getApplerForRound(Number(roomID)).then((applerUsername) => {
+      setApplerUsername(applerUsername)
+    });
+  }, [roomID])
 
   useEffect(() => {
-    getAppler();
-  });
-
-  useEffect(() => {
-    everyoneCreatedACaptionListener(Number(roomID), navToVote);
-  });
+    everyoneCreatedACaptionListener(Number(roomID), () => navToVote(String(userName), Number(roomID), String(caption), String(URL)));
+  }, [URL, caption, roomID, userName]);
 
   return (
     <main>
@@ -119,7 +79,7 @@ const CaptionCreation: NextPage = () => {
         />
       </div>
       <div>
-        <button onClick={() => uploadCaptionNavToVote()}>submit</button>
+        <button onClick={() => uploadCaption(String(caption), String(userName), Number(roomID))}>submit</button>
       </div>
     </main>
   );
