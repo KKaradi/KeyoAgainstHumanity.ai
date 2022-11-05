@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import React from "react";
 import Router from "next/router";
-import { useRouter } from "next/router";
+import useRouter from "next/router";
 import { useState, useEffect } from "react";
 import { getUserList } from "../../utils/firebase-utils/firebase-util";
 import { startGame } from "../../utils/firebase-utils/firebase-util";

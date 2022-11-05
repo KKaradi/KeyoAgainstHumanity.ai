@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Image from "next/image";
 import Router from "next/router";
-import { useRouter } from "next/router";
+import useRouter from "next/router";
 import { SetStateAction, useState, useEffect } from "react";
 import { generateImage } from "../../utils/image-utils/image-util";
 import { everyoneGeneratedAnImageListener } from "../../utils/firebase-utils/firebase-util";
