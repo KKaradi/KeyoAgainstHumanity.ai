@@ -32,13 +32,12 @@ const Home: NextPage = () => {
   }
 
   function joinRoomNavToLobby() {
-    joinRoom(userName, Number(roomID));
-    navToLobby();
+    joinRoom(userName, Number(roomID), () => navToLobby());
   }
 
   function createRoomNavToLobby() {
-    createRoom(Number(roomID));
-    joinRoomNavToLobby();
+    createRoom(Number(roomID), String(userName));
+    navToLobby();
   }
 
   return (

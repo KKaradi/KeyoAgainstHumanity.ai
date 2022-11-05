@@ -56,7 +56,7 @@ export async function getApplerForRound(roomCode: number): Promise<string> {
   return applerName;
 }
 
-export async function createRoom(roomCode: number): Promise<void> {
+export async function createRoom(roomCode: number, yourUserName: string): Promise<void> {
   await set(ref(database, "Rooms/" + roomCode), {
     roomCode: roomCode,
     started: false,
@@ -66,11 +66,7 @@ export async function createRoom(roomCode: number): Promise<void> {
   await set(ref(database, "Rooms/" + roomCode + "/Game"), {
     roundCounter: 0,
   });
-}
-export async function joinRoom(
-  yourUserName: string,
-  roomCode: number
-): Promise<void> {
+
   const userListRef = push(ref(database, "Rooms/" + roomCode + "/Userlist/"));
   await set(userListRef, {
     username: yourUserName,
@@ -84,6 +80,47 @@ export async function joinRoom(
     ref(database, "Rooms/" + roomCode + "/Game/" + yourUserName),
     dataToFirebase
   );
+}
+
+export async function joinRoom(
+  yourUserName: string,
+  roomCode: number,
+  callBack: () => void
+): Promise<void> {
+
+  const sameName = await checkIfDuplicateName(roomCode, yourUserName)
+  const noRoom = await checkIfRoomExists(roomCode)
+
+  if(sameName === false && noRoom === false){
+  const userListRef = push(ref(database, "Rooms/" + roomCode + "/Userlist/"));
+  await set(userListRef, {
+    username: yourUserName,
+  });
+
+  const dataToFirebase = {
+    username: yourUserName,
+  };
+
+  return(callBack(), update(
+    ref(database, "Rooms/" + roomCode + "/Game/" + yourUserName),
+    dataToFirebase
+  ));
+  }
+}
+
+export async function checkIfRoomExists(roomCode: Number): Promise<boolean> {
+  const roomCodeRef = await get(ref(database, "Rooms/" + roomCode))
+  return(roomCodeRef.exists())
+}
+
+export async function checkIfDuplicateName(roomCode: Number, username: String): Promise<boolean> {
+  const userList = await getUserList(roomCode)
+  for(let x = 0; x < userList.length ; x = x + 1){
+    if(userList[x] === username){
+      return(false)
+    }
+  }
+  return(true)
 }
 
 //Return userlist called whenever userlist in changed; to be displayed in lobby page
