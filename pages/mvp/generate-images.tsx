@@ -89,44 +89,80 @@ const GenerateImages: NextPage = () => {
     };
     attachListener();
   }, [URL, roomID, userName]);
+  const waves = "/waveboi.png";
+  const top = "/top.png";
 
   return (
     <main>
-      <h1>Generate Image</h1>
-      <h3>
-        Room {roomID} {roomCode}
-      </h3>
-      <h4>Generate your image</h4>
-      <div>
-        <Image src={URL} width={100} height={100} alt="Pretty Picture"></Image>
-      </div>
-      <div>
-        <p>Input prompt</p>
-        <input
-          type="text"
-          id="message"
-          name="message"
-          onChange={inputPrompt}
-          value={prompt}
-        />
-      </div>
-      <div>
-        <button onClick={() => generateImageWrapper(prompt)}>Generate</button>
-      </div>
-      <div>
-        <button
-          onClick={() =>
-            uploadURLUploadPrompt(
-              String(URL),
-              String(userName),
-              Number(roomID),
-              String(prompt)
-            )
-          }
-        >
-          Submit
-        </button>
-      </div>
+      <Image
+        src={top}
+        width={10000}
+        height={600}
+        alt="shapes top header"
+        className="top"
+      />
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+      ></meta>
+      <ul className="flex-container">
+        <li className="lobby-flex">
+          <h1>GENERATE IMAGE</h1>
+          <div className="generatedimg">
+            <Image
+              src={URL}
+              width={400}
+              height={400}
+              alt="Pretty Picture"
+            ></Image>
+          </div>
+        </li>
+        <li className="lobby-flex">
+          <h1>INSERT PROMPT HERE:</h1>
+          <ul></ul>
+          <div>
+            <input
+              className="textbox"
+              type="text"
+              id="message"
+              name="message"
+              onChange={inputPrompt}
+              value={prompt}
+            />
+          </div>
+
+          <div className="changebuttons">
+            <div>
+              <button
+                className="genbtn"
+                onClick={() => generateImageWrapper(prompt)}
+              >
+                Generate
+              </button>
+              <button
+                className="genbtn"
+                onClick={() =>
+                  uploadURLUploadPrompt(
+                    String(URL),
+                    String(userName),
+                    Number(roomID),
+                    String(prompt)
+                  )
+                }
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <Image
+        src={waves}
+        width={2400}
+        height={400}
+        alt="waves at the bottom of the screen"
+        className="waveslobby"
+      />
     </main>
   );
 };
