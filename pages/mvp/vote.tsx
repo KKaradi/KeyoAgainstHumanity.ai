@@ -1,56 +1,50 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { SetStateAction, useState, useEffect } from "react";
-import { fetchListOfCaptions, getApplerForRound, vote, hasVoted, fetchVoted } from "../../utils/firebase-utils/firebase-util";
+import { 
+  fetchListOfCaptions, 
+  getApplerForRound, 
+  vote, 
+  hasVoted, 
+  fetchVoted } from "../../utils/firebase-utils/firebase-util";
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCastAVoteListener } from "../../utils/firebase-utils/firebase-util";
+
+function navToResults(URL: string, userName: string, roomID: number, caption: string) {
+  Router.push({
+    pathname: "/mvp/results",
+    query: {
+      userName,
+      roomID,
+      URL,
+      caption,
+    },
+  });
+}
 
 const Vote: NextPage = () => {
   const router = useRouter();
   const {
-    query: { userName, roomID, roomCode, caption, URL },
+    query: { userName, roomID, caption, URL },
   } = router;
-  const props = {
-    userName,
-    roomID,
-    roomCode,
-    caption,
-    URL
-  };
 
-  function navToResults() {
-    Router.push({
-      pathname: "/mvp/results",
-      query: {
-        userName,
-        roomID,
-        roomCode,
-        URL,
-        caption
-      },
+  const [applerUsername, setApplerUsername] = useState("");
+
+  useEffect(() => {
+    getApplerForRound(Number(roomID)).then((applerUsername) => {
+      setApplerUsername(applerUsername)
     });
-  }
+  }, [roomID])
 
-  const [applerUsername, setApplerUsername] = useState("")
-
-  useEffect(() => {
-    getApplerForRound(Number(roomID)).then(applerUsername =>
-      setApplerUsername(applerUsername))
-      return() => {applerUsername}
-  })
-
-  const [imgURL, setImgURL] = useState("")
+  const [imgURL, setImgURL] = useState("");
 
   useEffect(() => {
-    fetchApplerImageURL(Number(roomID)).then(imgURL => {
-      setImgURL(imgURL)
-    })
-      return() => {imgURL}
-  })
+    fetchApplerImageURL(Number(roomID)).then((imgURL) => {
+      setImgURL(imgURL);
+    });
+  }, [roomID]);
 
   const [captionList, setCaptionList] = useState([""])
 
@@ -91,8 +85,8 @@ const Vote: NextPage = () => {
   }
 
   useEffect(() => {
-    everyoneCastAVoteListener(Number(roomID), navToResults);
-  })
+    everyoneCastAVoteListener(Number(roomID), () => navToResults(String(URL), String(userName), Number(roomID), String(caption)));
+  }, [URL, caption, roomID, userName]);
 
   return (
     <main>

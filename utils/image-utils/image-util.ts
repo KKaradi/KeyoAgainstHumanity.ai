@@ -33,6 +33,5 @@ export async function generateImage(prompt: string): Promise<string> {
     }
     realPrediction = prediction;
   }
-  console.log(realPrediction.output[0])
   return realPrediction.output[0];
 };

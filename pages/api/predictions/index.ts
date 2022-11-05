@@ -4,7 +4,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log(req.body.prompt);
   const response = await fetch("https://api.replicate.com/v1/predictions", {
     method: "POST",
     headers: {
