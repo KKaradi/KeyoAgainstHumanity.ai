@@ -29,7 +29,6 @@ async function navToCaptionCreate(
   roomID: number,
   URL: string
 ) {
-  console.log(applerUsername);
   if (applerUsername === userName && applerUsername != undefined) {
     await Router.push({
       pathname: "/mvp/appler-wait",

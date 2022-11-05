@@ -12,7 +12,7 @@ import { startGame } from "../../utils/firebase-utils/firebase-util";
 import { startedGameListener } from "../../utils/firebase-utils/firebase-util";
 
 async function navToGenerate(userName: string, roomID: string) {
-  detachUserListListener(roomID)
+  detachUserListListener(Number(roomID))
   await Router.push({
     pathname: "/mvp/generate-images",
     query: {
