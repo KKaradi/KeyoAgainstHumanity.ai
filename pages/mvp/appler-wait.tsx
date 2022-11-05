@@ -12,7 +12,7 @@ async function navToVote(userName: string, roomID: number, URL: string) {
     query: {
       userName,
       roomID,
-      URL
+      URL,
     },
   });
 }
@@ -32,20 +32,50 @@ const ApplerWait: NextPage = () => {
   }, [roomID]);
 
   useEffect(() => {
-    everyoneCreatedACaptionListener(Number(roomID), () => navToVote(String(userName), Number(roomID), String(URL)));
+    everyoneCreatedACaptionListener(Number(roomID), () =>
+      navToVote(String(userName), Number(roomID), String(URL))
+    );
   }, [URL, roomID, userName]);
+
+  const waves = "/waveboi.png";
+  const top = "/top.png";
 
   return (
     <main>
-      <h1>Sit tight while everyone captions your image!</h1>
+      <Image
+        src={top}
+        width={10000}
+        height={600}
+        alt="shapes top header"
+        className="top"
+      />
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+      ></meta>
+      <ul className="flex-container">
+        <li className="lobby-flex">
+          <div>
+            <Image
+              src={imgURL}
+              width={400}
+              height={400}
+              alt="Pretty Picture"
+            ></Image>
+          </div>
+        </li>
+      </ul>
       <div>
-        <Image
-          src={imgURL}
-          width={100}
-          height={100}
-          alt="Pretty Picture"
-        ></Image>
+        <h1 className="sit">Sit tight while everyone captions your image!</h1>
       </div>
+
+      <Image
+        src={waves}
+        width={2400}
+        height={400}
+        alt="waves at the bottom of the screen"
+        className="waveslobby"
+      />
     </main>
   );
 };
