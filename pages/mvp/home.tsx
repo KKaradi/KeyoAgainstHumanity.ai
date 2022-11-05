@@ -24,6 +24,16 @@ const top = "/top.png";
 const shapes = "/logo top boi.png";
 const waves = "/waveboi.png";
 
+async function navToLobby(userName: string, roomID: number) {
+  await Router.push({
+    pathname: "/mvp/lobby",
+    query: {
+      userName,
+      roomID,
+    },
+  });
+}
+
 const Home: NextPage = () => {
   const [userName, setUserName] = useState("");
   const inputUserName = (event: {
@@ -43,24 +53,16 @@ const Home: NextPage = () => {
     setRoomID(event.target.value);
   };
 
-  async function navToLobby() {
-    await Router.push({
-      pathname: "/mvp/lobby",
-      query: {
-        userName,
-        roomID,
-      },
-    });
-  }
-
   function joinRoomNavToLobby() {
     joinRoom(userName, Number(roomID));
-    navToLobby();
+    navToLobby(userName, Number(roomID));
   }
 
   function createRoomNavToLobby() {
-    createRoom(Number(roomID));
-    joinRoomNavToLobby();
+    createRoom().then((roomCode) => {
+      joinRoom(userName, roomCode);
+      navToLobby(userName, roomCode);
+    });
   }
 
   return (
