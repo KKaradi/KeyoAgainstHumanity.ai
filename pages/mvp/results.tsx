@@ -9,7 +9,7 @@ import {
   everyoneWentListener,
   getApplerForRound,
   resetRoom,
-  returnUserListAndRoundNum,
+  gameResets,
 } from "../../utils/firebase-utils/firebase-util";
 import { useState, useEffect } from "react";
 import {
@@ -19,31 +19,27 @@ import {
   nextRoundHasBeenClicked,
 } from "../../utils/firebase-utils/firebase-util";
 
+async function navToHome(roomID: number) {
+  await Router.push({
+    pathname: "/mvp/home",
+  });
+  setTimeout(() => resetRoom(Number(roomID)), 10000);
+}
+
+async function navToLobby(userName: string, roomID: number) {
+  await Router.push({
+    pathname: "/mvp/lobby",
+    query: {
+      userName,
+      roomID,
+    },
+  });
+}
+
 const Results: NextPage = () => {
-  const resetRoomConst = () => {
-    resetRoom(Number(roomID));
-  };
-
-  async function navToHome() {
-    await Router.push({
-      pathname: "/mvp/home",
-    });
-    setTimeout(resetRoomConst, 10000);
-  }
-
-  async function navToLobby() {
-    await Router.push({
-      pathname: "/mvp/lobby",
-      query: {
-        userName,
-        roomID,
-      },
-    });
-  }
-
   const router = useRouter();
   const {
-    query: { userName, roomID, caption, URL, roomCode, votes },
+    query: { userName, roomID, caption, URL, votes },
   } = router;
 
   const [captionVotes, setCaptionVotes] = useState({});
@@ -52,24 +48,15 @@ const Results: NextPage = () => {
     fetchCaptionVoteObject(Number(roomID)).then((captionVotes) => {
       setCaptionVotes(captionVotes);
     });
-  });
+  }, [roomID]);
 
   const [applerUsername, setApplerUsername] = useState("");
 
-  async function getAppler() {
-    const applerName = (await getApplerForRound(Number(roomID))) ?? undefined;
-    if (applerName === undefined) {
-    } else {
-      setApplerUsername(applerName);
-      return () => {
-        applerUsername;
-      };
-    }
-  }
-
   useEffect(() => {
-    getAppler();
-  });
+    getApplerForRound(Number(roomID)).then((applerUsername) => {
+      setApplerUsername(applerUsername);
+    });
+  }, [roomID]);
 
   const [imgURL, setImgURL] = useState("");
 
@@ -77,60 +64,35 @@ const Results: NextPage = () => {
     fetchApplerImageURL(Number(roomID)).then((imgURL) => {
       setImgURL(imgURL);
     });
-    return () => {
-      imgURL;
+  }, [roomID]);
+
+  const [newGame, setNewGame] = useState(false);
+  useEffect(() => {
+    const fetch = async () => {
+      const result = await gameResets(Number(roomID));
+      setNewGame(result);
     };
-  });
-
-  const [nav, setNav] = useState(String);
-
-  useEffect(() => {
-    returnUserListAndRoundNum(Number(roomID)).then((nav) => {
-      setNav(nav);
-    });
-    return () => {
-      nav;
-    };
-  });
-
-  function newGame() {
-    resetGame(Number(roomID));
-    navToLobby();
-  }
-
-  function resetOrNo() {
-    if (nav === "reset") {
-      return (
-        <div>
-          <button onClick={() => newGame()}>New Game</button>
-          <button onClick={() => endSessionClicked(Number(roomID))}>
-            End Session
-          </button>
-        </div>
-      );
-    } else if (nav === "no reset") {
-      return (
-        <button onClick={() => nextRound(Number(roomID))}>Next Round</button>
-      );
-    }
-  }
+    fetch();
+  }, [roomID]);
 
   useEffect(() => {
-    nextRoundHasBeenClicked(Number(roomID), navToLobby);
-  });
+    nextRoundHasBeenClicked(Number(roomID), () =>
+      navToLobby(String(userName), Number(roomID))
+    );
+  }, [roomID, userName]);
 
   useEffect(() => {
-    everyoneWentListener(Number(roomID), navToHome);
-  });
+    everyoneWentListener(Number(roomID), () => navToHome(Number(roomID)));
+  }, [roomID]);
 
   useEffect(() => {
-    newGameClickedListener(Number(roomID), navToLobby);
+    newGameClickedListener(Number(roomID), () => navToLobby(String(userName), Number(roomID)));
   });
 
   return (
     <main>
       <h1>Game Over</h1>
-      <h3>Room {roomCode}</h3>
+      <h3>Room {roomID}</h3>
       <h3>Appler: {applerUsername}</h3>
       <div>
         <Image
@@ -153,7 +115,15 @@ const Results: NextPage = () => {
           })}
         </ul>
       </div>
-      <div>{resetOrNo()}</div>
+      <div>
+        {newGame ? (
+          <button onClick={() => endSessionClicked(Number(roomID))}>
+            End Session
+          </button>
+        ) : (
+          <button onClick={() => nextRound(Number(roomID))}>Next Round</button>
+        )}
+      </div>
     </main>
   );
 };

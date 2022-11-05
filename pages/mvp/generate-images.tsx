@@ -9,6 +9,45 @@ import { uploadPrompt } from "../../utils/firebase-utils/firebase-util";
 import { uploadImageURL } from "../../utils/firebase-utils/firebase-util";
 import { getApplerForRound } from "../../utils/firebase-utils/firebase-util";
 
+const uploadURLUploadPrompt = (
+  URL: string,
+  userName: string,
+  roomID: number,
+  prompt: string
+) => {
+  if (URL != null && prompt != null) {
+    uploadImageURL(URL, String(userName), Number(roomID));
+    uploadPrompt(Number(roomID), String(userName), prompt);
+  }
+};
+
+async function navToCaptionCreate(
+  applerUsername: string,
+  userName: string,
+  roomID: number,
+  URL: string
+) {
+  if (applerUsername === userName && applerUsername != undefined) {
+    await Router.push({
+      pathname: "/mvp/appler-wait",
+      query: {
+        userName,
+        roomID,
+        URL,
+      },
+    });
+  } else if (applerUsername != userName && applerUsername != undefined) {
+    await Router.push({
+      pathname: "/mvp/caption-creation",
+      query: {
+        userName,
+        roomID,
+        URL,
+      },
+    });
+  }
+}
+
 const GenerateImages: NextPage = () => {
   const router = useRouter();
   const {
@@ -34,62 +73,20 @@ const GenerateImages: NextPage = () => {
     }
   };
 
-  const uploadURLUploadPrompt = () => {
-    if (URL != null && prompt != null) {
-      uploadImageURL(URL, String(userName), Number(roomID));
-      uploadPrompt(Number(roomID), String(userName), prompt);
-    }
-  };
-
-  const [applerUsername, setApplerUsername] = useState("");
-
-  async function getAppler() {
-    const applerName = (await getApplerForRound(Number(roomID))) ?? undefined;
-    if (applerName === undefined) {
-      return undefined;
-    } else {
-      setApplerUsername(applerName);
-      return applerName;
-    }
-  }
-
   useEffect(() => {
-    getAppler();
-  });
-
-  async function navToCaptionCreate() {
-    const applerUndefined = await getAppler();
-
-    if (applerUsername === userName && applerUndefined != undefined) {
-      await Router.push({
-        pathname: "/mvp/appler-wait",
-        query: {
-          userName,
-          roomID,
-          roomCode,
-          URL,
-        },
-      });
-    } else if (applerUsername != userName && applerUndefined != undefined) {
-      await Router.push({
-        pathname: "/mvp/caption-creation",
-        query: {
-          userName,
-          roomID,
-          roomCode,
-          URL,
-        },
-      });
-    } else {
-      await Router.push({
-        pathname: "/mvp/home",
-      });
-    }
-  }
-
-  useEffect(() => {
-    everyoneGeneratedAnImageListener(Number(roomID), navToCaptionCreate);
-  });
+    const attachListener = async () => {
+      const appler = await getApplerForRound(Number(roomID));
+      await everyoneGeneratedAnImageListener(Number(roomID), () =>
+        navToCaptionCreate(
+          String(appler),
+          String(userName),
+          Number(roomID),
+          String(URL)
+        )
+      );
+    };
+    attachListener();
+  }, [URL, roomID, userName]);
 
   return (
     <main>
@@ -115,7 +112,18 @@ const GenerateImages: NextPage = () => {
         <button onClick={() => generateImageWrapper(prompt)}>Generate</button>
       </div>
       <div>
-        <button onClick={() => uploadURLUploadPrompt()}>Submit</button>
+        <button
+          onClick={() =>
+            uploadURLUploadPrompt(
+              String(URL),
+              String(userName),
+              Number(roomID),
+              String(prompt)
+            )
+          }
+        >
+          Submit
+        </button>
       </div>
     </main>
   );

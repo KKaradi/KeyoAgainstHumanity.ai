@@ -3,15 +3,29 @@ import React from "react";
 import Router from "next/router";
 import useRouter from "next/router";
 import { useState, useEffect } from "react";
-import { getUserList } from "../../utils/firebase-utils/firebase-util";
+import {
+  detachUserListListener,
+  getUserList,
+  userListChangedListener,
+} from "../../utils/firebase-utils/firebase-util";
 import { startGame } from "../../utils/firebase-utils/firebase-util";
 import { startedGameListener } from "../../utils/firebase-utils/firebase-util";
-import { userListChangedListener } from "../../utils/firebase-utils/firebase-util";
+
+async function navToGenerate(userName: string, roomID: string) {
+  detachUserListListener(Number(roomID));
+  await Router.push({
+    pathname: "/mvp/generate-images",
+    query: {
+      userName,
+      roomID,
+    },
+  });
+}
 
 const Lobby: NextPage = () => {
   const router = useRouter();
   const {
-    query: { userName, roomID, roomCode },
+    query: { userName, roomID },
   } = router;
 
   async function navToHome() {
@@ -20,48 +34,34 @@ const Lobby: NextPage = () => {
     });
   }
 
-  async function navToGenerate() {
-    await Router.push({
-      pathname: "/mvp/generate-images",
-      query: {
-        userName,
-        roomID,
-        roomCode,
-      },
-    });
-  }
-
   const [userList, setUserList] = useState([""]);
 
-  const displayUserList = () => {
-    getUserList(Number(roomID)).then((userList) => {
+  useEffect(() => {
+    userListChangedListener(Number(roomID), (userList: string[]) => {
       setUserList(userList);
     });
-    return (
-      <ul>
-        {userList.map((user) => (
-          <li key={user}>{user}</li>
-        ))}
-      </ul>
-    );
-  };
+  }, [roomID]);
 
   useEffect(() => {
-    userListChangedListener(Number(roomID), displayUserList);
-  });
-
-  useEffect(() => {
-    startedGameListener(Number(roomID), navToGenerate);
-  });
+    startedGameListener(Number(roomID), () => {
+      navToGenerate(userName as string, roomID as string);
+    });
+  }, [roomID, userName]);
 
   return (
     <main>
       <h1>Lobby</h1>
-      <h3>
-        Room {roomID} {roomCode}
-      </h3>
+      <h3>Room {roomID}</h3>
       <h4>Users:</h4>
-      <p>{displayUserList()}</p>
+      <div>
+        {
+          <ul>
+            {userList.map((user) => (
+              <li key={user}>{user}</li>
+            ))}
+          </ul>
+        }
+      </div>
       <div>
         <button onClick={() => startGame(Number(roomID))}>Start Game</button>
       </div>
