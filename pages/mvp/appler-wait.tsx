@@ -68,7 +68,6 @@ const ApplerWait: NextPage = () => {
       <div>
         <h1 className="sit">Sit tight while everyone captions your image!</h1>
       </div>
-
       <Image
         src={waves}
         width={2400}
