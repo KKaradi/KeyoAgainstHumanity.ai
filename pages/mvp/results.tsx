@@ -120,12 +120,6 @@ const Results: NextPage = () => {
           <button onClick={() => nextRound(Number(roomID))}>Next Round</button>
         )}
       </div>
-      <button className="genbtn" onClick={() => nextRound(Number(roomID))}>
-        Next Round
-      </button>
-      <button className="genbtn" onClick={() => navToHome(Number(roomID))}>
-        End Session
-      </button>
       <Image
         src={waves}
         width={2400}
