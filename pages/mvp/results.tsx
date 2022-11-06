@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Image from "next/image";
 import Router from "next/router";
-import useRouter from "next/router";
+import {useRouter} from "next/router";
 import { newGameClickedListener } from "../../utils/firebase-utils/firebase-util";
 import { resetGame } from "../../utils/firebase-utils/firebase-util";
 import {
@@ -37,7 +37,7 @@ async function navToLobby(userName: string, roomID: number) {
 }
 
 const Results: NextPage = () => {
-  const router = useRouter;
+  const router = useRouter();
   const {
     query: { userName, roomID },
   } = router;

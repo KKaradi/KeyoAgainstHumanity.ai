@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Image from "next/image";
 import Router from "next/router";
-import useRouter from "next/router";
+import {useRouter} from "next/router";
 import { useState, useEffect } from "react";
 import {
   fetchListOfCaptions,
@@ -29,7 +29,7 @@ function navToResults(
 }
 
 const Vote: NextPage = () => {
-  const router = useRouter;
+  const router = useRouter();
   const {
     query: { userName, roomID, caption, URL },
   } = router;

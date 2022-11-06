@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Image from "next/image";
 import Router from "next/router";
-import useRouter from "next/router";
+import {useRouter} from "next/router";
 import { useState, useEffect } from "react";
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCreatedACaptionListener } from "../../utils/firebase-utils/firebase-util";
@@ -18,7 +18,7 @@ async function navToVote(userName: string, roomID: number, URL: string) {
 }
 
 const ApplerWait: NextPage = () => {
-  const router = useRouter;
+  const router = useRouter();
   const {
     query: { userName, roomID, URL },
   } = router;

@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import React from "react";
 import Router from "next/router";
-import useRouter from "next/router";
+import {useRouter} from "next/router";
 import { useState, useEffect } from "react";
 import {
   detachUserListListener,
@@ -22,7 +22,7 @@ async function navToGenerate(userName: string, roomID: string) {
 }
 
 const Lobby: NextPage = () => {
-  const router = useRouter;
+  const router = useRouter();
   const {
     query: { userName, roomID },
   } = router;
