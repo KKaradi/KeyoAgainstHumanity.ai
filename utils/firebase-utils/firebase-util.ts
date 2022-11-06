@@ -407,6 +407,9 @@ export async function resetRoom(roomCode: number): Promise<void> {
 
 export async function resetGame(roomCode: Number): Promise<void> {
   remove(ref(database, "Rooms/" + roomCode + "/Game/"));
+  set(ref(database, "Rooms/" + roomCode + "/Game"), {
+    roundCounter: 0,
+  });
   const dataToFirebase = {
     started: false,
     newGameClicked: true,
@@ -545,9 +548,6 @@ export async function newGameClickedListener(
     if (newGameWasClicked === true && newGameWasClicked != undefined) {
       callBack();
       off(ref(database, "Rooms/" + roomCode), "value", onValueCallback)
-      set(ref(database, "Rooms/" + roomCode + "/Game"), {
-        roundCounter: 0,
-      });
       const dataToFirebase = {
         newGameClicked: false,
       };
