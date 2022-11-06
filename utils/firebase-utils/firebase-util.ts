@@ -539,15 +539,17 @@ export async function newGameClickedListener(
   roomCode: Number,
   callBack: () => void
 ): Promise<void> {
-  onValue(ref(database, "Rooms/" + roomCode), async (snapshot) => {
+  const onValueCallback = async (snapshot: DataSnapshot) => {
     const newGameWasClicked =
       (await snapshot.val())?.newGameClicked ?? undefined;
     if (newGameWasClicked === true && newGameWasClicked != undefined) {
       callBack();
+      off(ref(database, "Rooms/" + roomCode), "value", onValueCallback)
       const dataToFirebase = {
         newGameClicked: false,
       };
       return update(ref(database, "Rooms/" + roomCode), dataToFirebase);
     }
-  });
+  }
+  onValue(ref(database, "Rooms/" + roomCode), onValueCallback);
 }
