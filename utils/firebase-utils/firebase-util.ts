@@ -311,48 +311,6 @@ export async function fetchTotalVotes(roomCode: number): Promise<number> {
   return totalVotes;
 }
 
-export async function fetchVoted(
-  roomCode: number,
-  yourUsername: string
-): Promise<Boolean> {
-  const applerUsername = await getApplerForRound(roomCode);
-  const votedData = await get(
-    child(
-      ref(database),
-      "Rooms/" +
-        roomCode +
-        "/Game/" +
-        applerUsername +
-        "/voteList/" +
-        yourUsername +
-        "/voted"
-    )
-  );
-  return votedData.val();
-}
-
-export async function hasVoted(
-  roomCode: number,
-  yourUsername: string
-): Promise<void> {
-  const applerUsername = await getApplerForRound(roomCode);
-  const dataToFirebase = {
-    voted: true,
-  };
-  return update(
-    ref(
-      database,
-      "Rooms/" +
-        roomCode +
-        "/Game/" +
-        applerUsername +
-        "/voteList/" +
-        yourUsername
-    ),
-    dataToFirebase
-  );
-}
-
 export async function nextRound(roomCode: number): Promise<void> {
   const roundNumData = await get(
     child(ref(database), "Rooms/" + roomCode + "/Game" + "/roundCounter")
@@ -470,8 +428,6 @@ export async function everyoneCreatedACaptionListener(
 
     if (
       userListLength - 1 === captionListLength &&
-      userListLength != undefined &&
-      captionListLength != undefined &&
       userListLength != 0 &&
       captionListLength != 0
     ) {
@@ -496,7 +452,7 @@ export async function everyoneCastAVoteListener(
   const onValueCallback = async () => {
     let userListLength = (await getUserList(roomCode))?.length ?? undefined;
     let totalVotes = await fetchTotalVotes(roomCode);
-    if (userListLength === totalVotes) {
+    if (userListLength === totalVotes && userListLength != undefined) {
       callBack();
       off(
         ref(database, "Rooms/" + roomCode + "/Game/"),
@@ -511,7 +467,7 @@ export async function everyoneCastAVoteListener(
 //checks if the next round number was increased by 1
 export async function nextRoundHasBeenClicked(
   roomCode: number,
-  callBack: Function
+  callBack: (roundNum: Number, UserListLength: Number) => void
 ) {
   const roundCounterRef = await get(
     ref(database, "Rooms/" + roomCode + "/Game" + "/roundCounter")

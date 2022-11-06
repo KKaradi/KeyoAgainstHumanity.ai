@@ -90,6 +90,7 @@ const Results: NextPage = () => {
       navToLobby(String(userName), Number(roomID))
     );
   }, [userName, roomID]);
+  
   const waves = "/waveboi.png";
 
   return (
