@@ -56,7 +56,10 @@ export async function getApplerForRound(roomCode: number): Promise<string> {
   return applerName;
 }
 
-export async function createRoom(yourUserName: string, callBack: (roomCode: number) => void): Promise<void> {
+export async function createRoom(
+  yourUserName: string,
+  callBack: (roomCode: number) => void
+): Promise<void> {
   const roomCode: number = Math.floor(Math.random() * (99999 - 10000) + 10000);
   await set(ref(database, "Rooms/" + roomCode), {
     roomCode: roomCode,
@@ -68,7 +71,7 @@ export async function createRoom(yourUserName: string, callBack: (roomCode: numb
     roundCounter: 0,
   });
 
-  await joinRoom(yourUserName, roomCode, () => callBack(roomCode))
+  await joinRoom(yourUserName, roomCode, () => callBack(roomCode));
 }
 
 export async function joinRoom(
@@ -76,39 +79,44 @@ export async function joinRoom(
   roomCode: number,
   callBack: () => void
 ): Promise<void> {
+  const sameName = await checkIfDuplicateName(roomCode, yourUserName);
+  const noRoom = await checkIfRoomExists(roomCode);
+  if (sameName === true && noRoom === true) {
+    const userListRef = push(ref(database, "Rooms/" + roomCode + "/Userlist/"));
+    await set(userListRef, {
+      username: yourUserName,
+    });
 
-  const sameName = await checkIfDuplicateName(roomCode, yourUserName)
-  const noRoom = await checkIfRoomExists(roomCode)
-  if(sameName === true && noRoom === true){
-  const userListRef = push(ref(database, "Rooms/" + roomCode + "/Userlist/"));
-  await set(userListRef, {
-    username: yourUserName,
-  });
+    const dataToFirebase = {
+      username: yourUserName,
+    };
 
-  const dataToFirebase = {
-    username: yourUserName,
-  };
-
-  return(callBack(), update(
-    ref(database, "Rooms/" + roomCode + "/Game/" + yourUserName),
-    dataToFirebase
-  ));
+    return (
+      callBack(),
+      update(
+        ref(database, "Rooms/" + roomCode + "/Game/" + yourUserName),
+        dataToFirebase
+      )
+    );
   }
 }
 
 export async function checkIfRoomExists(roomCode: Number): Promise<boolean> {
-  const roomCodeRef = await get(ref(database, "Rooms/" + roomCode))
-  return(roomCodeRef.exists())
+  const roomCodeRef = await get(ref(database, "Rooms/" + roomCode));
+  return roomCodeRef.exists();
 }
 
-export async function checkIfDuplicateName(roomCode: Number, username: String): Promise<boolean> {
-  const userList = await getUserList(roomCode)
-  for(let x = 0; x < userList.length ; x = x + 1){
-    if(userList[x] === username){
-      return(false)
+export async function checkIfDuplicateName(
+  roomCode: Number,
+  username: String
+): Promise<boolean> {
+  const userList = await getUserList(roomCode);
+  for (let i = 0; i < userList.length; i++) {
+    if (userList[i] === username) {
+      return false;
     }
   }
-  return(true)
+  return true;
 }
 
 //Return userlist called whenever userlist in changed; to be displayed in lobby page
