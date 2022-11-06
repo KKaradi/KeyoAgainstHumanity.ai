@@ -545,10 +545,15 @@ export async function newGameClickedListener(
     if (newGameWasClicked === true && newGameWasClicked != undefined) {
       callBack();
       off(ref(database, "Rooms/" + roomCode), "value", onValueCallback)
+      set(ref(database, "Rooms/" + roomCode + "/Game"), {
+        roundCounter: 0,
+      });
       const dataToFirebase = {
         newGameClicked: false,
       };
-      return update(ref(database, "Rooms/" + roomCode), dataToFirebase);
+      return (
+        update(ref(database, "Rooms/" + roomCode), dataToFirebase)
+      );
     }
   }
   onValue(ref(database, "Rooms/" + roomCode), onValueCallback);
