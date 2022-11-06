@@ -12,7 +12,12 @@ import {
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCastAVoteListener } from "../../utils/firebase-utils/firebase-util";
 
-function navToResults(URL: string, userName: string, roomID: number, caption: string) {
+function navToResults(
+  URL: string,
+  userName: string,
+  roomID: number,
+  caption: string
+) {
   Router.push({
     pathname: "/mvp/results",
     query: {
@@ -34,9 +39,9 @@ const Vote: NextPage = () => {
 
   useEffect(() => {
     getApplerForRound(Number(roomID)).then((applerUsername) => {
-      setApplerUsername(applerUsername)
+      setApplerUsername(applerUsername);
     });
-  }, [roomID])
+  }, [roomID]);
 
   const [imgURL, setImgURL] = useState("");
 
@@ -85,9 +90,17 @@ const Vote: NextPage = () => {
   }
 
   useEffect(() => {
-    everyoneCastAVoteListener(Number(roomID), () => navToResults(String(URL), String(userName), Number(roomID), String(caption)));
+    everyoneCastAVoteListener(Number(roomID), () =>
+      navToResults(
+        String(URL),
+        String(userName),
+        Number(roomID),
+        String(caption)
+      )
+    );
   }, [URL, caption, roomID, userName]);
-
+  const waves = "/waveboi.png";
+  const top = "/top.png";
   return (
     <main>
       <h1>Voting</h1>
@@ -98,7 +111,7 @@ const Vote: NextPage = () => {
       <h4>These are the captions the players came up with</h4>
       <h4>Vote for your favorite caption!</h4>
       <div>
-        { displayCaptions() }
+      { displayCaptions() }
       </div>
     </main>
   );
