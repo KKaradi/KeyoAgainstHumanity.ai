@@ -35,7 +35,6 @@ const Lobby: NextPage = () => {
   const waves = "/waveboi.png";
   const top = "/top.png";
   const [userList, setUserList] = useState([""]);
-  console.log(userList)
   useEffect(() => {
     userListChangedListener(Number(roomID), (userList: string[]) => {
       setUserList(userList);

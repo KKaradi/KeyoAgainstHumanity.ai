@@ -79,7 +79,6 @@ export async function joinRoom(
 
   const sameName = await checkIfDuplicateName(roomCode, yourUserName)
   const noRoom = await checkIfRoomExists(roomCode)
-  console.log(sameName + '     ' + noRoom)
   if(sameName === true && noRoom === true){
   const userListRef = push(ref(database, "Rooms/" + roomCode + "/Userlist/"));
   await set(userListRef, {
