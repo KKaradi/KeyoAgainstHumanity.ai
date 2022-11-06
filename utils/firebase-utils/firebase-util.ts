@@ -56,7 +56,8 @@ export async function getApplerForRound(roomCode: number): Promise<string> {
   return applerName;
 }
 
-export async function createRoom(roomCode: number, yourUserName: string): Promise<void> {
+export async function createRoom(yourUserName: string, callBack: (roomCode: number) => void): Promise<void> {
+  const roomCode: number = Math.floor(Math.random() * (99999 - 10000) + 10000);
   await set(ref(database, "Rooms/" + roomCode), {
     roomCode: roomCode,
     started: false,
@@ -67,19 +68,7 @@ export async function createRoom(roomCode: number, yourUserName: string): Promis
     roundCounter: 0,
   });
 
-  const userListRef = push(ref(database, "Rooms/" + roomCode + "/Userlist/"));
-  await set(userListRef, {
-    username: yourUserName,
-  });
-
-  const dataToFirebase = {
-    username: yourUserName,
-  };
-
-  return update(
-    ref(database, "Rooms/" + roomCode + "/Game/" + yourUserName),
-    dataToFirebase
-  );
+  await joinRoom(yourUserName, roomCode, () => callBack(roomCode))
 }
 
 export async function joinRoom(
@@ -90,8 +79,8 @@ export async function joinRoom(
 
   const sameName = await checkIfDuplicateName(roomCode, yourUserName)
   const noRoom = await checkIfRoomExists(roomCode)
-
-  if(sameName === false && noRoom === false){
+  console.log(sameName + '     ' + noRoom)
+  if(sameName === true && noRoom === true){
   const userListRef = push(ref(database, "Rooms/" + roomCode + "/Userlist/"));
   await set(userListRef, {
     username: yourUserName,

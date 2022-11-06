@@ -4,6 +4,16 @@ import { SetStateAction, useState } from "react";
 import { createRoom } from "../../utils/firebase-utils/firebase-util";
 import { joinRoom } from "../../utils/firebase-utils/firebase-util";
 
+async function navToLobby(userName: string, roomID: number) {
+  await Router.push({
+    pathname: "/mvp/lobby",
+    query: {
+      userName,
+      roomID,
+    },
+  });
+}
+
 const Home: NextPage = () => {
   const [userName, setUserName] = useState("");
 
@@ -21,24 +31,13 @@ const Home: NextPage = () => {
     setRoomID(event.target.value);
   };
 
-  async function navToLobby() {
-    await Router.push({
-      pathname: "/mvp/lobby",
-      query: {
-        userName,
-        roomID,
-      },
-    });
-  }
-
   function joinRoomNavToLobby() {
-    joinRoom(userName, Number(roomID), () => navToLobby());
+    joinRoom(userName, Number(roomID), () => navToLobby(String(userName), Number(roomID)));
   }
 
   function createRoomNavToLobby() {
-    createRoom(Number(roomID), String(userName));
-    navToLobby();
-  }
+    createRoom(String(userName), (roomCode) => navToLobby(String(userName), Number(roomCode)))
+  };
 
   return (
     <main>

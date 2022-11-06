@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import {
   detachUserListListener,
-  getUserList,
   userListChangedListener,
 } from "../../utils/firebase-utils/firebase-util";
 import { startGame } from "../../utils/firebase-utils/firebase-util";
@@ -35,7 +34,7 @@ const Lobby: NextPage = () => {
   }
 
   const [userList, setUserList] = useState([""]);
-
+  console.log(userList)
   useEffect(() => {
     userListChangedListener(Number(roomID), (userList: string[]) => {
       setUserList(userList);
