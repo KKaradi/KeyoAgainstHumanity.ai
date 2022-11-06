@@ -12,13 +12,14 @@ import {
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCastAVoteListener } from "../../utils/firebase-utils/firebase-util";
 
-function navToResults(
+async function navToResults(
   URL: string,
   userName: string,
   roomID: number,
   caption: string
-) {
-  Router.push({
+){
+  await updateLeaderboard(Number(roomID))
+  await Router.push({
     pathname: "/mvp/results",
     query: {
       userName,
@@ -26,13 +27,7 @@ function navToResults(
       URL,
       caption,
     },
-  });
-}
-
-const voteAndUpdateLeaderboard = async (caption: string, roomID: number) => {
-  await vote(String(caption), Number(roomID))
-  await updateLeaderboard(Number(roomID), String(caption))
-}
+  })};
 
 const Vote: NextPage = () => {
   const router = useRouter();
@@ -103,7 +98,7 @@ const Vote: NextPage = () => {
             {captionList.map((caption) => (
               <button
                 key={caption}
-                onClick={() => voteAndUpdateLeaderboard(caption, Number(roomID))}
+                onClick={() => vote(String(caption), Number(roomID))}
               >
                 {caption}
               </button>

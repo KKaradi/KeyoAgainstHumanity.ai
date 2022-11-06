@@ -306,28 +306,28 @@ export async function fetchCaptionVoteObject(
 }
 
 
-export async function fetchCaptionUsernameVoteObject(
-  roomCode: number
-): Promise<{ [index: string]: {[index: string]: number }}> {
-  const applerUsername = await getApplerForRound(roomCode);
-  const captionData = await get(
-    child(
-      ref(database),
-      "Rooms/" + roomCode + "/Game/" + applerUsername + "/" + "Captions"
-    )
-  );
-  let captionVoteObject: { [index: string]: {[index: string]: number } } = {};
-  captionData.forEach((childSnapshot) => {
-    let caption: unknown;
-    let captionAuthor: string
-    caption = childSnapshot.key;
-    captionAuthor = childSnapshot.val().username
-    if (typeof caption === "string") {
-      captionVoteObject[caption] = {[captionAuthor] : childSnapshot.val().votes}
-    }
-  });
-  return captionVoteObject;
-}
+// export async function fetchCaptionUsernameVoteObject(
+//   roomCode: number
+// ): Promise<{ [index: string]: {[index: string]: number }}> {
+//   const applerUsername = await getApplerForRound(roomCode);
+//   const captionData = await get(
+//     child(
+//       ref(database),
+//       "Rooms/" + roomCode + "/Game/" + applerUsername + "/" + "Captions"
+//     )
+//   );
+//   let captionVoteObject: { [index: string]: {[index: string]: number } } = {};
+//   captionData.forEach((childSnapshot) => {
+//     let caption: unknown;
+//     let captionAuthor: string
+//     caption = childSnapshot.key;
+//     captionAuthor = childSnapshot.val().username
+//     if (typeof caption === "string") {
+//       captionVoteObject[caption] = {[captionAuthor] : childSnapshot.val().votes}
+//     }
+//   });
+//   return captionVoteObject;
+// }
 
 
 export async function fetchTotalVotes(roomCode: number): Promise<number> {
@@ -564,26 +564,30 @@ export async function endSessionClicked(roomCode: number): Promise<void> {
 }
 
 export async function updateLeaderboard(
-  roomCode: number,
-  caption: string
+  roomCode: number
 ): Promise<void> {
 
-  const captionAuthor = await fetchUsernameFromCaption(roomCode, caption)
-  const captionVoteObject = await fetchCaptionVoteObject(roomCode)
   const totalVoteUsernameObj = await fetchLeaderboard(roomCode)
-  const roundVotes = captionVoteObject.caption ?? 0
-  console.log(roundVotes)
-  const leaderboardVotes = totalVoteUsernameObj.username ?? 0
-  console.log(leaderboardVotes)
-  const userVotes = roundVotes + leaderboardVotes
+  const applerUsername = await getApplerForRound(roomCode)
 
-  const dataToFirebase = {
-    points: userVotes
-  };
+  const captionData = await get(
+    child(
+      ref(database),
+      "Rooms/" + roomCode + "/Game/" + applerUsername + "/" + "Captions"
+    )
+  );
+  captionData.forEach((childSnapshot) => {
+      const captionAuthor = childSnapshot.val().username
+      const roundVotes = childSnapshot.val().votes
+      const leaderboardVotes = totalVoteUsernameObj[captionAuthor] ?? 0
+      const userVotes = roundVotes + leaderboardVotes
 
-if(typeof userVotes === "number"){
-  return update(ref(database, "Rooms/" + roomCode + "/Leaderboard/" + captionAuthor), dataToFirebase);
-}
+      const dataToFirebase = {
+        points: userVotes
+      };
+    
+      update(ref(database, "Rooms/" + roomCode + "/Leaderboard/" + captionAuthor), dataToFirebase);
+  })
 }
 
 export async function fetchLeaderboard(roomCode: number): Promise<{ [index: string]: number }> {

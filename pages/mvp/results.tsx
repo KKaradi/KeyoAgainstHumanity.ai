@@ -109,7 +109,7 @@ const Results: NextPage = () => {
           alt="Pretty Picture"
         ></Image>
       </div>
-      <h3>Leaderboard:</h3>
+      <h3>RESULTS:</h3>
       <div>
         <ul>
           {Object.keys(captionVotes).map((caption, index) => {
@@ -117,6 +117,19 @@ const Results: NextPage = () => {
               <li key={index}>
                 {caption} got{" "}
                 {captionVotes[caption as keyof typeof captionVotes]} votes.
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+      <div>
+        <h3>LEADERBOARD:</h3>
+        <ul>
+          {Object.keys(leaderboard).map((username, index) => {
+            return (
+              <li key={index}>
+                {username} has{" "}
+                {leaderboard[username as keyof typeof leaderboard]} points.
               </li>
             );
           })}
