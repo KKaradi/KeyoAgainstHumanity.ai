@@ -36,11 +36,6 @@ async function navToLobby(userName: string, roomID: number) {
   });
 }
 
-async function startNewGame(userName: string, roomID: number) {
-  resetGame(roomID);
-  navToLobby(userName, roomID);
-}
-
 const Results: NextPage = () => {
   const router = useRouter;
   const {
@@ -126,11 +121,7 @@ const Results: NextPage = () => {
       <div>
         {newGame ? (
           <div>
-            <button
-              onClick={() => startNewGame(String(userName), Number(roomID))}
-            >
-              New Game
-            </button>
+            <button onClick={() => resetGame(Number(roomID))}>New Game</button>
             <button onClick={() => endSessionClicked(Number(roomID))}>
               End Session
             </button>

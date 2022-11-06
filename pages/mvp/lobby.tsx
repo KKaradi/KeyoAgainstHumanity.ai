@@ -81,15 +81,15 @@ const Lobby: NextPage = () => {
         </li>
         <li className="lobby-flex">
           <h1>PLAYERS:</h1>
-            <div className="players">
-              {
-                <ul>
-                  {userList.map((user) => (
-                    <li key={user}>{user}</li>
-                  ))}
-                </ul>
-              }
-            </div>
+          <div className="players">
+            {
+              <ul>
+                {userList.map((user) => (
+                  <li key={user}>{user}</li>
+                ))}
+              </ul>
+            }
+          </div>
         </li>
       </ul>
       <div>
