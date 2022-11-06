@@ -6,7 +6,8 @@ import { useState, useEffect } from "react";
 import {
   detachUserListListener,
   getUserList,
-  userListChangedListener,
+  leaveRoom,
+  userListChangedListener
 } from "../../utils/firebase-utils/firebase-util";
 import { startGame } from "../../utils/firebase-utils/firebase-util";
 import { startedGameListener } from "../../utils/firebase-utils/firebase-util";
@@ -22,17 +23,24 @@ async function navToGenerate(userName: string, roomID: string) {
   });
 }
 
+async function navToHome() {
+  await Router.push({
+    pathname: "/mvp/home",
+  });
+}
+
+async function navToHomeAndLeaveRoom(roomCode: number, userName: string) {
+  navToHome()
+  leaveRoom(roomCode, userName)
+}
+
 const Lobby: NextPage = () => {
   const router = useRouter();
   const {
     query: { userName, roomID },
   } = router;
 
-  async function navToHome() {
-    await Router.push({
-      pathname: "/mvp/home",
-    });
-  }
+
   const waves = "/waveboi.png";
   const top = "/top.png";
   const [userList, setUserList] = useState([""]);
@@ -94,7 +102,7 @@ const Lobby: NextPage = () => {
             </div>
           </ul>
           <div className="button">
-            <button className="homebutton" onClick={() => navToHome()}>
+            <button className="homebutton" onClick={() => navToHomeAndLeaveRoom(Number(roomID), String(userName))}>
               Exit Room
             </button>
           </div>
