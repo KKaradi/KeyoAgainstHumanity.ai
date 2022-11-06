@@ -276,6 +276,31 @@ export async function fetchCaptionVoteObject(
   return captionVoteObject;
 }
 
+
+export async function fetchCaptionUsernameVoteObject(
+  roomCode: number
+): Promise<{ [index: string]: {[index: string]: number }}> {
+  const applerUsername = await getApplerForRound(roomCode);
+  const captionData = await get(
+    child(
+      ref(database),
+      "Rooms/" + roomCode + "/Game/" + applerUsername + "/" + "Captions"
+    )
+  );
+  let captionVoteObject: { [index: string]: {[index: string]: number } } = {};
+  captionData.forEach((childSnapshot) => {
+    let caption: unknown;
+    let username: string
+    caption = childSnapshot.key;
+    username = childSnapshot.val().username
+    if (typeof caption === "string") {
+      captionVoteObject[caption] = {username : childSnapshot.val().votes}
+    }
+  });
+  return captionVoteObject;
+}
+
+
 export async function fetchTotalVotes(roomCode: number): Promise<number> {
   const applerUsername = await getApplerForRound(roomCode);
   const captionData = await get(

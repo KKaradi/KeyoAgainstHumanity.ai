@@ -7,6 +7,7 @@ import {
   fetchListOfCaptions,
   getApplerForRound,
   vote,
+  updateLeaderboard
 } from "../../utils/firebase-utils/firebase-util";
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCastAVoteListener } from "../../utils/firebase-utils/firebase-util";
@@ -26,6 +27,11 @@ function navToResults(
       caption,
     },
   });
+}
+
+const voteAndUpdateLeaderboard = async (caption: string, roomID: number) => {
+  await vote(caption, Number(roomID))
+  await updateLeaderboard(Number(roomID), String(caption))
 }
 
 const Vote: NextPage = () => {
@@ -97,7 +103,7 @@ const Vote: NextPage = () => {
             {captionList.map((caption) => (
               <button
                 key={caption}
-                onClick={() => vote(caption, Number(roomID))}
+                onClick={() => voteAndUpdateLeaderboard(caption, Number(roomID))}
               >
                 {caption}
               </button>
