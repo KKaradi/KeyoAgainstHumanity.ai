@@ -1,0 +1,65 @@
+.wavelobby{
+    bottom: 0px;
+    position: fixed;
+    margin-bottom: 0px;
+  }
+  .body {
+    padding: 0;
+    margin: 100px;
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+      Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  }
+  
+  .a {
+    color: inherit;
+    text-decoration: none;
+    text-decoration-color: white;
+  }
+  
+  .h1 {
+    color:rgb(255, 255, 255);
+  }
+  
+  .top{
+    top: 0100px;
+    position: fixed;
+  }
+  
+  
+  .flexContainer {
+    /* We first create a flex layout context */
+    display: flex;
+    flex-flow: row wrap;
+    
+    /* Then we define how is distributed the remaining space */
+    justify-content: space-around;
+    
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  
+  .lobby-flex {
+    background: linear-gradient(#ff84a9 0%,#ff835d 100%);
+    color: white;
+    border-radius: 10%;
+    padding: 5px;
+    width: 400px;
+    height: 250px;
+    margin-top: 70px;
+    margin-bottom: 70px;
+    font-size: medium;
+    text-align: left;
+  }
+  .button{
+    font-weight: bold;
+    text-align: right;
+    margin-right: 100px;
+  }
+  
+  .waves{
+    bottom: 0px;
+    position: relative;
+    margin-bottom: 0px;
+  }
