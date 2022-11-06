@@ -5,9 +5,11 @@ import { useRouter } from "next/router";
 import { SetStateAction, useState, useEffect } from "react";
 import { generateImage } from "../../utils/image-utils/image-util";
 import { everyoneGeneratedAnImageListener } from "../../utils/firebase-utils/firebase-util";
-import { uploadPrompt } from "../../utils/firebase-utils/firebase-util";
-import { uploadImageURL } from "../../utils/firebase-utils/firebase-util";
-import { getApplerForRound } from "../../utils/firebase-utils/firebase-util";
+import {
+  getApplerForRound,
+  uploadImageURL,
+  uploadPrompt,
+} from "../../utils/firebase-utils/firebase-util";
 
 const uploadURLUploadPrompt = (
   URL: string,
