@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import {
   detachUserListListener,
-  getUserList,
   userListChangedListener,
 } from "../../utils/firebase-utils/firebase-util";
 import { startGame } from "../../utils/firebase-utils/firebase-util";
@@ -36,7 +35,6 @@ const Lobby: NextPage = () => {
   const waves = "/waveboi.png";
   const top = "/top.png";
   const [userList, setUserList] = useState([""]);
-
   useEffect(() => {
     userListChangedListener(Number(roomID), (userList: string[]) => {
       setUserList(userList);
@@ -82,24 +80,22 @@ const Lobby: NextPage = () => {
         </li>
         <li className="lobby-flex">
           <h1>PLAYERS:</h1>
-          <ul>
-            <div className="players">
-              {
-                <ul>
-                  {userList.map((user) => (
-                    <li key={user}>{user}</li>
-                  ))}
-                </ul>
-              }
-            </div>
-          </ul>
-          <div className="button">
-            <button className="homebutton" onClick={() => navToHome()}>
-              Exit Room
-            </button>
+          <div className="players">
+            {
+              <ul>
+                {userList.map((user) => (
+                  <li key={user}>{user}</li>
+                ))}
+              </ul>
+            }
           </div>
         </li>
       </ul>
+      <div className="button">
+        <button className="homebutton" onClick={() => navToHome()}>
+          Exit Room
+        </button>
+      </div>
       <Image
         src={waves}
         width={2400}
