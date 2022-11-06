@@ -89,7 +89,7 @@ const Results: NextPage = () => {
     newGameClickedListener(Number(roomID), () =>
       navToLobby(String(userName), Number(roomID))
     );
-  });
+  }, [userName, roomID]);
   const waves = "/waveboi.png";
 
   return (
