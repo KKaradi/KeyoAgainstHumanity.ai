@@ -68,25 +68,50 @@ const Vote: NextPage = () => {
       )
     );
   }, [URL, caption, roomID, userName]);
-
+  const waves = "/waveboi.png";
+  const top = "/top.png";
   return (
     <main>
-      <h1>Voting</h1>
-      <h3>Room {roomID}</h3>
-      <h3>Appler: {applerUsername}</h3>
-      <h4>This is the picture {applerUsername} generated</h4>
-      <Image src={imgURL} width={100} height={100} alt="Pretty Picture" />
-      <h4>These are the captions the players came up with</h4>
-      <h4>Vote for your favorite caption!</h4>
-      <div>
-        <div>
-          {captionList.map((caption) => (
-            <button key={caption} onClick={() => vote(caption, Number(roomID))}>
-              {caption}
-            </button>
-          ))}
-        </div>
-      </div>
+      <Image
+        src={top}
+        width={10000}
+        height={600}
+        alt="shapes top header"
+        className="top"
+      />
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+      ></meta>
+      <ul className="flex-container">
+        <li className="lobby-flex">
+          <h1>{applerUsername}&#39;S PAINTING</h1>
+          <div className="generatedimg">
+            <Image src={imgURL} width={400} height={400} alt="Pretty Picture" />
+          </div>
+        </li>
+        <li className="lobby-flex">
+          <h1>VOTE ON YOUR FAVORITE CAPTION</h1>
+
+          <div className="sit">
+            {captionList.map((caption) => (
+              <button
+                key={caption}
+                onClick={() => vote(caption, Number(roomID))}
+              >
+                {caption}
+              </button>
+            ))}
+          </div>
+        </li>
+      </ul>
+      <Image
+        src={waves}
+        width={2400}
+        height={400}
+        alt="waves at the bottom of the screen"
+        className="waveslobby"
+      />
     </main>
   );
 };

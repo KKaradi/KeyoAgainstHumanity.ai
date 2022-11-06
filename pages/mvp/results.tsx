@@ -95,6 +95,7 @@ const Results: NextPage = () => {
       navToLobby(String(userName), Number(roomID))
     );
   });
+  const waves = "/waveboi.png";
 
   return (
     <main>
@@ -138,6 +139,13 @@ const Results: NextPage = () => {
           <button onClick={() => nextRound(Number(roomID))}>Next Round</button>
         )}
       </div>
+      <Image
+        src={waves}
+        width={2400}
+        height={400}
+        alt="waves at the bottom of the screen"
+        className="waveslobby"
+      />
     </main>
   );
 };
