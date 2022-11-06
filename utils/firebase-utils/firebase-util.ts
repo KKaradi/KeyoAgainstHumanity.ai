@@ -56,7 +56,8 @@ export async function getApplerForRound(roomCode: number): Promise<string> {
   return applerName;
 }
 
-export async function createRoom(roomCode: number): Promise<void> {
+export async function createRoom(): Promise<number> {
+  const roomCode: number = Math.floor(Math.random() * (99999 - 10000) + 10000);
   await set(ref(database, "Rooms/" + roomCode), {
     roomCode: roomCode,
     started: false,
@@ -66,6 +67,8 @@ export async function createRoom(roomCode: number): Promise<void> {
   await set(ref(database, "Rooms/" + roomCode + "/Game"), {
     roundCounter: 0,
   });
+
+  return roomCode;
 }
 export async function joinRoom(
   yourUserName: string,

@@ -1,26 +1,256 @@
-html,
-body {
+.body {
   padding: 0;
   margin: 0;
+  height: 100%;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
-a {
+.a {
   color: inherit;
   text-decoration: none;
+  text-decoration-color: white;
 }
 
-* {
-  box-sizing: border-box;
+.top {
+  top: 0px;
+  position: fixed;
 }
 
+.joinRoom {
+  margin-right: 55px;
+  color: rgb(0, 65, 88);
+  border-radius: 10px;
+  margin-top: 20px;
+  font-weight: bold;
+  background-color: rgb(143, 221, 255);
+  height: 50px;
+  box-shadow: 5px 5px 5px rgb(0, 65, 88);
+}
+
+.createRoom {
+  color: rgb(0, 65, 88);
+  border-radius: 10px;
+  text-decoration: solid;
+  font-weight: bold;
+  margin-top: 90px;
+  background-color: rgb(143, 221, 255);
+  height: 50px;
+  width: 100px;
+  box-shadow: 5px 5px 5px rgb(0, 65, 88);
+}
+.startgame {
+  color: rgb(0, 65, 88);
+  border-radius: 10px;
+  text-decoration: solid;
+  font-weight: bolder;
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 45px;
+  margin-bottom: 10px;
+  background-color: rgb(143, 221, 255);
+  height: 100px;
+  width: 200px;
+  box-shadow: 5px 5px 5px rgb(0, 65, 88);
+  cursor: grab;
+}
+.homebutton {
+  color: rgb(0, 65, 88);
+  border-radius: 10px;
+  text-align: center;
+  text-decoration: solid;
+  font-weight: bolder;
+  margin-right: 100px;
+  margin-top: 20px;
+  background-color: rgb(143, 221, 255);
+  height: 60px;
+  width: 100px;
+  box-shadow: 5px 5px 5px rgb(0, 65, 88);
+  cursor: grab;
+}
+.shapes {
+  margin-top: -1.8%;
+  top: 0px;
+  position: relative;
+}
+
+.flex-container {
+  /* We first create a flex layout context */
+  display: flex;
+  /* Then we define the flow direction 
+     and if we allow the items to wrap 
+   * Remember this is the same as:
+   * flex-direction: row;
+   * flex-wrap: wrap;
+   */
+  flex-flow: row wrap;
+
+  /* Then we define how is distributed the remaining space */
+  justify-content: space-around;
+
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.flex-item {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(#ff84a9 0%, #ff835d 100%);
+  color: white;
+  border-radius: 10%;
+  padding: 5px;
+  width: 400px;
+  height: 250px;
+  margin-top: 70px;
+  margin-bottom: 70px;
+  font-size: medium;
+  text-align: left;
+}
+.lobby-flex {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(#ff84a9 0%, #ff835d 100%);
+  color: white;
+  border-radius: 10%;
+  padding: 5px;
+  width: 500px;
+  height: 575px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: medium;
+  text-align: center;
+  z-index: 1;
+}
+
+.button {
+  font-weight: bold;
+  text-align: right;
+  margin-right: 100px;
+  cursor: grab;
+}
+
+.waves {
+  bottom: 0px;
+  position: relative;
+  margin-bottom: 0px;
+  z-index: 0;
+}
+.roomcode {
+  text-align: center;
+  font-size: 50px;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.305);
+  border-radius: 20px;
+  padding: 10px;
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
+.players {
+  text-align: center;
+  font-size: 50px;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.305);
+  border-radius: 20px;
+  padding: 10px;
+  width: 400px;
+  margin-left: 0px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  margin-right: 50px;
+}
+
+.changebuttons {
+  color: white;
+  text-align: center;
+  background: none;
+  border: none;
+  cursor: grab;
+}
+
+.currentplayers {
+  text-align: center;
+}
+
+.generatedimg {
+  padding-top: 20px;
+}
+.textbox {
+  background-color: rgba(255, 255, 255, 0.38);
+  width: 400px;
+  height: 100px;
+  border-radius: 15px;
+  border-style: hidden;
+  text-align: center;
+  color: white;
+  font-size: larger;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
+}
+.prompt {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+.genbtn {
+  color: rgb(0, 65, 88);
+  font-size: x-large;
+  border-radius: 10px;
+  text-align: center;
+  text-decoration: solid;
+  font-weight: bolder;
+  margin-right: 20px;
+  margin-top: 20px;
+  background-color: rgb(143, 221, 255);
+  height: 80px;
+  width: 180px;
+  box-shadow: 5px 5px 5px rgb(0, 65, 88);
+  cursor: grab;
+}
+.sit {
+  background-color: rgba(255, 255, 255, 0.38);
+  padding: 10px;
+  color: black;
+  border-radius: 15px;
+  border-style: hidden;
+  text-align: center;
+  font-size: xx-largeS;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+.cap {
+  margin-top: -24px;
+}
+.captiontxt {
+  background-color: rgba(255, 255, 255, 0.58);
+  width: 70%;
+
+  margin-right: 1%;
+  margin-left: 1%;
+  height: 100px;
+  border-radius: 15px;
+  border-style: hidden;
+  text-align: center;
+  color: rgb(0, 65, 88);
+  font-size: x-large;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
+}
+.title {
+  margin-top: 0px;
+  font-weight: bold;
+  font-size: 35px;
+  margin-left: 3%;
+  color: rgb(0, 65, 88);
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
 @media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
   body {
+    margin: 0;
     color: white;
-    background: black;
+    font-size: small;
+    background-color: rgb(234, 139, 255);
+    background-image: url("/grid.png");
+    z-index: 0;
   }
 }
