@@ -91,9 +91,6 @@ const Lobby: NextPage = () => {
           </div>
         </li>
       </ul>
-      <div>
-        <button onClick={() => startGame(Number(roomID))}>Start Game</button>
-      </div>
       <div className="button">
         <button className="homebutton" onClick={() => navToHome()}>
           Exit Room
