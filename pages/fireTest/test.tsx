@@ -36,7 +36,7 @@ const testCallback = () => testCallbackFunc();
 
 const Home: NextPage = () => {
   const callBack1 = async () => {
-    const obj = await fetchCaptionUsernameVoteObject(49678)
+    const obj = await fetchCaptionUsernameVoteObject(87841)
     console.log(obj)
   };
   const callBack2 = () => {
@@ -44,7 +44,6 @@ const Home: NextPage = () => {
     console.log('everyoneCastAVoteListener has started')
   };
   const callBack3 = () => {
-    joinRoom("Billy", 100);
     console.log("joined");
   };
   const callBack4 = () => {

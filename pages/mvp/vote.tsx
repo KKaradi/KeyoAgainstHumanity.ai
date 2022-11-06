@@ -30,7 +30,7 @@ function navToResults(
 }
 
 const voteAndUpdateLeaderboard = async (caption: string, roomID: number) => {
-  await vote(caption, Number(roomID))
+  await vote(String(caption), Number(roomID))
   await updateLeaderboard(Number(roomID), String(caption))
 }
 
