@@ -2,6 +2,8 @@ import type { NextPage } from "next";
 import Image from "next/image";
 import Router from "next/router";
 import { useRouter } from "next/router";
+import { newGameClickedListener } from "../../utils/firebase-utils/firebase-util";
+import { resetGame } from "../../utils/firebase-utils/firebase-util";
 import {
   endSessionClicked,
   everyoneWentListener,
@@ -38,7 +40,7 @@ async function navToLobby(userName: string, roomID: number) {
 const Results: NextPage = () => {
   const router = useRouter();
   const {
-    query: { userName, roomID, caption, URL, votes },
+    query: { userName, roomID },
   } = router;
 
   const [captionVotes, setCaptionVotes] = useState({});
@@ -94,6 +96,12 @@ const Results: NextPage = () => {
     everyoneWentListener(Number(roomID), () => navToHome(Number(roomID)));
   }, [roomID]);
 
+  useEffect(() => {
+    newGameClickedListener(Number(roomID), () =>
+      navToLobby(String(userName), Number(roomID))
+    );
+  }, [userName, roomID]);
+  
   const waves = "/waveboi.png";
 
   return (
@@ -137,9 +145,12 @@ const Results: NextPage = () => {
       </div>
       <div>
         {newGame ? (
-          <button onClick={() => endSessionClicked(Number(roomID))}>
-            End Session
-          </button>
+          <div>
+            <button onClick={() => resetGame(Number(roomID))}>New Game</button>
+            <button onClick={() => endSessionClicked(Number(roomID))}>
+              End Session
+            </button>
+          </div>
         ) : (
           <button onClick={() => nextRound(Number(roomID))}>Next Round</button>
         )}

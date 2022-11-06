@@ -65,6 +65,7 @@ export async function createRoom(
     roomCode: roomCode,
     started: false,
     everyoneWent: false,
+    newGameClicked: false,
   });
 
   await set(ref(database, "Rooms/" + roomCode + "/Game"), {
@@ -225,7 +226,7 @@ export async function fetchListOfCaptions(roomCode: number): Promise<string[]> {
   const captionData = await get(
     child(
       ref(database),
-      "Rooms/" + roomCode + "/Game/" + applerUsername + "/" + "Captions"
+      "Rooms/" + roomCode + "/Game/" + applerUsername + "/Captions"
     )
   );
 
@@ -246,13 +247,7 @@ export async function vote(caption: string, roomCode: number): Promise<void> {
   const captionData = await get(
     child(
       ref(database),
-      "Rooms/" +
-        roomCode +
-        "/Game/" +
-        applerUsername +
-        "/" +
-        "Captions/" +
-        caption
+      "Rooms/" + roomCode + "/Game/" + applerUsername + "/Captions/" + caption
     )
   );
 
@@ -268,17 +263,10 @@ export async function vote(caption: string, roomCode: number): Promise<void> {
   const dataToFirebase = {
     votes: newVotesForCaption,
   };
-
   return update(
     ref(
       database,
-      "Rooms/" +
-        roomCode +
-        "/Game/" +
-        applerUsername +
-        "/" +
-        "Captions/" +
-        caption
+      "Rooms/" + roomCode + "/Game/" + applerUsername + "/Captions/" + caption
     ),
     dataToFirebase
   );
@@ -294,7 +282,7 @@ export async function fetchCaptionVoteObject(
       "Rooms/" + roomCode + "/Game/" + applerUsername + "/" + "Captions"
     )
   );
-  let captionVoteObject: { [index: string]: number } = {};
+  const captionVoteObject: { [index: string]: number } = {};
   captionData.forEach((childSnapshot) => {
     let caption: unknown;
     caption = childSnapshot.key;
@@ -335,7 +323,7 @@ export async function fetchTotalVotes(roomCode: number): Promise<number> {
   const captionData = await get(
     child(
       ref(database),
-      "Rooms/" + roomCode + "/Game/" + applerUsername + "/" + "Captions"
+      "Rooms/" + roomCode + "/Game/" + applerUsername + "/Captions"
     )
   );
   let totalVotes = 0;
@@ -353,7 +341,7 @@ export async function nextRound(roomCode: number): Promise<void> {
     child(ref(database), "Rooms/" + roomCode + "/Game" + "/roundCounter")
   );
 
-  let newRoundNum = (await roundNumData.val()) + 1;
+  const newRoundNum = (await roundNumData.val()) + 1;
 
   const dataToFirebase = {
     roundCounter: newRoundNum,
@@ -365,11 +353,15 @@ export async function nextRound(roomCode: number): Promise<void> {
 // A function that anyone in the room can call to start the game for all people in the lobby.
 // Sets the started value in the round to true
 export async function startGame(roomCode: number): Promise<void> {
+  const userList = await getUserList(roomCode)
+  if(userList.length < 2){
+  }else{
   const dataToFirebase = {
     started: true,
   };
 
   return update(ref(database, "Rooms/" + roomCode), dataToFirebase);
+}
 }
 
 export async function startedGameListener(
@@ -393,13 +385,17 @@ export async function userListChangedListener(
   roomCode: number,
   callBack: (userList: string[]) => void
 ): Promise<void> {
-  onValue(ref(database, "Rooms/" + roomCode + "/Userlist"), (snapshot) => {
+  onValue(ref(database, "Rooms/" + roomCode + "/Userlist"), async (snapshot) => {
     if (snapshot.exists()) {
       const userList: string[] = [];
       snapshot.forEach((childSnapshot: DataSnapshot) => {
         userList.push(childSnapshot.val().username);
       });
       callBack(userList);
+    }
+    const userList = await getUserList(roomCode) ?? undefined
+    if(userList.length === 0 || userList === undefined){
+      resetRoom(roomCode)
     }
   });
 }
@@ -440,6 +436,18 @@ export async function everyoneGeneratedAnImageListener(
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 export async function resetRoom(roomCode: number): Promise<void> {
   remove(ref(database, "Rooms/" + roomCode));
+}
+
+export async function resetGame(roomCode: Number): Promise<void> {
+  remove(ref(database, "Rooms/" + roomCode + "/Game/"));
+  set(ref(database, "Rooms/" + roomCode + "/Game"), {
+    roundCounter: 0,
+  });
+  const dataToFirebase = {
+    started: false,
+    newGameClicked: true,
+  };
+  return update(ref(database, "Rooms/" + roomCode), dataToFirebase);
 }
 
 // Calls a call back function when everyone in the lobby has generated an caption for a specfic appler.
@@ -616,4 +624,24 @@ export async function fetchUsernameFromCaption(roomCode: number, caption: string
   const username = (await captionData.val())?.username ?? undefined
 
   return (username);
+}
+export async function newGameClickedListener(
+  roomCode: Number,
+  callBack: () => void
+): Promise<void> {
+  const onValueCallback = async (snapshot: DataSnapshot) => {
+    const newGameWasClicked =
+      (await snapshot.val())?.newGameClicked ?? undefined;
+    if (newGameWasClicked === true && newGameWasClicked != undefined) {
+      callBack();
+      off(ref(database, "Rooms/" + roomCode), "value", onValueCallback)
+      const dataToFirebase = {
+        newGameClicked: false,
+      };
+      return (
+        update(ref(database, "Rooms/" + roomCode), dataToFirebase)
+      );
+    }
+  }
+  onValue(ref(database, "Rooms/" + roomCode), onValueCallback);
 }
