@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Image from "next/image";
 import Router from "next/router";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import {
   fetchListOfCaptions,
@@ -38,7 +38,7 @@ const Vote: NextPage = () => {
 
   useEffect(() => {
     getApplerForRound(Number(roomID)).then((applerUsername) => {
-      setApplerUsername(String(applerUsername));
+      setApplerUsername(applerUsername);
     });
   }, [roomID]);
 

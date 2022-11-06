@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Image from "next/image";
 import Router from "next/router";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import { newGameClickedListener } from "../../utils/firebase-utils/firebase-util";
 import { resetGame } from "../../utils/firebase-utils/firebase-util";
 import {
