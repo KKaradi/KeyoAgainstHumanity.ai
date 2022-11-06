@@ -28,7 +28,7 @@ async function navToVote(
 const CaptionCreation: NextPage = () => {
   const router = useRouter();
   const {
-    query: { userName, roomID, roomCode, URL },
+    query: { userName, roomID, URL },
   } = router;
 
   const [caption, setCaption] = useState("");
