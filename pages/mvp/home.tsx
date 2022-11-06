@@ -37,16 +37,12 @@ const Home: NextPage = () => {
   };
 
   function joinRoomNavToLobby() {
-    joinRoom(userName, Number(roomID));
-    navToLobby(userName, Number(roomID));
+    joinRoom(userName, Number(roomID), () => navToLobby(String(userName), Number(roomID)));
   }
 
   function createRoomNavToLobby() {
-    createRoom().then((roomCode) => {
-      joinRoom(userName, roomCode);
-      navToLobby(userName, roomCode);
-    });
-  }
+    createRoom(String(userName), (roomCode) => navToLobby(String(userName), Number(roomCode)))
+  };
 
   return (
     <main>

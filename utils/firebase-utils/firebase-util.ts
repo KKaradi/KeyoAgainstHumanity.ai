@@ -56,7 +56,10 @@ export async function getApplerForRound(roomCode: number): Promise<string> {
   return applerName;
 }
 
-export async function createRoom(): Promise<number> {
+export async function createRoom(
+  yourUserName: string,
+  callBack: (roomCode: number) => void
+): Promise<void> {
   const roomCode: number = Math.floor(Math.random() * (99999 - 10000) + 10000);
   await set(ref(database, "Rooms/" + roomCode), {
     roomCode: roomCode,
@@ -69,25 +72,52 @@ export async function createRoom(): Promise<number> {
     roundCounter: 0,
   });
 
-  return roomCode;
+  await joinRoom(yourUserName, roomCode, () => callBack(roomCode));
 }
+
 export async function joinRoom(
   yourUserName: string,
-  roomCode: number
+  roomCode: number,
+  callBack: () => void
 ): Promise<void> {
-  const userListRef = push(ref(database, "Rooms/" + roomCode + "/Userlist/"));
-  await set(userListRef, {
-    username: yourUserName,
-  });
+  const sameName = await checkIfDuplicateName(roomCode, yourUserName);
+  const roomExists = await checkIfRoomExists(roomCode);
+  if (sameName && roomExists) {
+    const userListRef = push(ref(database, "Rooms/" + roomCode + "/Userlist/"));
+    await set(userListRef, {
+      username: yourUserName,
+    });
 
-  const dataToFirebase = {
-    username: yourUserName,
-  };
+    const dataToFirebase = {
+      username: yourUserName,
+    };
 
-  return update(
-    ref(database, "Rooms/" + roomCode + "/Game/" + yourUserName),
-    dataToFirebase
-  );
+    return (
+      callBack(),
+      update(
+        ref(database, "Rooms/" + roomCode + "/Game/" + yourUserName),
+        dataToFirebase
+      )
+    );
+  }
+}
+
+export async function checkIfRoomExists(roomCode: Number): Promise<boolean> {
+  const roomCodeRef = await get(ref(database, "Rooms/" + roomCode));
+  return roomCodeRef.exists();
+}
+
+export async function checkIfDuplicateName(
+  roomCode: Number,
+  username: String
+): Promise<boolean> {
+  const userList = await getUserList(roomCode);
+  for (let i = 0; i < userList.length; i++) {
+    if (userList[i] === username) {
+      return false;
+    }
+  }
+  return true;
 }
 
 //Return userlist called whenever userlist in changed; to be displayed in lobby page
