@@ -386,16 +386,16 @@ export async function userListChangedListener(
   callBack: (userList: string[]) => void
 ): Promise<void> {
   onValue(ref(database, "Rooms/" + roomCode + "/Userlist"), async (snapshot) => {
+    const userList = await getUserList(roomCode) ?? undefined
+    if(userList.length === 0 || userList === undefined){
+      resetRoom(roomCode)
+    }
     if (snapshot.exists()) {
       const userList: string[] = [];
       snapshot.forEach((childSnapshot: DataSnapshot) => {
         userList.push(childSnapshot.val().username);
       });
       callBack(userList);
-    }
-    const userList = await getUserList(roomCode) ?? undefined
-    if(userList.length === 0 || userList === undefined){
-      resetRoom(roomCode)
     }
   });
 }
