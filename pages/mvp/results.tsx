@@ -36,10 +36,15 @@ async function navToLobby(userName: string, roomID: number) {
   });
 }
 
+async function startNewGame(userName: string, roomID: number) {
+  resetGame(roomID);
+  navToLobby(userName, roomID);
+}
+
 const Results: NextPage = () => {
-  const router = useRouter();
+  const router = useRouter;
   const {
-    query: { userName, roomID, caption, URL, votes },
+    query: { userName, roomID },
   } = router;
 
   const [captionVotes, setCaptionVotes] = useState({});
@@ -86,7 +91,9 @@ const Results: NextPage = () => {
   }, [roomID]);
 
   useEffect(() => {
-    newGameClickedListener(Number(roomID), () => navToLobby(String(userName), Number(roomID)));
+    newGameClickedListener(Number(roomID), () =>
+      navToLobby(String(userName), Number(roomID))
+    );
   });
 
   return (
@@ -117,9 +124,16 @@ const Results: NextPage = () => {
       </div>
       <div>
         {newGame ? (
-          <button onClick={() => endSessionClicked(Number(roomID))}>
-            End Session
-          </button>
+          <div>
+            <button
+              onClick={() => startNewGame(String(userName), Number(roomID))}
+            >
+              New Game
+            </button>
+            <button onClick={() => endSessionClicked(Number(roomID))}>
+              End Session
+            </button>
+          </div>
         ) : (
           <button onClick={() => nextRound(Number(roomID))}>Next Round</button>
         )}

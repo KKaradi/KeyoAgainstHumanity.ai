@@ -13,7 +13,7 @@ const Home: NextPage = () => {
     setUserName(event.target.value);
   };
 
-  let [roomID, setRoomID] = useState("");
+  const [roomID, setRoomID] = useState("");
 
   const inputRoomID = (event: {
     target: { value: SetStateAction<string> };

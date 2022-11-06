@@ -12,13 +12,13 @@ async function navToVote(userName: string, roomID: number, URL: string) {
     query: {
       userName,
       roomID,
-      URL
+      URL,
     },
   });
 }
 
 const ApplerWait: NextPage = () => {
-  const router = useRouter();
+  const router = useRouter;
   const {
     query: { userName, roomID, URL },
   } = router;
@@ -32,7 +32,9 @@ const ApplerWait: NextPage = () => {
   }, [roomID]);
 
   useEffect(() => {
-    everyoneCreatedACaptionListener(Number(roomID), () => navToVote(String(userName), Number(roomID), String(URL)));
+    everyoneCreatedACaptionListener(Number(roomID), () =>
+      navToVote(String(userName), Number(roomID), String(URL))
+    );
   }, [URL, roomID, userName]);
 
   return (

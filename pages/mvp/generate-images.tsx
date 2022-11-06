@@ -49,7 +49,7 @@ async function navToCaptionCreate(
 }
 
 const GenerateImages: NextPage = () => {
-  const router = useRouter();
+  const router = useRouter;
   const {
     query: { userName, roomID, roomCode },
   } = router;

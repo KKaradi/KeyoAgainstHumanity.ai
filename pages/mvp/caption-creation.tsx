@@ -8,7 +8,12 @@ import { uploadCaption } from "../../utils/firebase-utils/firebase-util";
 import { getApplerForRound } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCreatedACaptionListener } from "../../utils/firebase-utils/firebase-util";
 
-async function navToVote(userName: string, roomID: number, caption: string, URL: string) {
+async function navToVote(
+  userName: string,
+  roomID: number,
+  caption: string,
+  URL: string
+) {
   await Router.push({
     pathname: "/mvp/vote",
     query: {
@@ -21,9 +26,9 @@ async function navToVote(userName: string, roomID: number, caption: string, URL:
 }
 
 const CaptionCreation: NextPage = () => {
-  const router = useRouter();
+  const router = useRouter;
   const {
-    query: { userName, roomID, roomCode, URL },
+    query: { userName, roomID, URL },
   } = router;
 
   const [caption, setCaption] = useState("");
@@ -46,12 +51,14 @@ const CaptionCreation: NextPage = () => {
 
   useEffect(() => {
     getApplerForRound(Number(roomID)).then((applerUsername) => {
-      setApplerUsername(String(applerUsername))
+      setApplerUsername(String(applerUsername));
     });
-  }, [roomID])
+  }, [roomID]);
 
   useEffect(() => {
-    everyoneCreatedACaptionListener(Number(roomID), () => navToVote(String(userName), Number(roomID), String(caption), String(URL)));
+    everyoneCreatedACaptionListener(Number(roomID), () =>
+      navToVote(String(userName), Number(roomID), String(caption), String(URL))
+    );
   }, [URL, caption, roomID, userName]);
 
   return (
@@ -79,7 +86,13 @@ const CaptionCreation: NextPage = () => {
         />
       </div>
       <div>
-        <button onClick={() => uploadCaption(String(caption), String(userName), Number(roomID))}>submit</button>
+        <button
+          onClick={() =>
+            uploadCaption(String(caption), String(userName), Number(roomID))
+          }
+        >
+          submit
+        </button>
       </div>
     </main>
   );

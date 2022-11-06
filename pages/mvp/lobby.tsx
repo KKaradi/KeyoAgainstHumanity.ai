@@ -5,7 +5,6 @@ import useRouter from "next/router";
 import { useState, useEffect } from "react";
 import {
   detachUserListListener,
-  getUserList,
   userListChangedListener,
 } from "../../utils/firebase-utils/firebase-util";
 import { startGame } from "../../utils/firebase-utils/firebase-util";
@@ -23,7 +22,7 @@ async function navToGenerate(userName: string, roomID: string) {
 }
 
 const Lobby: NextPage = () => {
-  const router = useRouter();
+  const router = useRouter;
   const {
     query: { userName, roomID },
   } = router;
