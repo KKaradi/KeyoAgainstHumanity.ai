@@ -80,8 +80,8 @@ export async function joinRoom(
   callBack: () => void
 ): Promise<void> {
   const sameName = await checkIfDuplicateName(roomCode, yourUserName);
-  const noRoom = await checkIfRoomExists(roomCode);
-  if (sameName === true && noRoom === true) {
+  const roomExists = await checkIfRoomExists(roomCode);
+  if (sameName && roomExists) {
     const userListRef = push(ref(database, "Rooms/" + roomCode + "/Userlist/"));
     await set(userListRef, {
       username: yourUserName,
