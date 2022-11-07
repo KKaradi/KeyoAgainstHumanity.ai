@@ -2,13 +2,12 @@ import type { NextPage } from "next";
 import Image from "next/image";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { SetStateAction, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { 
   fetchListOfCaptions, 
   getApplerForRound, 
   vote, 
-  checkIfUserVoted, 
-  fetchVoted } from "../../utils/firebase-utils/firebase-util";
+} from "../../utils/firebase-utils/firebase-util";
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCastAVoteListener } from "../../utils/firebase-utils/firebase-util";
 
@@ -52,18 +51,9 @@ const Vote: NextPage = () => {
   }, [roomID]);
 
   const [voted, setVoted] = useState(false)
-  
-  useEffect(() => {
-    fetchVoted(Number(roomID), String(userName)).then(
-      (voted) => {
-        setVoted(Boolean(voted))
-      }
-    )
-  }, [roomID, userName])
 
-  function voteOnce(caption: string, id: number, user: string) {
+  function voteOnce(caption: string, id: number) {
     vote(caption, id)
-    checkIfUserVoted(id, user)
     setVoted(true)
   }
   
@@ -119,7 +109,7 @@ const Vote: NextPage = () => {
                 <div>
                   {
                     captionList.map(
-                      (caption) => <button key = { caption } onClick = {() => voteOnce(caption, Number(roomID), String(userName))}>{ caption }</button>
+                      (caption) => <button key = { caption } onClick = {() => voteOnce(caption, Number(roomID))}>{ caption }</button>
                     )
                   }
                 </div>

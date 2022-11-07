@@ -314,42 +314,6 @@ export async function fetchTotalVotes(roomCode: number): Promise<number> {
   return totalVotes;
 }
 
-export async function fetchVoted(
-  roomCode: number,
-  yourUsername: string
-): Promise<Boolean> {
-  const applerUsername = await getApplerForRound(roomCode);
-  const votedData = await get(
-    child(
-      ref(database),
-      "Rooms/" + roomCode + "/Game/" + applerUsername + "/voteList/" + yourUsername + "/voted"
-    )
-  );
-  return votedData.val()
-}
-
-export async function checkIfUserVoted(
-  roomCode: number,
-  yourUsername: string,
-): Promise<void> {
-  const applerUsername = await getApplerForRound(roomCode);
-  const dataToFirebase = {
-    voted: true,
-  }
-  return update(
-    ref(
-      database,
-        "Rooms/" +
-        roomCode +
-        "/Game/" +
-        applerUsername +
-        "/voteList/" +
-        yourUsername
-      ),
-    dataToFirebase
-  );
-  }
-
 export async function nextRound(roomCode: number): Promise<void> {
   const roundNumData = await get(
     child(ref(database), "Rooms/" + roomCode + "/Game" + "/roundCounter")
