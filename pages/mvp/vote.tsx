@@ -61,10 +61,8 @@ const Vote: NextPage = () => {
     )
   }, [roomID, userName])
 
-  console.log(voted)
-
-  function voteOnce(cap: string, id: number, user: string) {
-    vote(cap, id)
+  function voteOnce(caption: string, id: number, user: string) {
+    vote(caption, id)
     checkIfUserVoted(id, user)
     setVoted(true)
   }
