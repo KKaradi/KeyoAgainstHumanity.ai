@@ -203,6 +203,17 @@ export async function uploadCaption(
     username: yourUserName,
   };
 
+  const captionList = await fetchListOfCaptions(roomCode)
+  let duplicateCaption = false;
+  
+  for(let i = 0; i < captionList.length; i++){
+    if(captionList[i] === caption){
+      duplicateCaption = true
+    }
+  }
+
+  if(duplicateCaption === false){
+
   return update(
     ref(
       database,
@@ -218,6 +229,7 @@ export async function uploadCaption(
     ),
     dataToFirebase
   );
+    }
 }
 
 //returns list of captions for one prompt under appler username called when going to vote page
