@@ -243,7 +243,10 @@ export async function fetchListOfCaptions(roomCode: number): Promise<string[]> {
 }
 
 //Add 1 to Num Votes under a caption. Called every time someone clicks a vote button
-export async function vote(caption: string, roomCode: number): Promise<void> {
+export async function vote(
+  caption: string,
+  roomCode: number
+): Promise<void> {
   const applerUsername = await getApplerForRound(roomCode);
   const captionData = await get(
     child(
