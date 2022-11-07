@@ -17,7 +17,7 @@ const uploadURLUploadPrompt = (
   roomID: number,
   prompt: string
 ) => {
-  if (URL != "" && prompt != "") {
+  if (URL != "https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921" && prompt != "") {
     uploadImageURL(URL, String(userName), Number(roomID));
     uploadPrompt(Number(roomID), String(userName), prompt);
   }
