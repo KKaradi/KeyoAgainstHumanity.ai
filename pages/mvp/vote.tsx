@@ -7,7 +7,7 @@ import {
   fetchListOfCaptions, 
   getApplerForRound, 
   vote, 
-  hasVoted, 
+  checkIfUserVoted, 
   fetchVoted } from "../../utils/firebase-utils/firebase-util";
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCastAVoteListener } from "../../utils/firebase-utils/firebase-util";
@@ -63,9 +63,9 @@ const Vote: NextPage = () => {
 
   console.log(voted)
 
-  function voteAndVoted(cap: string, id: number, user: string) {
+  function voteOnce(cap: string, id: number, user: string) {
     vote(cap, id)
-    hasVoted(id, user)
+    checkIfUserVoted(id, user)
     setVoted(true)
   }
   
@@ -121,7 +121,7 @@ const Vote: NextPage = () => {
                 <div>
                   {
                     captionList.map(
-                      (caption) => <button key = { caption } onClick = {() => voteAndVoted(caption, Number(roomID), String(userName))}>{ caption }</button>
+                      (caption) => <button key = { caption } onClick = {() => voteOnce(caption, Number(roomID), String(userName))}>{ caption }</button>
                     )
                   }
                 </div>

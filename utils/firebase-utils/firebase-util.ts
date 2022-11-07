@@ -328,7 +328,7 @@ export async function fetchVoted(
   return votedData.val()
 }
 
-export async function hasVoted(
+export async function checkIfUserVoted(
   roomCode: number,
   yourUsername: string,
 ): Promise<void> {
