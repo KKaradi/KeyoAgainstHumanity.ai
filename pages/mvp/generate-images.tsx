@@ -17,7 +17,7 @@ const uploadURLUploadPrompt = (
   roomID: number,
   prompt: string
 ) => {
-  if (URL != null && prompt != null) {
+  if (URL != "" && prompt != "") {
     uploadImageURL(URL, String(userName), Number(roomID));
     uploadPrompt(Number(roomID), String(userName), prompt);
   }
