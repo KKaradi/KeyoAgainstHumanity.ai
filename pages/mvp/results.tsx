@@ -10,7 +10,7 @@ import {
   getApplerForRound,
   resetRoom,
   gameResets,
-  fetchLeaderboard
+  fetchLeaderboard,
 } from "../../utils/firebase-utils/firebase-util";
 import { useState, useEffect } from "react";
 import {
@@ -59,17 +59,15 @@ const Results: NextPage = () => {
     });
   }, [roomID]);
 
-  const [leaderboard, setLeaderboard] = useState({})
+  const [leaderboard, setLeaderboard] = useState({});
 
   useEffect(() => {
-    fetchLeaderboard(Number(roomID)).then(
-      (leaderboard) => {
-        setLeaderboard(leaderboard)
-      }
-    )
-  })
+    fetchLeaderboard(Number(roomID)).then((leaderboard) => {
+      setLeaderboard(leaderboard);
+    });
+  }, [roomID]);
 
-  const [imgURL, setImgURL] = useState("")
+  const [imgURL, setImgURL] = useState("");
 
   useEffect(() => {
     fetchApplerImageURL(Number(roomID)).then((imgURL) => {
@@ -101,7 +99,7 @@ const Results: NextPage = () => {
       navToLobby(String(userName), Number(roomID))
     );
   }, [userName, roomID]);
-  
+
   const waves = "/waveboi.png";
 
   return (
