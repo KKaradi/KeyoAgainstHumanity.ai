@@ -558,3 +558,19 @@ export async function newGameClickedListener(
   }
   onValue(ref(database, "Rooms/" + roomCode), onValueCallback);
 }
+
+export async function leaveRoom(
+  roomCode: number, 
+  userName: string
+  ): Promise<void> {
+  remove(ref(database, "Rooms/" + roomCode + "/Game/" + userName));
+  const userListData = await get(
+    child(ref(database), "Rooms/" + roomCode + "/Userlist/")
+  );
+  userListData.forEach((childSnapshot) => {
+    if (childSnapshot.val().username === userName) {
+      remove(ref(database, "Rooms/" + roomCode + "/Userlist/" + childSnapshot.key));
+      off(ref(database, "Rooms/" + roomCode), "value", undefined);
+    }
+  });
+}
