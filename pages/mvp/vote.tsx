@@ -51,43 +51,31 @@ const Vote: NextPage = () => {
     });
   }, [roomID]);
 
-  const [voted, setVoted] = useState(Boolean)
-
-  function voteAndVoted(cap: string, id: number, user: string) {
-    vote(cap, id)
-    hasVoted(id, user)
-  }
-
-  const [captionList, setCaptionList] = useState([""]);
-
-  const displayCaptions = () => {
-    fetchListOfCaptions(Number(roomID)).then(
-      (captionList) => {
-        setCaptionList(captionList)
-      }
-    )
+  const [voted, setVoted] = useState(false)
+  
+  useEffect(() => {
     fetchVoted(Number(roomID), String(userName)).then(
       (voted) => {
         setVoted(Boolean(voted))
       }
     )
-    if (voted === false){
-      return(
-        <div>
-          {
-            captionList.map(
-              (caption) => <button key = { caption } onClick = {() => voteAndVoted(caption, Number(roomID), String(userName))}>{ caption }</button>
-            )
-          }
-        </div>
-      )
-    }
-    else if (voted === true){
-      return(
-      <h3>You Voted</h3>
-      )
-    }
+  }, [roomID, userName])
+
+  console.log(voted)
+
+  function voteAndVoted(cap: string, id: number, user: string) {
+    vote(cap, id)
+    hasVoted(id, user)
+    setVoted(true)
   }
+  
+  const [captionList, setCaptionList] = useState([""]);
+
+  useEffect(() => {
+    fetchListOfCaptions(Number(roomID)).then((captionList) => {
+      setCaptionList(captionList);
+    });
+  }, [roomID]);
 
   useEffect(() => {
     everyoneCastAVoteListener(Number(roomID), () =>
@@ -99,8 +87,10 @@ const Vote: NextPage = () => {
       )
     );
   }, [URL, caption, roomID, userName]);
+
   const waves = "/waveboi.png";
   const top = "/top.png";
+  
   return (
     <main>
       <Image
@@ -124,7 +114,19 @@ const Vote: NextPage = () => {
         <li className="lobby-flex">
           <h1>VOTE ON YOUR FAVORITE CAPTION</h1>
           <div className = "sit">
-            { displayCaptions() }
+            {
+              voted ? (
+                <h3>You Voted</h3>
+              ) : (
+                <div>
+                  {
+                    captionList.map(
+                      (caption) => <button key = { caption } onClick = {() => voteAndVoted(caption, Number(roomID), String(userName))}>{ caption }</button>
+                    )
+                  }
+                </div>
+              )
+            }
           </div>
         </li>
       </ul>
