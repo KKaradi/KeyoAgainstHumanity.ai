@@ -7,17 +7,18 @@ import {
   fetchListOfCaptions,
   getApplerForRound,
   vote,
+  updateLeaderboard
 } from "../../utils/firebase-utils/firebase-util";
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCastAVoteListener } from "../../utils/firebase-utils/firebase-util";
 
-function navToResults(
+async function navToResults(
   URL: string,
   userName: string,
   roomID: number,
   caption: string
-) {
-  Router.push({
+){
+  await Router.push({
     pathname: "/mvp/results",
     query: {
       userName,
@@ -25,8 +26,12 @@ function navToResults(
       URL,
       caption,
     },
-  });
-}
+  })};
+
+  async function voteAndUpdateLeaderboard(roomID: number, caption: string){
+    await vote(String(caption), Number(roomID))
+    await updateLeaderboard(Number(roomID), String(caption))
+  }
 
 const Vote: NextPage = () => {
   const router = useRouter();
@@ -50,6 +55,13 @@ const Vote: NextPage = () => {
     });
   }, [roomID]);
 
+  const [voted, setVoted] = useState(false)
+
+  function voteOnce(caption: string, roomID: number) {
+    voteAndUpdateLeaderboard(Number(roomID), String(caption))
+    setVoted(true)
+  }
+  
   const [captionList, setCaptionList] = useState([""]);
 
   useEffect(() => {
@@ -68,8 +80,10 @@ const Vote: NextPage = () => {
       )
     );
   }, [URL, caption, roomID, userName]);
+
   const waves = "/waveboi.png";
   const top = "/top.png";
+  
   return (
     <main>
       <Image
@@ -92,16 +106,20 @@ const Vote: NextPage = () => {
         </li>
         <li className="lobby-flex">
           <h1>VOTE ON YOUR FAVORITE CAPTION</h1>
-
-          <div className="sit">
-            {captionList.map((caption) => (
-              <button
-                key={caption}
-                onClick={() => vote(caption, Number(roomID))}
-              >
-                {caption}
-              </button>
-            ))}
+          <div className = "sit">
+            {
+              voted ? (
+                <h3>You Voted!</h3>
+              ) : (
+                <div>
+                  {
+                    captionList.map(
+                      (caption) => <button key = { caption } onClick = {() => voteOnce(caption, Number(roomID))}>{ caption }</button>
+                    )
+                  }
+                </div>
+              )
+            }
           </div>
         </li>
       </ul>
