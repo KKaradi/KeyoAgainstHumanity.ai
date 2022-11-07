@@ -203,6 +203,17 @@ export async function uploadCaption(
     username: yourUserName,
   };
 
+  const captionList = await fetchListOfCaptions(roomCode)
+  let duplicateCaption = false;
+  
+  for(let i = 0; i < captionList.length; i++){
+    if(captionList[i] === caption){
+      duplicateCaption = true
+    }
+  }
+
+  if(duplicateCaption === false){
+
   return update(
     ref(
       database,
@@ -218,6 +229,7 @@ export async function uploadCaption(
     ),
     dataToFirebase
   );
+    }
 }
 
 //returns list of captions for one prompt under appler username called when going to vote page
@@ -330,7 +342,7 @@ export async function nextRound(roomCode: number): Promise<void> {
 // Sets the started value in the round to true
 export async function startGame(roomCode: number): Promise<void> {
   const userList = await getUserList(roomCode);
-  if (userList.length > 2) {
+  if (userList.length >= 2) {
     const dataToFirebase = {
       started: true,
     };
