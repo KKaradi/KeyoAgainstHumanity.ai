@@ -156,6 +156,7 @@ export async function uploadImageURL(
 ): Promise<void> {
   const dataToFirebase = {
     imageUrl: imageURL,
+    username: yourUserName
   };
 
   return update(
@@ -572,30 +573,24 @@ export async function endSessionClicked(roomCode: number): Promise<void> {
 }
 
 export async function updateLeaderboard(
-  roomCode: number
+  roomCode: number,
+  caption: string
 ): Promise<void> {
 
-  const totalVoteUsernameObj = await fetchLeaderboard(roomCode)
-  const applerUsername = await getApplerForRound(roomCode)
+const totalVoteUsernameObj = await fetchLeaderboard(roomCode)
 
-  const captionData = await get(
-    child(
-      ref(database),
-      "Rooms/" + roomCode + "/Game/" + applerUsername + "/" + "Captions"
-    )
-  );
-  captionData.forEach((childSnapshot) => {
-      const captionAuthor = childSnapshot.val().username
-      const roundVotes = childSnapshot.val().votes
-      const leaderboardVotes = totalVoteUsernameObj[captionAuthor] ?? 0
-      const userVotes = roundVotes + leaderboardVotes
+      const username = await fetchUsernameFromCaption(roomCode, caption)
+      const leaderboardVotes = totalVoteUsernameObj[username] ?? 0
+      console.log(leaderboardVotes)
+      const userVotes = leaderboardVotes + 1
+      console.log(userVotes)
 
       const dataToFirebase = {
         points: userVotes
       };
     
-      update(ref(database, "Rooms/" + roomCode + "/Leaderboard/" + captionAuthor), dataToFirebase);
-  })
+      return(update(ref(database, "Rooms/" + roomCode + "/Leaderboard/" + username), dataToFirebase));
+  
 }
 
 export async function fetchLeaderboard(roomCode: number): Promise<{ [index: string]: number }> {
@@ -644,4 +639,31 @@ export async function newGameClickedListener(
     }
   }
   onValue(ref(database, "Rooms/" + roomCode), onValueCallback);
+}
+
+export async function leaveRoom(
+  roomCode: number, 
+  userName: string
+  ): Promise<void> {
+  remove(ref(database, "Rooms/" + roomCode + "/Game/" + userName));
+  const userListData = await get(
+    child(ref(database), "Rooms/" + roomCode + "/Userlist/")
+  );
+  const leaderboardData = await get(
+    child(
+      ref(database),
+      "Rooms/" + roomCode + "/Leaderboard/"
+    )
+  );
+  leaderboardData.forEach((childSnapshot) => {
+    if (childSnapshot.key === userName) {
+      remove(ref(database, "Rooms/" + roomCode + "/Leaderboard/" + userName));
+    }
+  })
+  userListData.forEach((childSnapshot) => {
+    if (childSnapshot.val().username === userName) {
+      remove(ref(database, "Rooms/" + roomCode + "/Userlist/" + childSnapshot.key));
+      off(ref(database, "Rooms/" + roomCode), "value", undefined);
+    }
+  });
 }

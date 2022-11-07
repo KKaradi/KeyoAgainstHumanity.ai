@@ -18,7 +18,6 @@ async function navToResults(
   roomID: number,
   caption: string
 ){
-  await updateLeaderboard(Number(roomID))
   await Router.push({
     pathname: "/mvp/results",
     query: {
@@ -28,6 +27,11 @@ async function navToResults(
       caption,
     },
   })};
+
+  async function voteAndUpdateLeaderboard(roomID: number, caption: string){
+    await vote(String(caption), Number(roomID))
+    await updateLeaderboard(Number(roomID), String(caption))
+  }
 
 const Vote: NextPage = () => {
   const router = useRouter();
@@ -98,7 +102,7 @@ const Vote: NextPage = () => {
             {captionList.map((caption) => (
               <button
                 key={caption}
-                onClick={() => vote(String(caption), Number(roomID))}
+                onClick={() => voteAndUpdateLeaderboard(Number(roomID), String(caption))}
               >
                 {caption}
               </button>
