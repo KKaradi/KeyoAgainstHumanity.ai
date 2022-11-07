@@ -3,10 +3,10 @@ import Image from "next/image";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import {
-  fetchListOfCaptions,
-  getApplerForRound,
-  vote,
+import { 
+  fetchListOfCaptions, 
+  getApplerForRound, 
+  vote, 
 } from "../../utils/firebase-utils/firebase-util";
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCastAVoteListener } from "../../utils/firebase-utils/firebase-util";
@@ -50,6 +50,13 @@ const Vote: NextPage = () => {
     });
   }, [roomID]);
 
+  const [voted, setVoted] = useState(false)
+
+  function voteOnce(caption: string, id: number) {
+    vote(caption, id)
+    setVoted(true)
+  }
+  
   const [captionList, setCaptionList] = useState([""]);
 
   useEffect(() => {
@@ -68,8 +75,10 @@ const Vote: NextPage = () => {
       )
     );
   }, [URL, caption, roomID, userName]);
+
   const waves = "/waveboi.png";
   const top = "/top.png";
+  
   return (
     <main>
       <Image
@@ -92,16 +101,20 @@ const Vote: NextPage = () => {
         </li>
         <li className="lobby-flex">
           <h1>VOTE ON YOUR FAVORITE CAPTION</h1>
-
-          <div className="sit">
-            {captionList.map((caption) => (
-              <button
-                key={caption}
-                onClick={() => vote(caption, Number(roomID))}
-              >
-                {caption}
-              </button>
-            ))}
+          <div className = "sit">
+            {
+              voted ? (
+                <h3>You Voted</h3>
+              ) : (
+                <div>
+                  {
+                    captionList.map(
+                      (caption) => <button key = { caption } onClick = {() => voteOnce(caption, Number(roomID))}>{ caption }</button>
+                    )
+                  }
+                </div>
+              )
+            }
           </div>
         </li>
       </ul>
