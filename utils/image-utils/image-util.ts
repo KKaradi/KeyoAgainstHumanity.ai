@@ -35,3 +35,5 @@ export async function generateImage(prompt: string): Promise<string> {
   }
   return realPrediction.output[0];
 };
+
+export const loadingURL = "https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921"
