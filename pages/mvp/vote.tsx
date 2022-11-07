@@ -51,14 +51,14 @@ const Vote: NextPage = () => {
     });
   }, [roomID]);
 
-  const [captionList, setCaptionList] = useState([""]);
-
   const [voted, setVoted] = useState(Boolean)
 
-  async function voteAndVoted(cap: string, id: number, user: string) {
+  function voteAndVoted(cap: string, id: number, user: string) {
     vote(cap, id)
     hasVoted(id, user)
   }
+
+  const [captionList, setCaptionList] = useState([""]);
 
   const displayCaptions = () => {
     fetchListOfCaptions(Number(roomID)).then(
@@ -123,9 +123,8 @@ const Vote: NextPage = () => {
         </li>
         <li className="lobby-flex">
           <h1>VOTE ON YOUR FAVORITE CAPTION</h1>
-
-          <div>
-          { displayCaptions() }
+          <div className = "sit">
+            { displayCaptions() }
           </div>
         </li>
       </ul>
