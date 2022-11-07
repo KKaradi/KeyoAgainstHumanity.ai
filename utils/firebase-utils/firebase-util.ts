@@ -342,7 +342,7 @@ export async function nextRound(roomCode: number): Promise<void> {
 // Sets the started value in the round to true
 export async function startGame(roomCode: number): Promise<void> {
   const userList = await getUserList(roomCode);
-  if (userList.length > 2) {
+  if (userList.length >= 2) {
     const dataToFirebase = {
       started: true,
     };
