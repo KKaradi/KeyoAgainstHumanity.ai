@@ -156,6 +156,7 @@ export async function uploadImageURL(
 ): Promise<void> {
   const dataToFirebase = {
     imageUrl: imageURL,
+    username: yourUserName,
   };
 
   return update(
@@ -202,6 +203,17 @@ export async function uploadCaption(
     username: yourUserName,
   };
 
+  const captionList = await fetchListOfCaptions(roomCode)
+  let duplicateCaption = false;
+  
+  for(let i = 0; i < captionList.length; i++){
+    if(captionList[i] === caption){
+      duplicateCaption = true
+    }
+  }
+
+  if(duplicateCaption === false){
+
   return update(
     ref(
       database,
@@ -217,6 +229,7 @@ export async function uploadCaption(
     ),
     dataToFirebase
   );
+    }
 }
 
 //returns list of captions for one prompt under appler username called when going to vote page
@@ -242,10 +255,7 @@ export async function fetchListOfCaptions(roomCode: number): Promise<string[]> {
 }
 
 //Add 1 to Num Votes under a caption. Called every time someone clicks a vote button
-export async function vote(
-  caption: string,
-  roomCode: number
-): Promise<void> {
+export async function vote(caption: string, roomCode: number): Promise<void> {
   const applerUsername = await getApplerForRound(roomCode);
   const captionData = await get(
     child(
@@ -331,11 +341,14 @@ export async function nextRound(roomCode: number): Promise<void> {
 // A function that anyone in the room can call to start the game for all people in the lobby.
 // Sets the started value in the round to true
 export async function startGame(roomCode: number): Promise<void> {
-  const dataToFirebase = {
-    started: true,
-  };
+  const userList = await getUserList(roomCode);
+  if (userList.length >= 2) {
+    const dataToFirebase = {
+      started: true,
+    };
 
-  return update(ref(database, "Rooms/" + roomCode), dataToFirebase);
+    return update(ref(database, "Rooms/" + roomCode), dataToFirebase);
+  }
 }
 
 export async function startedGameListener(
@@ -359,15 +372,22 @@ export async function userListChangedListener(
   roomCode: number,
   callBack: (userList: string[]) => void
 ): Promise<void> {
-  onValue(ref(database, "Rooms/" + roomCode + "/Userlist"), (snapshot) => {
-    if (snapshot.exists()) {
-      const userList: string[] = [];
-      snapshot.forEach((childSnapshot: DataSnapshot) => {
-        userList.push(childSnapshot.val().username);
-      });
-      callBack(userList);
+  onValue(
+    ref(database, "Rooms/" + roomCode + "/Userlist"),
+    async (snapshot) => {
+      const userList = (await getUserList(roomCode)) ?? undefined;
+      if (userList.length === 0 || userList === undefined) {
+        resetRoom(roomCode);
+      }
+      if (snapshot.exists()) {
+        const userList: string[] = [];
+        snapshot.forEach((childSnapshot: DataSnapshot) => {
+          userList.push(childSnapshot.val().username);
+        });
+        callBack(userList);
+      }
     }
-  });
+  );
 }
 
 export async function detachUserListListener(roomCode: number): Promise<void> {
@@ -541,6 +561,60 @@ export async function endSessionClicked(roomCode: number): Promise<void> {
   return update(ref(database, "Rooms/" + roomCode), dataToFirebase);
 }
 
+export async function updateLeaderboard(
+  roomCode: number,
+  caption: string
+): Promise<void> {
+  const totalVoteUsernameObj = await fetchLeaderboard(roomCode);
+
+  const username = await fetchUsernameFromCaption(roomCode, caption);
+  const leaderboardVotes = totalVoteUsernameObj[username] ?? 0;
+  const userVotes = leaderboardVotes + 1;
+
+  const dataToFirebase = {
+    points: userVotes,
+  };
+
+  return update(
+    ref(database, "Rooms/" + roomCode + "/Leaderboard/" + username),
+    dataToFirebase
+  );
+}
+
+export async function fetchLeaderboard(
+  roomCode: number
+): Promise<{ [index: string]: number }> {
+  const leaderboardData = await get(
+    child(ref(database), "Rooms/" + roomCode + "/Leaderboard/")
+  );
+  let leaderboardObj: { [index: string]: number } = {};
+
+  leaderboardData.forEach((childSnapshot) => {
+    let username: unknown;
+    username = childSnapshot.key;
+    if (typeof username === "string") {
+      leaderboardObj[username] = childSnapshot.val().points;
+    }
+  });
+
+  return leaderboardObj;
+}
+
+export async function fetchUsernameFromCaption(
+  roomCode: number,
+  caption: string
+): Promise<string> {
+  const applerUsername = await getApplerForRound(roomCode);
+  const captionData = await get(
+    ref(
+      database,
+      "Rooms/" + roomCode + "/Game/" + applerUsername + "/Captions/" + caption
+    )
+  );
+  const username = (await captionData.val())?.username ?? undefined;
+
+  return username;
+}
 export async function newGameClickedListener(
   roomCode: Number,
   callBack: () => void
@@ -550,29 +624,37 @@ export async function newGameClickedListener(
       (await snapshot.val())?.newGameClicked ?? undefined;
     if (newGameWasClicked === true && newGameWasClicked != undefined) {
       callBack();
-      off(ref(database, "Rooms/" + roomCode), "value", onValueCallback)
+      off(ref(database, "Rooms/" + roomCode), "value", onValueCallback);
       const dataToFirebase = {
         newGameClicked: false,
       };
-      return (
-        update(ref(database, "Rooms/" + roomCode), dataToFirebase)
-      );
+      return update(ref(database, "Rooms/" + roomCode), dataToFirebase);
     }
-  }
+  };
   onValue(ref(database, "Rooms/" + roomCode), onValueCallback);
 }
 
 export async function leaveRoom(
-  roomCode: number, 
+  roomCode: number,
   userName: string
-  ): Promise<void> {
+): Promise<void> {
   remove(ref(database, "Rooms/" + roomCode + "/Game/" + userName));
   const userListData = await get(
     child(ref(database), "Rooms/" + roomCode + "/Userlist/")
   );
+  const leaderboardData = await get(
+    child(ref(database), "Rooms/" + roomCode + "/Leaderboard/")
+  );
+  leaderboardData.forEach((childSnapshot) => {
+    if (childSnapshot.key === userName) {
+      remove(ref(database, "Rooms/" + roomCode + "/Leaderboard/" + userName));
+    }
+  });
   userListData.forEach((childSnapshot) => {
     if (childSnapshot.val().username === userName) {
-      remove(ref(database, "Rooms/" + roomCode + "/Userlist/" + childSnapshot.key));
+      remove(
+        ref(database, "Rooms/" + roomCode + "/Userlist/" + childSnapshot.key)
+      );
       off(ref(database, "Rooms/" + roomCode), "value", undefined);
     }
   });

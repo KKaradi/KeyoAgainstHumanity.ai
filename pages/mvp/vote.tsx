@@ -3,21 +3,22 @@ import Image from "next/image";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import { 
-  fetchListOfCaptions, 
-  getApplerForRound, 
-  vote, 
+import {
+  fetchListOfCaptions,
+  getApplerForRound,
+  vote,
+  updateLeaderboard
 } from "../../utils/firebase-utils/firebase-util";
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCastAVoteListener } from "../../utils/firebase-utils/firebase-util";
 
-function navToResults(
+async function navToResults(
   URL: string,
   userName: string,
   roomID: number,
   caption: string
-) {
-  Router.push({
+){
+  await Router.push({
     pathname: "/mvp/results",
     query: {
       userName,
@@ -25,8 +26,12 @@ function navToResults(
       URL,
       caption,
     },
-  });
-}
+  })};
+
+  async function voteAndUpdateLeaderboard(roomID: number, caption: string){
+    await vote(String(caption), Number(roomID))
+    await updateLeaderboard(Number(roomID), String(caption))
+  }
 
 const Vote: NextPage = () => {
   const router = useRouter();
@@ -52,8 +57,8 @@ const Vote: NextPage = () => {
 
   const [voted, setVoted] = useState(false)
 
-  function voteOnce(caption: string, id: number) {
-    vote(caption, id)
+  function voteOnce(caption: string, roomID: number) {
+    voteAndUpdateLeaderboard(Number(roomID), String(caption))
     setVoted(true)
   }
   
@@ -104,7 +109,7 @@ const Vote: NextPage = () => {
           <div className = "sit">
             {
               voted ? (
-                <h3>You Voted</h3>
+                <h3>You Voted!</h3>
               ) : (
                 <div>
                   {
