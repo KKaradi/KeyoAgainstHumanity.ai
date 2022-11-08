@@ -3,7 +3,7 @@ import Image from "next/image";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { SetStateAction, useState, useEffect } from "react";
-import { generateImage } from "../../utils/image-utils/image-util";
+import { generateImage, loadingURL } from "../../utils/image-utils/image-util";
 import {
   getApplerForRound,
   uploadImageURL,
@@ -17,7 +17,7 @@ const uploadURLUploadPrompt = (
   roomID: number,
   prompt: string
 ) => {
-  if (URL != null && prompt != null) {
+  if (URL != loadingURL && prompt != "") {
     uploadImageURL(URL, String(userName), Number(roomID));
     uploadPrompt(Number(roomID), String(userName), prompt);
   }
@@ -65,7 +65,7 @@ const GenerateImages: NextPage = () => {
   };
 
   const [URL, setURL] = useState(
-    "https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921"
+    loadingURL
   );
 
   const generateImageWrapper = async (prompt: string) => {
