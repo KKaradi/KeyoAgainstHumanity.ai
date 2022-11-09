@@ -3,13 +3,13 @@ import Image from "next/image";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { SetStateAction, useState, useEffect } from "react";
-import { generateImage, loadingURL } from "../../utils/image-utils/image-util";
+import { generateImage, loadingURL } from "../utils/image-utils/image-util";
 import {
   getApplerForRound,
   uploadImageURL,
   uploadPrompt,
-} from "../../utils/firebase-utils/firebase-util";
-import { everyoneGeneratedAnImageListener } from "../../utils/firebase-utils/firebase-util";
+} from "../utils/firebase-utils/firebase-util";
+import { everyoneGeneratedAnImageListener } from "../utils/firebase-utils/firebase-util";
 
 const uploadURLUploadPrompt = (
   URL: string,
@@ -31,7 +31,7 @@ async function navToCaptionCreate(
 ) {
   if (applerUsername === userName && applerUsername != undefined) {
     await Router.push({
-      pathname: "/mvp/appler-wait",
+      pathname: "/appler-wait",
       query: {
         userName,
         roomID,
@@ -40,7 +40,7 @@ async function navToCaptionCreate(
     });
   } else if (applerUsername != userName && applerUsername != undefined) {
     await Router.push({
-      pathname: "/mvp/caption-creation",
+      pathname: "/caption-creation",
       query: {
         userName,
         roomID,

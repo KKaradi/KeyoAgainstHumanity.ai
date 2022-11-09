@@ -7,15 +7,15 @@ import {
   detachUserListListener,
   getUserList,
   leaveRoom,
-  userListChangedListener
-} from "../../utils/firebase-utils/firebase-util";
-import { startGame } from "../../utils/firebase-utils/firebase-util";
-import { startedGameListener } from "../../utils/firebase-utils/firebase-util";
+  userListChangedListener,
+} from "../utils/firebase-utils/firebase-util";
+import { startGame } from "../utils/firebase-utils/firebase-util";
+import { startedGameListener } from "../utils/firebase-utils/firebase-util";
 import Image from "next/image";
 async function navToGenerate(userName: string, roomID: string) {
   detachUserListListener(Number(roomID));
   await Router.push({
-    pathname: "/mvp/generate-images",
+    pathname: "/generate-images",
     query: {
       userName,
       roomID,
@@ -25,13 +25,13 @@ async function navToGenerate(userName: string, roomID: string) {
 
 async function navToHome() {
   await Router.push({
-    pathname: "/mvp/home",
+    pathname: "/",
   });
 }
 
 async function navToHomeAndLeaveRoom(roomCode: number, userName: string) {
-  navToHome()
-  leaveRoom(roomCode, userName)
+  navToHome();
+  leaveRoom(roomCode, userName);
 }
 
 const Lobby: NextPage = () => {
@@ -39,7 +39,6 @@ const Lobby: NextPage = () => {
   const {
     query: { userName, roomID },
   } = router;
-
 
   const waves = "/waveboi.png";
   const top = "/top.png";
@@ -78,16 +77,20 @@ const Lobby: NextPage = () => {
           <h2 className="currentplayers"> CURRENT PLAYERS:</h2>
           <div className="changebuttons">
             <div>
-            <button
-              className="genbtn"
-              onClick={() => startGame(Number(roomID))}
-            >
-              Start Round
-            </button>
-            <button className="genbtn" 
-            onClick={() => navToHomeAndLeaveRoom(Number(roomID), String(userName))}>
-              Exit Room
-            </button>
+              <button
+                className="genbtn"
+                onClick={() => startGame(Number(roomID))}
+              >
+                Start Round
+              </button>
+              <button
+                className="genbtn"
+                onClick={() =>
+                  navToHomeAndLeaveRoom(Number(roomID), String(userName))
+                }
+              >
+                Exit Room
+              </button>
             </div>
           </div>
         </li>
@@ -103,7 +106,7 @@ const Lobby: NextPage = () => {
             }
           </div>
         </li>
-      </ul>      
+      </ul>
       <Image
         src={waves}
         width={2400}

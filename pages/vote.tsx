@@ -8,9 +8,9 @@ import {
   getApplerForRound,
   vote,
   updateLeaderboard,
-} from "../../utils/firebase-utils/firebase-util";
-import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
-import { everyoneCastAVoteListener } from "../../utils/firebase-utils/firebase-util";
+} from "../utils/firebase-utils/firebase-util";
+import { fetchApplerImageURL } from "../utils/firebase-utils/firebase-util";
+import { everyoneCastAVoteListener } from "../utils/firebase-utils/firebase-util";
 
 async function navToResults(
   URL: string,
@@ -19,7 +19,7 @@ async function navToResults(
   caption: string
 ) {
   await Router.push({
-    pathname: "/mvp/results",
+    pathname: "/results",
     query: {
       userName,
       roomID,
@@ -107,23 +107,23 @@ const Vote: NextPage = () => {
         </li>
         <li className="lobby-flex">
           <h1>VOTE ON YOUR FAVORITE CAPTION</h1>
-        <div>
-          {voted ? (
+          <div>
+            {voted ? (
               <h3>You Voted!</h3>
             ) : (
               <div>
-            {captionList.map((caption) => (
-              <button
-                className="vote"
-                key={caption}
-                onClick={() => voteOnce(caption, Number(roomID))}
-              >
-                {caption}
-              </button>
-            ))}
+                {captionList.map((caption) => (
+                  <button
+                    className="vote"
+                    key={caption}
+                    onClick={() => voteOnce(caption, Number(roomID))}
+                  >
+                    {caption}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-          )}
-        </div>
         </li>
       </ul>
       <Image
