@@ -85,7 +85,7 @@ const Lobby: NextPage = () => {
               Start Round
             </button>
             <button className="genbtn" 
-            onClick={() => navToHome()}>
+            onClick={() => navToHomeAndLeaveRoom(Number(roomID), String(userName))}>
               Exit Room
             </button>
             </div>
@@ -103,12 +103,7 @@ const Lobby: NextPage = () => {
             }
           </div>
         </li>
-      </ul>
-      <div className="button">
-        <button className="homebutton" onClick={() => navToHomeAndLeaveRoom(Number(roomID), String(userName))}>
-          Exit Room
-        </button>
-      </div>
+      </ul>      
       <Image
         src={waves}
         width={2400}
