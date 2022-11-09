@@ -2,8 +2,8 @@ import type { NextPage } from "next";
 import Image from "next/image";
 import Router from "next/router";
 import { useRouter } from "next/router";
-import { newGameClickedListener } from "../../utils/firebase-utils/firebase-util";
-import { resetGame } from "../../utils/firebase-utils/firebase-util";
+import { newGameClickedListener } from "../utils/firebase-utils/firebase-util";
+import { resetGame } from "../utils/firebase-utils/firebase-util";
 import {
   endSessionClicked,
   everyoneWentListener,
@@ -11,25 +11,25 @@ import {
   resetRoom,
   gameResets,
   fetchLeaderboard,
-} from "../../utils/firebase-utils/firebase-util";
+} from "../utils/firebase-utils/firebase-util";
 import { useState, useEffect } from "react";
 import {
   fetchApplerImageURL,
   fetchCaptionVoteObject,
   nextRound,
   nextRoundHasBeenClicked,
-} from "../../utils/firebase-utils/firebase-util";
+} from "../utils/firebase-utils/firebase-util";
 
 async function navToHome(roomID: number) {
   await Router.push({
-    pathname: "/mvp/home",
+    pathname: "/",
   });
   setTimeout(() => resetRoom(Number(roomID)), 10000);
 }
 
 async function navToLobby(userName: string, roomID: number) {
   await Router.push({
-    pathname: "/mvp/lobby",
+    pathname: "/lobby",
     query: {
       userName,
       roomID,
@@ -102,7 +102,7 @@ const Results: NextPage = () => {
   const waves = "/waveboi.png";
   const top = "/top.png";
   const gameOver = "/gameOver.png";
-  
+
   return (
     <main>
       <Image
@@ -119,8 +119,8 @@ const Results: NextPage = () => {
 
       <ul className="flex-container">
         <li className="result-flex">
-          <h1>  </h1>
-          <div >
+          <h1> </h1>
+          <div>
             <Image
               className="resultsImage"
               src={imgURL}
@@ -131,7 +131,7 @@ const Results: NextPage = () => {
           </div>
         </li>
         <li className="leaderboard-flex">
-        <div >
+          <div>
             <Image
               className="gameImage"
               src={gameOver}
@@ -139,7 +139,7 @@ const Results: NextPage = () => {
               width={200}
               alt="gameOver"
             ></Image>
-        </div>
+          </div>
           <h3>RESULTS:</h3>
           <div>
             <div>
@@ -153,59 +153,53 @@ const Results: NextPage = () => {
               })}
             </div>
           </div>
-      <div>
-        <h3>LEADERBOARD:</h3>
-        <div>
-          {Object.keys(leaderboard).map((username, index) => {
-            return (
-              <div key={index}>
-                {username} has{" "}
-                {leaderboard[username as keyof typeof leaderboard]} points.
-              </div>
-            );
-          })}
-        </div>
-      </div>
+          <div>
+            <h3>LEADERBOARD:</h3>
+            <div>
+              {Object.keys(leaderboard).map((username, index) => {
+                return (
+                  <div key={index}>
+                    {username} has{" "}
+                    {leaderboard[username as keyof typeof leaderboard]} points.
+                  </div>
+                );
+              })}
+            </div>
+          </div>
           <div>
             {newGame ? (
               <div>
-                <button 
+                <button
                   className="genbtn"
-                  onClick={() => 
-                    resetGame(Number(roomID)
-                    )
-                  }>
+                  onClick={() => resetGame(Number(roomID))}
+                >
                   New Game
                 </button>
-                <button 
+                <button
                   className="genbtn"
-                  onClick={() => 
-                    endSessionClicked(Number(roomID)
-                    )
-                  }>
+                  onClick={() => endSessionClicked(Number(roomID))}
+                >
                   End Session
                 </button>
               </div>
             ) : (
-              <button 
+              <button
                 className="nextbtn"
-                  onClick={() =>
-                    nextRound(Number(roomID)
-                    )
-                }>
-                  Next Round
+                onClick={() => nextRound(Number(roomID))}
+              >
+                Next Round
               </button>
             )}
           </div>
-            </li>
-          </ul>
-        <Image
-          src={waves}
-          width={2400}
-          height={400}
-          alt="waves at the bottom of the screen"
-          className="waveslobby"
-        />
+        </li>
+      </ul>
+      <Image
+        src={waves}
+        width={2400}
+        height={400}
+        alt="waves at the bottom of the screen"
+        className="waveslobby"
+      />
     </main>
   );
 };

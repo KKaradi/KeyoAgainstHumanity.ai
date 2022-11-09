@@ -3,10 +3,10 @@ import Image from "next/image";
 import Router from "next/router";
 import { useRouter } from "next/router";
 import { SetStateAction, useState, useEffect } from "react";
-import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
-import { uploadCaption } from "../../utils/firebase-utils/firebase-util";
-import { getApplerForRound } from "../../utils/firebase-utils/firebase-util";
-import { everyoneCreatedACaptionListener } from "../../utils/firebase-utils/firebase-util";
+import { fetchApplerImageURL } from "../utils/firebase-utils/firebase-util";
+import { uploadCaption } from "../utils/firebase-utils/firebase-util";
+import { getApplerForRound } from "../utils/firebase-utils/firebase-util";
+import { everyoneCreatedACaptionListener } from "../utils/firebase-utils/firebase-util";
 
 async function navToVote(
   userName: string,
@@ -15,7 +15,7 @@ async function navToVote(
   URL: string
 ) {
   await Router.push({
-    pathname: "/mvp/vote",
+    pathname: "/vote",
     query: {
       userName,
       roomID,
