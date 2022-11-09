@@ -33,4 +33,4 @@ export async function generateImage(prompt: string): Promise<string> {
   return realPrediction.output[0];
 }
 
-export const loadingURL = "/loadingScreen.gif";
+export const loadingURL = "/canvas.png";

@@ -86,7 +86,9 @@ const GenerateImages: NextPage = () => {
 
   const generateImageWrapper = async (prompt: string) => {
     if (prompt != "") {
-      setURL("/generating.gif");
+      setURL(
+        "https://i.pinimg.com/originals/8b/c9/32/8bc932d9b88b0ba632c09c0a0f422ca5.gif"
+      );
       const newURL = await generateImage(prompt);
       setURL(newURL);
     }
