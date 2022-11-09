@@ -93,16 +93,17 @@ const Vote: NextPage = () => {
         <li className="lobby-flex">
           <h1>VOTE ON YOUR FAVORITE CAPTION</h1>
 
-          <div className="sit">
+          <li>
             {captionList.map((caption) => (
               <button
+                className="vote"
                 key={caption}
                 onClick={() => vote(caption, Number(roomID))}
               >
                 {caption}
               </button>
             ))}
-          </div>
+          </li>
         </li>
       </ul>
       <Image

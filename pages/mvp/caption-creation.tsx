@@ -77,39 +77,41 @@ const CaptionCreation: NextPage = () => {
         content="width=device-width, initial-scale=1"
       ></meta>
       <ul className="flex-container">
-        <li className="lobby-flex">
-          <h1>CAPTION {applerUsername}&#39;S PAINTING!</h1>
-          <div>
+        <li className="appler-flex">
+          <div className="captionImage">
             <Image
               src={imgURL}
-              width={400}
-              height={400}
+              width={450}
+              height={450}
               alt="Pretty Picture"
             ></Image>
           </div>
         </li>
       </ul>
       <div className="title">
-        <p>CAPTION THIS PICTURE!</p>
+        <p>ENTER PROMPT:</p>
       </div>
-      <div className="cap">
-        <input
-          className="captiontxt"
-          type="text"
-          id="message"
-          name="message"
-          onChange={inputCaption}
-          value={caption}
-        />
-      </div>
-      <div>
-        <button
-          onClick={() =>
-            uploadCaption(String(caption), String(userName), Number(roomID))
-          }
-        >
-          submit
-        </button>
+      <div className="changebuttons">
+        <div className="cap">
+          <input
+            className="captiontxt"
+            type="textCaption"
+            id="message"
+            name="message"
+            onChange={inputCaption}
+            value={caption}
+          />
+          <div>
+            <button
+              className="genbtn"
+              onClick={() =>
+                uploadCaption(String(caption), String(userName), Number(roomID))
+              }
+            >
+              submit
+            </button>
+          </div>
+        </div>
       </div>
 
       <Image

@@ -65,7 +65,7 @@ const GenerateImages: NextPage = () => {
   };
 
   const [URL, setURL] = useState(
-    "https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921"
+    "/loadingScreen.gif"
   );
 
   const generateImageWrapper = async (prompt: string) => {
@@ -122,7 +122,6 @@ const GenerateImages: NextPage = () => {
           <ul></ul>
           <div>
             <input
-              className="textbox"
               type="text"
               id="message"
               name="message"
@@ -148,8 +147,7 @@ const GenerateImages: NextPage = () => {
                     Number(roomID),
                     String(prompt)
                   )
-                }
-              >
+                }>
                 Submit
               </button>
             </div>
