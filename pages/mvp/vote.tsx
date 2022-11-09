@@ -112,7 +112,7 @@ const Vote: NextPage = () => {
             {captionList.map((caption) => (
               <button
                 key={caption}
-                onClick={() => vote(caption, Number(roomID))}
+                onClick={() => voteOnce(caption, Number(roomID))}
               >
                 {caption}
               </button>
