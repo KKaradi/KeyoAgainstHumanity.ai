@@ -64,9 +64,7 @@ const GenerateImages: NextPage = () => {
     setPrompt(event.target.value);
   };
 
-  const [URL, setURL] = useState(
-    "/loadingScreen.gif"
-  );
+  const [URL, setURL] = useState(loadingURL);
 
   const generateImageWrapper = async (prompt: string) => {
     if (prompt != null) {
@@ -147,7 +145,8 @@ const GenerateImages: NextPage = () => {
                     Number(roomID),
                     String(prompt)
                   )
-                }>
+                }
+              >
                 Submit
               </button>
             </div>

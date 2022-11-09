@@ -1,12 +1,12 @@
-import type { NextPage } from 'next'
+import type { NextPage } from "next";
 import { useState } from "react";
-import Head from 'next/head'
-import Image from 'next/image'
+import Head from "next/head";
+import Image from "next/image";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export async function generateImage(prompt: string): Promise<string> {
-  const response = await fetch('/api/predictions', {
+  const response = await fetch("/api/predictions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -20,11 +20,8 @@ export async function generateImage(prompt: string): Promise<string> {
     return "https://www.pngitem.com/pimgs/m/119-1190874_warning-icon-png-png-download-icon-transparent-png.png";
   }
   let realPrediction = prediction;
-  
-  while (
-    prediction.status !== "succeeded" &&
-    prediction.status !== "failed"
-  ) {
+
+  while (prediction.status !== "succeeded" && prediction.status !== "failed") {
     await sleep(1000);
     const response = await fetch("/api/predictions/" + prediction.id);
     prediction = await response.json();
@@ -34,6 +31,6 @@ export async function generateImage(prompt: string): Promise<string> {
     realPrediction = prediction;
   }
   return realPrediction.output[0];
-};
+}
 
-export const loadingURL = "https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921"
+export const loadingURL = "/loadingScreen.gif";
