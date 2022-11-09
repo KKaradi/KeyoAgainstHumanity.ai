@@ -36,7 +36,6 @@ async function navToLobby(userName: string, roomID: number) {
     },
   });
 }
-
 const Results: NextPage = () => {
   const router = useRouter();
   const {
@@ -101,65 +100,112 @@ const Results: NextPage = () => {
   }, [userName, roomID]);
 
   const waves = "/waveboi.png";
-
+  const top = "/top.png";
+  const gameOver = "/gameOver.png";
+  
   return (
     <main>
-      <h1>Game Over</h1>
-      <h3>Room {roomID}</h3>
-      <h3>Appler: {applerUsername}</h3>
-      <div>
-        <Image
-          src={imgURL}
-          width={100}
-          height={100}
-          alt="Pretty Picture"
-        ></Image>
-      </div>
-      <h3>RESULTS:</h3>
-      <div>
-        <ul>
-          {Object.keys(captionVotes).map((caption, index) => {
-            return (
-              <li key={index}>
-                {caption} got{" "}
-                {captionVotes[caption as keyof typeof captionVotes]} votes.
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      <Image
+        src={top}
+        width={10000}
+        height={600}
+        alt="shapes top header"
+        className="top"
+      />
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+      ></meta>
+
+      <ul className="flex-container">
+        <li className="result-flex">
+          <h1>  </h1>
+          <div >
+            <Image
+              className="resultsImage"
+              src={imgURL}
+              width={400}
+              height={400}
+              alt="Pretty Picture"
+            ></Image>
+          </div>
+        </li>
+        <li className="leaderboard-flex">
+        <div >
+            <Image
+              className="gameImage"
+              src={gameOver}
+              height={150}
+              width={200}
+              alt="gameOver"
+            ></Image>
+        </div>
+          <h3>RESULTS:</h3>
+          <div>
+            <div>
+              {Object.keys(captionVotes).map((caption, index) => {
+                return (
+                  <div key={index}>
+                    {caption} got{" "}
+                    {captionVotes[caption as keyof typeof captionVotes]} votes.
+                  </div>
+                );
+              })}
+            </div>
+          </div>
       <div>
         <h3>LEADERBOARD:</h3>
-        <ul>
+        <div>
           {Object.keys(leaderboard).map((username, index) => {
             return (
-              <li key={index}>
+              <div key={index}>
                 {username} has{" "}
                 {leaderboard[username as keyof typeof leaderboard]} points.
-              </li>
+              </div>
             );
           })}
-        </ul>
+        </div>
       </div>
-      <div>
-        {newGame ? (
           <div>
-            <button onClick={() => resetGame(Number(roomID))}>New Game</button>
-            <button onClick={() => endSessionClicked(Number(roomID))}>
-              End Session
-            </button>
+            {newGame ? (
+              <div>
+                <button 
+                  className="genbtn"
+                  onClick={() => 
+                    resetGame(Number(roomID)
+                    )
+                  }>
+                  New Game
+                </button>
+                <button 
+                  className="genbtn"
+                  onClick={() => 
+                    endSessionClicked(Number(roomID)
+                    )
+                  }>
+                  End Session
+                </button>
+              </div>
+            ) : (
+              <button 
+                className="nextbtn"
+                  onClick={() =>
+                    nextRound(Number(roomID)
+                    )
+                }>
+                  Next Round
+              </button>
+            )}
           </div>
-        ) : (
-          <button onClick={() => nextRound(Number(roomID))}>Next Round</button>
-        )}
-      </div>
-      <Image
-        src={waves}
-        width={2400}
-        height={400}
-        alt="waves at the bottom of the screen"
-        className="waveslobby"
-      />
+            </li>
+          </ul>
+        <Image
+          src={waves}
+          width={2400}
+          height={400}
+          alt="waves at the bottom of the screen"
+          className="waveslobby"
+        />
     </main>
   );
 };

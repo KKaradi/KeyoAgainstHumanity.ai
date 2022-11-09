@@ -75,16 +75,20 @@ const Lobby: NextPage = () => {
           <div className="roomcode">{roomID}</div>
           <h1> YOU:</h1>
           <div className="roomcode">{userName}</div>
-          <button className="changebuttons">CHANGE NAME</button>
-          <button className="changebuttons">CHANGE ARTIST</button>
           <h2 className="currentplayers"> CURRENT PLAYERS:</h2>
-          <div className="button">
+          <div className="changebuttons">
+            <div>
             <button
-              className="startgame"
+              className="genbtn"
               onClick={() => startGame(Number(roomID))}
             >
               Start Round
             </button>
+            <button className="genbtn" 
+            onClick={() => navToHomeAndLeaveRoom(Number(roomID), String(userName))}>
+              Exit Room
+            </button>
+            </div>
           </div>
         </li>
         <li className="lobby-flex">
@@ -93,18 +97,13 @@ const Lobby: NextPage = () => {
             {
               <ul>
                 {userList.map((user) => (
-                  <li key={user}>{user}</li>
+                  <div key={user}>{user}</div>
                 ))}
               </ul>
             }
           </div>
         </li>
-      </ul>
-      <div className="button">
-        <button className="homebutton" onClick={() => navToHomeAndLeaveRoom(Number(roomID), String(userName))}>
-          Exit Room
-        </button>
-      </div>
+      </ul>      
       <Image
         src={waves}
         width={2400}

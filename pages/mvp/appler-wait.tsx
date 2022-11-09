@@ -54,8 +54,8 @@ const ApplerWait: NextPage = () => {
         content="width=device-width, initial-scale=1"
       ></meta>
       <ul className="flex-container">
-        <li className="lobby-flex">
-          <div>
+        <li className="appler-flex">
+          <div className="lobbyImage">
             <Image
               src={imgURL}
               width={400}
@@ -66,7 +66,7 @@ const ApplerWait: NextPage = () => {
         </li>
       </ul>
       <div>
-        <h1 className="sit">Sit tight while everyone captions your image!</h1>
+        <h1 className="sit">SIT TIGHT WHILE EVERYONE CAPTIONS YOUR IMAGE!</h1>
       </div>
       <Image
         src={waves}

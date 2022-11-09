@@ -80,28 +80,32 @@ const Home: NextPage = () => {
         </li>
         <li className="flex-item">
           <div>
-            <h2> CHOOSE A NAME AND ARTIST</h2>
+            <h2> CHOOSE A NAME</h2>
             <h4>Username</h4>
-            <input
+            <div className="textBoxHome">
+            <input 
               type="text"
               id="message"
               name="message"
               onChange={inputUserName}
               value={userName}
             />
+            </div>
           </div>
         </li>
         <li className="flex-item">
           <h2> JOIN ROOM</h2>
           <div>
             <h4>Enter Room Code</h4>
-            <input
+            <div className="textBoxHome">
+            <input  
               type="text"
               id="message"
               name="message"
               onChange={inputRoomID}
               value={roomID}
             />
+            </div>
           </div>
           <div className="homebuttos"></div>
           <div className="button">

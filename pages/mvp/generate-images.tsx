@@ -64,9 +64,7 @@ const GenerateImages: NextPage = () => {
     setPrompt(event.target.value);
   };
 
-  const [URL, setURL] = useState(
-    loadingURL
-  );
+  const [URL, setURL] = useState(loadingURL);
 
   const generateImageWrapper = async (prompt: string) => {
     if (prompt != null) {
@@ -122,7 +120,6 @@ const GenerateImages: NextPage = () => {
           <ul></ul>
           <div>
             <input
-              className="textbox"
               type="text"
               id="message"
               name="message"

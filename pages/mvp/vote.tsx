@@ -107,22 +107,23 @@ const Vote: NextPage = () => {
         </li>
         <li className="lobby-flex">
           <h1>VOTE ON YOUR FAVORITE CAPTION</h1>
-          <div className="sit">
-            {voted ? (
+        <div>
+          {voted ? (
               <h3>You Voted!</h3>
             ) : (
               <div>
-                {captionList.map((caption) => (
-                  <button
-                    key={caption}
-                    onClick={() => voteOnce(caption, Number(roomID))}
-                  >
-                    {caption}
-                  </button>
-                ))}
-              </div>
-            )}
+            {captionList.map((caption) => (
+              <button
+                className="vote"
+                key={caption}
+                onClick={() => voteOnce(caption, Number(roomID))}
+              >
+                {caption}
+              </button>
+            ))}
           </div>
+          )}
+        </div>
         </li>
       </ul>
       <Image
