@@ -195,7 +195,7 @@ export async function uploadCaption(
   caption: string,
   yourUserName: string,
   roomCode: number
-): Promise<void> {
+): Promise<boolean> {
   const applerUsername = await getApplerForRound(roomCode);
 
   const dataToFirebase = {
@@ -203,33 +203,33 @@ export async function uploadCaption(
     username: yourUserName,
   };
 
-  const captionList = await fetchListOfCaptions(roomCode)
-  let duplicateCaption = false;
-  
-  for(let i = 0; i < captionList.length; i++){
-    if(captionList[i] === caption){
-      duplicateCaption = true
+  const captionList = await fetchListOfCaptions(roomCode);
+  let isDuplicateCaption = false;
+
+  for (let i = 0; i < captionList.length; i++) {
+    if (captionList[i] === caption) {
+      isDuplicateCaption = true;
     }
   }
 
-  if(duplicateCaption === false){
-
-  return update(
-    ref(
-      database,
-      "Rooms/" +
-        roomCode +
-        "/" +
-        "Game/" +
-        applerUsername +
-        "/" +
-        "Captions" +
-        "/" +
-        caption
-    ),
-    dataToFirebase
-  );
-    }
+  if (isDuplicateCaption === false) {
+    update(
+      ref(
+        database,
+        "Rooms/" +
+          roomCode +
+          "/" +
+          "Game/" +
+          applerUsername +
+          "/" +
+          "Captions" +
+          "/" +
+          caption
+      ),
+      dataToFirebase
+    );
+  }
+  return isDuplicateCaption;
 }
 
 //returns list of captions for one prompt under appler username called when going to vote page

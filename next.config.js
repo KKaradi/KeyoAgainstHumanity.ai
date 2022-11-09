@@ -8,6 +8,7 @@ const nextConfig = {
       "www.pngitem.com",
       "replicate.com",
       "replicate.delivery",
+      "imgs.search.brave.com"
     ],
   },
 };
