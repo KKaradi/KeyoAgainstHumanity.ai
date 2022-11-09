@@ -10,6 +10,7 @@ import {
   getApplerForRound,
   resetRoom,
   gameResets,
+  fetchLeaderboard,
 } from "../../utils/firebase-utils/firebase-util";
 import { useState, useEffect } from "react";
 import {
@@ -57,6 +58,14 @@ const Results: NextPage = () => {
     });
   }, [roomID]);
 
+  const [leaderboard, setLeaderboard] = useState({});
+
+  useEffect(() => {
+    fetchLeaderboard(Number(roomID)).then((leaderboard) => {
+      setLeaderboard(leaderboard);
+    });
+  }, [roomID]);
+
   const [imgURL, setImgURL] = useState("");
 
   useEffect(() => {
@@ -89,7 +98,7 @@ const Results: NextPage = () => {
       navToLobby(String(userName), Number(roomID))
     );
   }, [userName, roomID]);
-  
+
   const waves = "/waveboi.png";
   const top = "/top.png";
   const gameOver = "/gameOver.png";

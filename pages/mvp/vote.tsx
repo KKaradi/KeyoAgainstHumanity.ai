@@ -7,17 +7,18 @@ import {
   fetchListOfCaptions,
   getApplerForRound,
   vote,
+  updateLeaderboard,
 } from "../../utils/firebase-utils/firebase-util";
 import { fetchApplerImageURL } from "../../utils/firebase-utils/firebase-util";
 import { everyoneCastAVoteListener } from "../../utils/firebase-utils/firebase-util";
 
-function navToResults(
+async function navToResults(
   URL: string,
   userName: string,
   roomID: number,
   caption: string
 ) {
-  Router.push({
+  await Router.push({
     pathname: "/mvp/results",
     query: {
       userName,
@@ -26,6 +27,11 @@ function navToResults(
       caption,
     },
   });
+}
+
+async function voteAndUpdateLeaderboard(roomID: number, caption: string) {
+  await updateLeaderboard(Number(roomID), String(caption));
+  await vote(String(caption), Number(roomID));
 }
 
 const Vote: NextPage = () => {
@@ -50,6 +56,13 @@ const Vote: NextPage = () => {
     });
   }, [roomID]);
 
+  const [voted, setVoted] = useState(false);
+
+  function voteOnce(caption: string, roomID: number) {
+    voteAndUpdateLeaderboard(Number(roomID), String(caption));
+    setVoted(true);
+  }
+
   const [captionList, setCaptionList] = useState([""]);
 
   useEffect(() => {
@@ -68,8 +81,10 @@ const Vote: NextPage = () => {
       )
     );
   }, [URL, caption, roomID, userName]);
+
   const waves = "/waveboi.png";
   const top = "/top.png";
+
   return (
     <main>
       <Image
@@ -93,17 +108,16 @@ const Vote: NextPage = () => {
         <li className="lobby-flex">
           <h1>VOTE ON YOUR FAVORITE CAPTION</h1>
 
-          <li>
+          <div className="sit">
             {captionList.map((caption) => (
               <button
-                className="vote"
                 key={caption}
                 onClick={() => vote(caption, Number(roomID))}
               >
                 {caption}
               </button>
             ))}
-          </li>
+          </div>
         </li>
       </ul>
       <Image
