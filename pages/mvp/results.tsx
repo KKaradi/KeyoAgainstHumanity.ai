@@ -139,8 +139,8 @@ const Results: NextPage = () => {
               width={200}
               alt="gameOver"
             ></Image>
-          </div>
-        <h1>LEADERBOARD:</h1>
+        </div>
+          <h3>RESULTS:</h3>
           <div>
             <div>
               {Object.keys(captionVotes).map((caption, index) => {
@@ -153,6 +153,19 @@ const Results: NextPage = () => {
               })}
             </div>
           </div>
+      <div>
+        <h3>LEADERBOARD:</h3>
+        <div>
+          {Object.keys(leaderboard).map((username, index) => {
+            return (
+              <div key={index}>
+                {username} has{" "}
+                {leaderboard[username as keyof typeof leaderboard]} points.
+              </div>
+            );
+          })}
+        </div>
+      </div>
           <div>
             {newGame ? (
               <div>
