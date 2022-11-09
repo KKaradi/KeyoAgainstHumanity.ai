@@ -47,6 +47,23 @@ const CaptionCreation: NextPage = () => {
     });
   }, [roomID]);
 
+  const [captioned, setCaptioned] = useState(false);
+
+  async function userSubmitsCaption(
+    caption: string,
+    userName: string,
+    roomID: number
+  ) {
+    const duplicateCaption = await uploadCaption(
+      String(caption),
+      String(userName),
+      Number(roomID)
+    );
+    if (caption != "" && duplicateCaption === false) {
+      setCaptioned(true);
+    }
+  }
+
   const [applerUsername, setApplerUsername] = useState("");
 
   useEffect(() => {
@@ -91,6 +108,7 @@ const CaptionCreation: NextPage = () => {
       <div className="title">
         <p>ENTER PROMPT:</p>
       </div>
+
       <div className="changebuttons">
         <div className="cap">
           <input
@@ -102,14 +120,21 @@ const CaptionCreation: NextPage = () => {
             value={caption}
           />
           <div>
-            <button
-              className="genbtn"
-              onClick={() =>
-                uploadCaption(String(caption), String(userName), Number(roomID))
-              }
-            >
-              submit
-            </button>
+            {captioned ? (
+              <h2>Caption Submitted!</h2>
+            ) : (
+              <button
+                onClick={() =>
+                  userSubmitsCaption(
+                    String(caption),
+                    String(userName),
+                    Number(roomID)
+                  )
+                }
+              >
+                submit
+              </button>
+            )}
           </div>
         </div>
       </div>
