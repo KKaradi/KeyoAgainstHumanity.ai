@@ -106,7 +106,7 @@ const CaptionCreation: NextPage = () => {
         </li>
       </ul>
       <div className="title">
-        <p>ENTER PROMPT:</p>
+        <p>ENTER CAPTION:</p>
       </div>
 
       <div className="changebuttons">
@@ -123,7 +123,7 @@ const CaptionCreation: NextPage = () => {
             {captioned ? (
               <h2>Caption Submitted!</h2>
             ) : (
-              <button
+              <button className="nextbtn"
                 onClick={() =>
                   userSubmitsCaption(
                     String(caption),
