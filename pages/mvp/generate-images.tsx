@@ -64,12 +64,27 @@ const GenerateImages: NextPage = () => {
     setPrompt(event.target.value);
   };
 
+  const [submitted, setSubmitted] = useState(false);
+
+  function userClicksSubmit(URL: string, userName: string, roomID: number, prompt: string){
+    uploadURLUploadPrompt(
+      String(URL),
+      String(userName),
+      Number(roomID),
+      String(prompt)
+    )
+    if(URL != loadingURL && prompt != ""){
+    setSubmitted(true)
+    }
+  }
+
   const [URL, setURL] = useState(
     loadingURL
   );
 
   const generateImageWrapper = async (prompt: string) => {
-    if (prompt != null) {
+    if (prompt != "") {
+      setURL("/generating.gif")
       const newURL = await generateImage(prompt);
       setURL(newURL);
     }
@@ -133,16 +148,16 @@ const GenerateImages: NextPage = () => {
 
           <div className="changebuttons">
             <div>
-              <button
+              {submitted ? (<h3></h3>) : (<button
                 className="genbtn"
                 onClick={() => generateImageWrapper(prompt)}
               >
                 Generate
-              </button>
-              <button
+              </button>)}
+              {submitted ? (<h3>Image Submitted!</h3>) : (<button
                 className="genbtn"
                 onClick={() =>
-                  uploadURLUploadPrompt(
+                  userClicksSubmit(
                     String(URL),
                     String(userName),
                     Number(roomID),
@@ -151,7 +166,7 @@ const GenerateImages: NextPage = () => {
                 }
               >
                 Submit
-              </button>
+              </button>)}
             </div>
           </div>
         </li>

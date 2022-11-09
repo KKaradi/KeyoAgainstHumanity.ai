@@ -195,7 +195,7 @@ export async function uploadCaption(
   caption: string,
   yourUserName: string,
   roomCode: number
-): Promise<void> {
+): Promise<boolean> {
   const applerUsername = await getApplerForRound(roomCode);
 
   const dataToFirebase = {
@@ -213,8 +213,7 @@ export async function uploadCaption(
   }
 
   if(duplicateCaption === false){
-
-  return update(
+  update(
     ref(
       database,
       "Rooms/" +
@@ -230,6 +229,7 @@ export async function uploadCaption(
     dataToFirebase
   );
     }
+    return(duplicateCaption)
 }
 
 //returns list of captions for one prompt under appler username called when going to vote page
