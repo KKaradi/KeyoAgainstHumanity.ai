@@ -25,7 +25,8 @@
   margin-top: 20px;
 }
 .vote {
-  margin-right: 50px;
+  margin-right: 2px;
+  margin-left: 2px;
   color: rgb(255, 255, 255);
   border-radius: 10px;
   margin-top: 20px;
@@ -224,7 +225,7 @@ input[type="text"] {
 }
 
 .players {
-  text-align: left;
+  text-align: center;
   font-size: 50px;
   font-weight: bold;
   background: rgba(255, 255, 255, 0.305);

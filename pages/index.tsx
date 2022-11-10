@@ -17,6 +17,18 @@ async function navToLobby(userName: string, roomID: number) {
   });
 }
 
+async function joinRoomNavToLobby(userName: string, roomID: number) {
+  await joinRoom(userName, Number(roomID), async () =>
+    await navToLobby(String(userName), Number(roomID))
+  );
+}
+
+async function createRoomNavToLobby(userName: string, roomID: number) {
+  await createRoom(String(userName), async (roomCode) =>
+    await navToLobby(String(userName), Number(roomCode))
+  );
+}
+
 const Home: NextPage = () => {
   const [userName, setUserName] = useState("");
   const inputUserName = (event: {
@@ -36,17 +48,6 @@ const Home: NextPage = () => {
     setRoomID(event.target.value);
   };
 
-  function joinRoomNavToLobby() {
-    joinRoom(userName, Number(roomID), () =>
-      navToLobby(String(userName), Number(roomID))
-    );
-  }
-
-  function createRoomNavToLobby() {
-    createRoom(String(userName), (roomCode) =>
-      navToLobby(String(userName), Number(roomCode))
-    );
-  }
 
   return (
     <main>
@@ -76,7 +77,7 @@ const Home: NextPage = () => {
           <div className="button">
             <button
               className="createRoom"
-              onClick={() => createRoomNavToLobby()}
+              onClick={() => createRoomNavToLobby(String(userName), Number(roomID))}
             >
               Create Room
             </button>
@@ -113,7 +114,7 @@ const Home: NextPage = () => {
           </div>
           <div className="homebuttos"></div>
           <div className="button">
-            <button className="joinRoom" onClick={() => joinRoomNavToLobby()}>
+            <button className="joinRoom" onClick={() => joinRoomNavToLobby(String(userName), Number(roomID))}>
               Join Room
             </button>
           </div>
