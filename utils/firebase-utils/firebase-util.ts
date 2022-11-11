@@ -82,7 +82,8 @@ export async function joinRoom(
 ): Promise<void> {
   const sameName = await checkIfDuplicateName(roomCode, yourUserName);
   const roomExists = await checkIfRoomExists(roomCode);
-  if (sameName && roomExists) {
+  const roomStarted = await checkIfRoomAlreadyStarted(Number(roomCode))
+  if (sameName && roomExists && roomStarted === false) {
     const userListRef = push(ref(database, "Rooms/" + roomCode + "/Userlist/"));
     await set(userListRef, {
       username: yourUserName,
@@ -105,6 +106,11 @@ export async function joinRoom(
 export async function checkIfRoomExists(roomCode: Number): Promise<boolean> {
   const roomCodeRef = await get(ref(database, "Rooms/" + roomCode));
   return roomCodeRef.exists();
+}
+
+export async function checkIfRoomAlreadyStarted(roomCode: Number): Promise<boolean> {
+  const roomCodeRef = await get(ref(database, "Rooms/" + roomCode + "/started"));
+  return roomCodeRef.val();
 }
 
 export async function checkIfDuplicateName(
